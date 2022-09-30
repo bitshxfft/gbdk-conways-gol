@@ -1,0 +1,2049 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ANSI-C Compiler
+                                      3 ; Version 4.1.6 #12539 (MINGW32)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module main
+                                      6 	.optsdcc -mgbz80
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _main
+                                     12 	.globl _update_cursor_position
+                                     13 	.globl _update_cursor_sprite
+                                     14 	.globl _is_input_held
+                                     15 	.globl _was_input_released
+                                     16 	.globl _was_input_depressed
+                                     17 	.globl _update_input_state
+                                     18 	.globl _set_sprite_data
+                                     19 	.globl _set_bkg_tiles
+                                     20 	.globl _set_bkg_data
+                                     21 	.globl _joypad
+                                     22 	.globl _sprites
+                                     23 	.globl _background_tiles
+                                     24 	.globl _background_map
+                                     25 	.globl _highlight_sprite_index
+                                     26 	.globl _highlight_live_tile_index
+                                     27 	.globl _highlight_empty_tile_index
+                                     28 	.globl _live_tile_index
+                                     29 	.globl _empty_tile_index
+                                     30 ;--------------------------------------------------------
+                                     31 ; special function registers
+                                     32 ;--------------------------------------------------------
+                                     33 ;--------------------------------------------------------
+                                     34 ; ram data
+                                     35 ;--------------------------------------------------------
+                                     36 	.area _DATA
+                                     37 ;--------------------------------------------------------
+                                     38 ; ram data
+                                     39 ;--------------------------------------------------------
+                                     40 	.area _INITIALIZED
+      000000                         41 _background_map::
+      000000                         42 	.ds 360
+      000168                         43 _background_tiles::
+      000168                         44 	.ds 32
+      000188                         45 _sprites::
+      000188                         46 	.ds 64
+                                     47 ;--------------------------------------------------------
+                                     48 ; absolute external ram data
+                                     49 ;--------------------------------------------------------
+                                     50 	.area _DABS (ABS)
+                                     51 ;--------------------------------------------------------
+                                     52 ; global & static initialisations
+                                     53 ;--------------------------------------------------------
+                                     54 	.area _HOME
+                                     55 	.area _GSINIT
+                                     56 	.area _GSFINAL
+                                     57 	.area _GSINIT
+                                     58 ;--------------------------------------------------------
+                                     59 ; Home
+                                     60 ;--------------------------------------------------------
+                                     61 	.area _HOME
+                                     62 	.area _HOME
+                                     63 ;--------------------------------------------------------
+                                     64 ; code
+                                     65 ;--------------------------------------------------------
+                                     66 	.area _CODE
+                                     67 ;input.h:31: void update_input_state(struct input_state* is, uint8_t button_state)
+                                     68 ;	---------------------------------
+                                     69 ; Function update_input_state
+                                     70 ; ---------------------------------
+      000000                         71 _update_input_state::
+      000000 E8 FD                   72 	add	sp, #-3
+                                     73 ;input.h:34: is->previous_state = is->current_state;
+      000002 F8 05                   74 	ldhl	sp,	#5
+      000004 7E                      75 	ld	a, (hl)
+      000005 F8 00                   76 	ldhl	sp,	#0
+      000007 77                      77 	ld	(hl), a
+      000008 F8 06                   78 	ldhl	sp,	#6
+      00000A 7E                      79 	ld	a, (hl)
+      00000B F8 01                   80 	ldhl	sp,	#1
+      00000D 22                      81 	ld	(hl+), a
+      00000E C1                      82 	pop	bc
+      00000F C5                      83 	push	bc
+      000010 03                      84 	inc	bc
+      000011 0A                      85 	ld	a, (bc)
+      000012 77                      86 	ld	(hl), a
+      000013 D1                      87 	pop	de
+      000014 D5                      88 	push	de
+      000015 7E                      89 	ld	a, (hl)
+      000016 12                      90 	ld	(de), a
+                                     91 ;input.h:37: is->current_state = (button_state == J_A) << btn_a;
+      000017 F8 07                   92 	ldhl	sp,	#7
+      000019 7E                      93 	ld	a, (hl)
+      00001A D6 10                   94 	sub	a, #0x10
+      00001C 3E 01                   95 	ld	a, #0x01
+      00001E 28 01                   96 	jr	Z, 00104$
+      000020 AF                      97 	xor	a, a
+      000021                         98 00104$:
+                                     99 ;input.h:38: is->current_state |= (button_state == J_B) << btn_b;
+      000021 02                     100 	ld	(bc), a
+      000022 5F                     101 	ld	e, a
+      000023 F8 07                  102 	ldhl	sp,	#7
+      000025 7E                     103 	ld	a, (hl)
+      000026 D6 20                  104 	sub	a, #0x20
+      000028 3E 01                  105 	ld	a, #0x01
+      00002A 28 01                  106 	jr	Z, 00106$
+      00002C AF                     107 	xor	a, a
+      00002D                        108 00106$:
+      00002D 87                     109 	add	a, a
+      00002E B3                     110 	or	a, e
+      00002F 5F                     111 	ld	e, a
+      000030 02                     112 	ld	(bc), a
+                                    113 ;input.h:39: is->current_state |= (button_state == J_UP) << btn_up;
+      000031 F8 07                  114 	ldhl	sp,	#7
+      000033 7E                     115 	ld	a, (hl)
+      000034 D6 04                  116 	sub	a, #0x04
+      000036 3E 01                  117 	ld	a, #0x01
+      000038 28 01                  118 	jr	Z, 00108$
+      00003A AF                     119 	xor	a, a
+      00003B                        120 00108$:
+      00003B 87                     121 	add	a, a
+      00003C 87                     122 	add	a, a
+      00003D B3                     123 	or	a, e
+      00003E 5F                     124 	ld	e, a
+      00003F 02                     125 	ld	(bc), a
+                                    126 ;input.h:40: is->current_state |= (button_state == J_DOWN) << btn_down;
+      000040 F8 07                  127 	ldhl	sp,	#7
+      000042 7E                     128 	ld	a, (hl)
+      000043 D6 08                  129 	sub	a, #0x08
+      000045 3E 01                  130 	ld	a, #0x01
+      000047 28 01                  131 	jr	Z, 00110$
+      000049 AF                     132 	xor	a, a
+      00004A                        133 00110$:
+      00004A 87                     134 	add	a, a
+      00004B 87                     135 	add	a, a
+      00004C 87                     136 	add	a, a
+      00004D B3                     137 	or	a, e
+      00004E 5F                     138 	ld	e, a
+      00004F 02                     139 	ld	(bc), a
+                                    140 ;input.h:41: is->current_state |= (button_state == J_LEFT) << btn_left;
+      000050 F8 07                  141 	ldhl	sp,	#7
+      000052 7E                     142 	ld	a, (hl)
+      000053 D6 02                  143 	sub	a, #0x02
+      000055 3E 01                  144 	ld	a, #0x01
+      000057 28 01                  145 	jr	Z, 00112$
+      000059 AF                     146 	xor	a, a
+      00005A                        147 00112$:
+      00005A CB 37                  148 	swap	a
+      00005C E6 F0                  149 	and	a, #0xf0
+      00005E B3                     150 	or	a, e
+      00005F 5F                     151 	ld	e, a
+      000060 02                     152 	ld	(bc), a
+                                    153 ;input.h:42: is->current_state |= (button_state == J_RIGHT) << btn_right;
+      000061 F8 07                  154 	ldhl	sp,	#7
+      000063 7E                     155 	ld	a, (hl)
+      000064 3D                     156 	dec	a
+      000065 3E 01                  157 	ld	a, #0x01
+      000067 28 01                  158 	jr	Z, 00114$
+      000069 AF                     159 	xor	a, a
+      00006A                        160 00114$:
+      00006A CB 37                  161 	swap	a
+      00006C 07                     162 	rlca
+      00006D E6 E0                  163 	and	a, #0xe0
+      00006F B3                     164 	or	a, e
+      000070 5F                     165 	ld	e, a
+      000071 02                     166 	ld	(bc), a
+                                    167 ;input.h:43: is->current_state |= (button_state == J_START) << btn_start;
+      000072 F8 07                  168 	ldhl	sp,	#7
+      000074 7E                     169 	ld	a, (hl)
+      000075 D6 80                  170 	sub	a, #0x80
+      000077 3E 01                  171 	ld	a, #0x01
+      000079 28 01                  172 	jr	Z, 00116$
+      00007B AF                     173 	xor	a, a
+      00007C                        174 00116$:
+      00007C 0F                     175 	rrca
+      00007D 0F                     176 	rrca
+      00007E E6 C0                  177 	and	a, #0xc0
+      000080 B3                     178 	or	a, e
+      000081 5F                     179 	ld	e, a
+      000082 02                     180 	ld	(bc), a
+                                    181 ;input.h:44: is->current_state |= (button_state == J_SELECT) << btn_select;
+      000083 F8 07                  182 	ldhl	sp,	#7
+      000085 7E                     183 	ld	a, (hl)
+      000086 D6 40                  184 	sub	a, #0x40
+      000088 3E 01                  185 	ld	a, #0x01
+      00008A 28 01                  186 	jr	Z, 00118$
+      00008C AF                     187 	xor	a, a
+      00008D                        188 00118$:
+      00008D 0F                     189 	rrca
+      00008E E6 80                  190 	and	a, #0x80
+      000090 B3                     191 	or	a, e
+      000091 57                     192 	ld	d, a
+      000092 02                     193 	ld	(bc), a
+                                    194 ;input.h:47: is->held_buttons = is->previous_state & is->current_state;
+      000093 C1                     195 	pop	bc
+      000094 C5                     196 	push	bc
+      000095 03                     197 	inc	bc
+      000096 03                     198 	inc	bc
+      000097 F8 02                  199 	ldhl	sp,	#2
+                                    200 ;input.h:50: is->depressed_buttons = (is->current_state ^ is->held_buttons);
+                                    201 ;input.h:53: is->released_buttons = (is->previous_state ^ is->held_buttons);
+      000099 3A                     202 	ld	a, (hl-)
+      00009A 2B                     203 	dec	hl
+      00009B A2                     204 	and	a, d
+      00009C 5F                     205 	ld	e, a
+      00009D 02                     206 	ld	(bc), a
+      00009E C1                     207 	pop	bc
+      00009F C5                     208 	push	bc
+      0000A0 03                     209 	inc	bc
+      0000A1 03                     210 	inc	bc
+      0000A2 03                     211 	inc	bc
+      0000A3 7A                     212 	ld	a, d
+      0000A4 AB                     213 	xor	a, e
+      0000A5 02                     214 	ld	(bc), a
+      0000A6 D5                     215 	push	de
+      0000A7 2A                     216 	ld	a, (hl+)
+      0000A8 5F                     217 	ld	e, a
+      0000A9 56                     218 	ld	d, (hl)
+      0000AA 21 04 00               219 	ld	hl, #0x0004
+      0000AD 19                     220 	add	hl, de
+      0000AE D1                     221 	pop	de
+      0000AF 4D                     222 	ld	c, l
+      0000B0 44                     223 	ld	b, h
+      0000B1 F8 02                  224 	ldhl	sp,	#2
+      0000B3 7E                     225 	ld	a, (hl)
+      0000B4 AB                     226 	xor	a, e
+      0000B5 02                     227 	ld	(bc), a
+                                    228 ;input.h:54: }
+      0000B6 E8 03                  229 	add	sp, #3
+      0000B8 C9                     230 	ret
+      0000B9                        231 _SCREEN_MIN_X:
+      0000B9 08                     232 	.db #0x08	; 8
+      0000BA                        233 _SCREEN_MIN_Y:
+      0000BA 10                     234 	.db #0x10	; 16
+      0000BB                        235 _SCREEN_WIDTH:
+      0000BB A0                     236 	.db #0xa0	; 160
+      0000BC                        237 _SCREEN_HEIGHT:
+      0000BC 90                     238 	.db #0x90	; 144
+      0000BD                        239 _SPRITE_TILE_WIDTH:
+      0000BD 08                     240 	.db #0x08	; 8
+      0000BE                        241 _SPRITE_TILE_HEIGHT:
+      0000BE 08                     242 	.db #0x08	; 8
+                                    243 ;input.h:58: uint8_t was_input_depressed(struct input_state* is, uint8_t button)
+                                    244 ;	---------------------------------
+                                    245 ; Function was_input_depressed
+                                    246 ; ---------------------------------
+      0000BF                        247 _was_input_depressed::
+                                    248 ;input.h:60: return is->depressed_buttons & (1 << button);
+      0000BF F8 02                  249 	ldhl	sp,	#2
+      0000C1 2A                     250 	ld	a, (hl+)
+      0000C2 4F                     251 	ld	c, a
+      0000C3 2A                     252 	ld	a, (hl+)
+      0000C4 47                     253 	ld	b, a
+      0000C5 03                     254 	inc	bc
+      0000C6 03                     255 	inc	bc
+      0000C7 03                     256 	inc	bc
+      0000C8 0A                     257 	ld	a, (bc)
+      0000C9 4E                     258 	ld	c, (hl)
+      0000CA 06 01                  259 	ld	b, #0x01
+      0000CC 0C                     260 	inc	c
+      0000CD 18 02                  261 	jr	00104$
+      0000CF                        262 00103$:
+      0000CF CB 20                  263 	sla	b
+      0000D1                        264 00104$:
+      0000D1 0D                     265 	dec	c
+      0000D2 20 FB                  266 	jr	NZ,00103$
+      0000D4 A0                     267 	and	a, b
+      0000D5 5F                     268 	ld	e, a
+                                    269 ;input.h:61: }
+      0000D6 C9                     270 	ret
+                                    271 ;input.h:63: uint8_t was_input_released(struct input_state* is, uint8_t button)
+                                    272 ;	---------------------------------
+                                    273 ; Function was_input_released
+                                    274 ; ---------------------------------
+      0000D7                        275 _was_input_released::
+                                    276 ;input.h:65: return is->released_buttons & (1 << button);
+      0000D7 F8 02                  277 	ldhl	sp,	#2
+      0000D9 2A                     278 	ld	a, (hl+)
+      0000DA 4F                     279 	ld	c, a
+      0000DB 46                     280 	ld	b, (hl)
+      0000DC 21 04 00               281 	ld	hl, #0x0004
+      0000DF 09                     282 	add	hl, bc
+      0000E0 4E                     283 	ld	c, (hl)
+      0000E1 F8 04                  284 	ldhl	sp,	#4
+      0000E3 46                     285 	ld	b, (hl)
+      0000E4 3E 01                  286 	ld	a, #0x01
+      0000E6 04                     287 	inc	b
+      0000E7 18 01                  288 	jr	00104$
+      0000E9                        289 00103$:
+      0000E9 87                     290 	add	a, a
+      0000EA                        291 00104$:
+      0000EA 05                     292 	dec	b
+      0000EB 20 FC                  293 	jr	NZ,00103$
+      0000ED A1                     294 	and	a, c
+      0000EE 5F                     295 	ld	e, a
+                                    296 ;input.h:66: }
+      0000EF C9                     297 	ret
+                                    298 ;input.h:68: uint8_t is_input_held(struct input_state* is, uint8_t button)
+                                    299 ;	---------------------------------
+                                    300 ; Function is_input_held
+                                    301 ; ---------------------------------
+      0000F0                        302 _is_input_held::
+                                    303 ;input.h:70: return is->held_buttons & (1 << button);
+      0000F0 F8 02                  304 	ldhl	sp,	#2
+      0000F2 2A                     305 	ld	a, (hl+)
+      0000F3 4F                     306 	ld	c, a
+      0000F4 2A                     307 	ld	a, (hl+)
+      0000F5 47                     308 	ld	b, a
+      0000F6 03                     309 	inc	bc
+      0000F7 03                     310 	inc	bc
+      0000F8 0A                     311 	ld	a, (bc)
+      0000F9 4E                     312 	ld	c, (hl)
+      0000FA 06 01                  313 	ld	b, #0x01
+      0000FC 0C                     314 	inc	c
+      0000FD 18 02                  315 	jr	00104$
+      0000FF                        316 00103$:
+      0000FF CB 20                  317 	sla	b
+      000101                        318 00104$:
+      000101 0D                     319 	dec	c
+      000102 20 FB                  320 	jr	NZ,00103$
+      000104 A0                     321 	and	a, b
+      000105 5F                     322 	ld	e, a
+                                    323 ;input.h:71: }
+      000106 C9                     324 	ret
+                                    325 ;main.c:46: void update_cursor_sprite(uint8_t tile_index)
+                                    326 ;	---------------------------------
+                                    327 ; Function update_cursor_sprite
+                                    328 ; ---------------------------------
+      000107                        329 _update_cursor_sprite::
+                                    330 ;main.c:48: set_sprite_tile(highlight_sprite_index, tile_index);
+      000107 F8 02                  331 	ldhl	sp,	#2
+      000109 4E                     332 	ld	c, (hl)
+      00010A 21r25r01               333 	ld	hl, #_highlight_sprite_index
+                                    334 ;c:/gameboy-dev/gbdk/include/gb/gb.h:1447: shadow_OAM[nb].tile=tile;
+      00010D 6E                     335 	ld	l, (hl)
+                                    336 ;	spillPairReg hl
+                                    337 ;	spillPairReg hl
+      00010E 26 00                  338 	ld	h, #0x00
+                                    339 ;	spillPairReg hl
+                                    340 ;	spillPairReg hl
+      000110 29                     341 	add	hl, hl
+      000111 29                     342 	add	hl, hl
+      000112 11r00r00               343 	ld	de, #_shadow_OAM
+      000115 19                     344 	add	hl, de
+      000116 23                     345 	inc	hl
+      000117 23                     346 	inc	hl
+      000118 71                     347 	ld	(hl), c
+                                    348 ;main.c:48: set_sprite_tile(highlight_sprite_index, tile_index);
+                                    349 ;main.c:49: }
+      000119 C9                     350 	ret
+      00011A                        351 _s_execution_state_active_mask:
+      00011A 02                     352 	.db #0x02	; 2
+      00011B                        353 _s_tile_is_alive_mask:
+      00011B 01                     354 	.db #0x01	; 1
+      00011C                        355 _s_tile_was_alive_mask:
+      00011C 02                     356 	.db #0x02	; 2
+      00011D                        357 _s_tile_is_north_row_mask:
+      00011D 04                     358 	.db #0x04	; 4
+      00011E                        359 _s_tile_is_south_row_mask:
+      00011E 08                     360 	.db #0x08	; 8
+      00011F                        361 _s_tile_is_west_column_mask:
+      00011F 10                     362 	.db #0x10	; 16
+      000120                        363 _s_tile_is_east_column_mask:
+      000120 20                     364 	.db #0x20	; 32
+      000121                        365 _empty_tile_index:
+      000121 00                     366 	.db #0x00	; 0
+      000122                        367 _live_tile_index:
+      000122 01                     368 	.db #0x01	; 1
+      000123                        369 _highlight_empty_tile_index:
+      000123 02                     370 	.db #0x02	; 2
+      000124                        371 _highlight_live_tile_index:
+      000124 03                     372 	.db #0x03	; 3
+      000125                        373 _highlight_sprite_index:
+      000125 00                     374 	.db #0x00	; 0
+                                    375 ;main.c:51: void update_cursor_position(uint8_t tile_x, uint8_t tile_y)
+                                    376 ;	---------------------------------
+                                    377 ; Function update_cursor_position
+                                    378 ; ---------------------------------
+      000126                        379 _update_cursor_position::
+                                    380 ;main.c:55: SCREEN_MIN_Y + (tile_y * SPRITE_TILE_HEIGHT));
+      000126 FArBEr00               381 	ld	a, (#_SPRITE_TILE_HEIGHT)
+      000129 F5                     382 	push	af
+      00012A 33                     383 	inc	sp
+      00012B F8 04                  384 	ldhl	sp,	#4
+      00012D 7E                     385 	ld	a, (hl)
+      00012E F5                     386 	push	af
+      00012F 33                     387 	inc	sp
+      000130 CDr00r00               388 	call	__muluchar
+      000133 E1                     389 	pop	hl
+      000134 FArBAr00               390 	ld	a, (#_SCREEN_MIN_Y)
+      000137 83                     391 	add	a, e
+      000138 47                     392 	ld	b, a
+                                    393 ;main.c:54: SCREEN_MIN_X + (tile_x * SPRITE_TILE_WIDTH),
+      000139 FArBDr00               394 	ld	a, (#_SPRITE_TILE_WIDTH)
+      00013C C5                     395 	push	bc
+      00013D F5                     396 	push	af
+      00013E 33                     397 	inc	sp
+      00013F F8 05                  398 	ldhl	sp,	#5
+      000141 7E                     399 	ld	a, (hl)
+      000142 F5                     400 	push	af
+      000143 33                     401 	inc	sp
+      000144 CDr00r00               402 	call	__muluchar
+      000147 E1                     403 	pop	hl
+      000148 C1                     404 	pop	bc
+      000149 FArB9r00               405 	ld	a, (#_SCREEN_MIN_X)
+      00014C 83                     406 	add	a, e
+      00014D 21r25r01               407 	ld	hl, #_highlight_sprite_index
+                                    408 ;main.c:55: SCREEN_MIN_Y + (tile_y * SPRITE_TILE_HEIGHT));
+                                    409 ;c:/gameboy-dev/gbdk/include/gb/gb.h:1520: OAM_item_t * itm = &shadow_OAM[nb];
+      000150 6E                     410 	ld	l, (hl)
+      000151 4F                     411 	ld	c, a
+                                    412 ;	spillPairReg hl
+                                    413 ;	spillPairReg hl
+      000152 26 00                  414 	ld	h, #0x00
+                                    415 ;	spillPairReg hl
+                                    416 ;	spillPairReg hl
+      000154 29                     417 	add	hl, hl
+      000155 29                     418 	add	hl, hl
+      000156 11r00r00               419 	ld	de, #_shadow_OAM
+      000159 19                     420 	add	hl, de
+                                    421 ;c:/gameboy-dev/gbdk/include/gb/gb.h:1521: itm->y=y, itm->x=x;
+      00015A 78                     422 	ld	a, b
+      00015B 22                     423 	ld	(hl+), a
+      00015C 71                     424 	ld	(hl), c
+                                    425 ;main.c:55: SCREEN_MIN_Y + (tile_y * SPRITE_TILE_HEIGHT));
+                                    426 ;main.c:56: }
+      00015D C9                     427 	ret
+                                    428 ;main.c:60: int main()
+                                    429 ;	---------------------------------
+                                    430 ; Function main
+                                    431 ; ---------------------------------
+      00015E                        432 _main::
+      00015E 21 77 FE               433 	ld	hl, #-393
+      000161 39                     434 	add	hl, sp
+      000162 F9                     435 	ld	sp, hl
+                                    436 ;main.c:67: input_state.previous_state = 0x00;
+      000163 F8 00                  437 	ldhl	sp,	#0
+      000165 4D                     438 	ld	c, l
+      000166 44                     439 	ld	b, h
+      000167 AF                     440 	xor	a, a
+      000168 02                     441 	ld	(bc), a
+                                    442 ;main.c:68: input_state.current_state = 0x00;
+      000169 F8 00                  443 	ldhl	sp,	#0
+      00016B 7D                     444 	ld	a, l
+      00016C 54                     445 	ld	d, h
+      00016D 21 6F 01               446 	ld	hl, #367
+      000170 39                     447 	add	hl, sp
+      000171 22                     448 	ld	(hl+), a
+      000172 7A                     449 	ld	a, d
+      000173 32                     450 	ld	(hl-), a
+      000174 2A                     451 	ld	a, (hl+)
+      000175 4F                     452 	ld	c, a
+                                    453 ;main.c:69: input_state.held_buttons = 0x00;
+      000176 3A                     454 	ld	a, (hl-)
+      000177 47                     455 	ld	b, a
+      000178 03                     456 	inc	bc
+      000179 AF                     457 	xor	a, a
+      00017A 02                     458 	ld	(bc), a
+      00017B 2A                     459 	ld	a, (hl+)
+      00017C 4F                     460 	ld	c, a
+                                    461 ;main.c:70: input_state.depressed_buttons = 0x00;
+      00017D 3A                     462 	ld	a, (hl-)
+      00017E 47                     463 	ld	b, a
+      00017F 03                     464 	inc	bc
+      000180 03                     465 	inc	bc
+      000181 AF                     466 	xor	a, a
+      000182 02                     467 	ld	(bc), a
+      000183 2A                     468 	ld	a, (hl+)
+      000184 4F                     469 	ld	c, a
+                                    470 ;main.c:71: input_state.released_buttons = 0x00;
+      000185 3A                     471 	ld	a, (hl-)
+      000186 47                     472 	ld	b, a
+      000187 03                     473 	inc	bc
+      000188 03                     474 	inc	bc
+      000189 03                     475 	inc	bc
+      00018A AF                     476 	xor	a, a
+      00018B 02                     477 	ld	(bc), a
+      00018C 2A                     478 	ld	a, (hl+)
+      00018D 5F                     479 	ld	e, a
+      00018E 56                     480 	ld	d, (hl)
+      00018F 21 04 00               481 	ld	hl, #0x0004
+      000192 19                     482 	add	hl, de
+      000193 4D                     483 	ld	c, l
+      000194 44                     484 	ld	b, h
+      000195 AF                     485 	xor	a, a
+      000196 02                     486 	ld	(bc), a
+                                    487 ;main.c:74: uint8_t execution_state = 0x00;
+      000197 21 86 01               488 	ld	hl, #390
+      00019A 39                     489 	add	hl, sp
+      00019B 36 00                  490 	ld	(hl), #0x00
+                                    491 ;main.c:76: uint8_t highlight_tile_position[2] = { 10, 9 };
+      00019D F8 05                  492 	ldhl	sp,	#5
+      00019F 7D                     493 	ld	a, l
+      0001A0 54                     494 	ld	d, h
+      0001A1 21 71 01               495 	ld	hl, #369
+      0001A4 39                     496 	add	hl, sp
+      0001A5 22                     497 	ld	(hl+), a
+      0001A6 7A                     498 	ld	a, d
+      0001A7 32                     499 	ld	(hl-), a
+      0001A8 2A                     500 	ld	a,	(hl+)
+      0001A9 66                     501 	ld	h, (hl)
+      0001AA 6F                     502 	ld	l, a
+      0001AB 36 0A                  503 	ld	(hl), #0x0a
+      0001AD 21 71 01               504 	ld	hl,#0x171
+      0001B0 39                     505 	add	hl,sp
+      0001B1 2A                     506 	ld	a, (hl+)
+      0001B2 5F                     507 	ld	e, a
+      0001B3 56                     508 	ld	d, (hl)
+      0001B4 6B                     509 	ld	l, e
+      0001B5 62                     510 	ld	h, d
+      0001B6 23                     511 	inc	hl
+      0001B7 E5                     512 	push	hl
+      0001B8 7D                     513 	ld	a, l
+      0001B9 21 75 01               514 	ld	hl, #373
+      0001BC 39                     515 	add	hl, sp
+      0001BD 77                     516 	ld	(hl), a
+      0001BE E1                     517 	pop	hl
+      0001BF 7C                     518 	ld	a, h
+      0001C0 21 74 01               519 	ld	hl, #372
+      0001C3 39                     520 	add	hl, sp
+      0001C4 32                     521 	ld	(hl-), a
+      0001C5 2A                     522 	ld	a,	(hl+)
+      0001C6 66                     523 	ld	h, (hl)
+      0001C7 6F                     524 	ld	l, a
+      0001C8 36 09                  525 	ld	(hl), #0x09
+                                    526 ;main.c:83: for (i = 0; i < 360; ++i)
+      0001CA F8 07                  527 	ldhl	sp,	#7
+      0001CC 7D                     528 	ld	a, l
+      0001CD 54                     529 	ld	d, h
+      0001CE 21 75 01               530 	ld	hl, #373
+      0001D1 39                     531 	add	hl, sp
+      0001D2 22                     532 	ld	(hl+), a
+      0001D3 72                     533 	ld	(hl), d
+      0001D4 AF                     534 	xor	a, a
+      0001D5 21 87 01               535 	ld	hl, #391
+      0001D8 39                     536 	add	hl, sp
+      0001D9 22                     537 	ld	(hl+), a
+      0001DA 77                     538 	ld	(hl), a
+      0001DB                        539 00123$:
+                                    540 ;main.c:85: uint8_t tile_data = 0x00;
+      0001DB 0E 00                  541 	ld	c, #0x00
+                                    542 ;main.c:86: tile_data |= (i < 20 ? s_tile_is_north_row_mask : 0x00);
+      0001DD 21 87 01               543 	ld	hl, #391
+      0001E0 39                     544 	add	hl, sp
+      0001E1 7E                     545 	ld	a, (hl)
+      0001E2 21 81 01               546 	ld	hl, #385
+      0001E5 39                     547 	add	hl, sp
+      0001E6 77                     548 	ld	(hl), a
+      0001E7 21 88 01               549 	ld	hl, #392
+      0001EA 39                     550 	add	hl, sp
+      0001EB 7E                     551 	ld	a, (hl)
+      0001EC 21 82 01               552 	ld	hl, #386
+      0001EF 39                     553 	add	hl, sp
+      0001F0 32                     554 	ld	(hl-), a
+      0001F1 2A                     555 	ld	a, (hl+)
+      0001F2 D6 14                  556 	sub	a, #0x14
+      0001F4 7E                     557 	ld	a, (hl)
+      0001F5 DE 00                  558 	sbc	a, #0x00
+      0001F7 30 07                  559 	jr	NC, 00133$
+      0001F9 FAr1Dr01               560 	ld	a, (#_s_tile_is_north_row_mask)
+      0001FC 06 00                  561 	ld	b, #0x00
+      0001FE 18 02                  562 	jr	00134$
+      000200                        563 00133$:
+      000200 AF                     564 	xor	a, a
+      000201 47                     565 	ld	b, a
+      000202                        566 00134$:
+      000202 B1                     567 	or	a, c
+      000203 21 83 01               568 	ld	hl, #387
+      000206 39                     569 	add	hl, sp
+                                    570 ;main.c:87: tile_data |= (i >= 340 ? s_tile_is_south_row_mask : 0x00);
+      000207 32                     571 	ld	(hl-), a
+      000208 2B                     572 	dec	hl
+      000209 2A                     573 	ld	a, (hl+)
+      00020A D6 54                  574 	sub	a, #0x54
+      00020C 7E                     575 	ld	a, (hl)
+      00020D DE 01                  576 	sbc	a, #0x01
+      00020F 38 0C                  577 	jr	C, 00135$
+      000211 FAr1Er01               578 	ld	a, (#_s_tile_is_south_row_mask)
+      000214 21 84 01               579 	ld	hl, #388
+      000217 39                     580 	add	hl, sp
+      000218 22                     581 	ld	(hl+), a
+      000219 36 00                  582 	ld	(hl), #0x00
+      00021B 18 07                  583 	jr	00136$
+      00021D                        584 00135$:
+      00021D AF                     585 	xor	a, a
+      00021E 21 84 01               586 	ld	hl, #388
+      000221 39                     587 	add	hl, sp
+      000222 22                     588 	ld	(hl+), a
+      000223 77                     589 	ld	(hl), a
+      000224                        590 00136$:
+      000224 21 84 01               591 	ld	hl, #388
+      000227 39                     592 	add	hl, sp
+      000228 3A                     593 	ld	a, (hl-)
+      000229 B6                     594 	or	a, (hl)
+                                    595 ;main.c:88: tile_data |= (i % 20 == 0 ? s_tile_is_west_column_mask : 0x00);
+      00022A 2B                     596 	dec	hl
+      00022B 2B                     597 	dec	hl
+      00022C 4F                     598 	ld	c, a
+      00022D C5                     599 	push	bc
+      00022E 11 14 00               600 	ld	de, #0x0014
+      000231 D5                     601 	push	de
+      000232 2A                     602 	ld	a, (hl+)
+      000233 5F                     603 	ld	e, a
+      000234 56                     604 	ld	d, (hl)
+      000235 D5                     605 	push	de
+      000236 CDr00r00               606 	call	__moduint
+      000239 E8 04                  607 	add	sp, #4
+      00023B C1                     608 	pop	bc
+      00023C 7A                     609 	ld	a, d
+      00023D B3                     610 	or	a, e
+      00023E 20 05                  611 	jr	NZ, 00137$
+      000240 FAr1Fr01               612 	ld	a, (#_s_tile_is_west_column_mask)
+      000243 18 01                  613 	jr	00138$
+      000245                        614 00137$:
+      000245 AF                     615 	xor	a, a
+      000246                        616 00138$:
+      000246 B1                     617 	or	a, c
+      000247 4F                     618 	ld	c, a
+                                    619 ;main.c:89: tile_data |= (i % 20== 19 ? s_tile_is_east_column_mask : 0x00);
+      000248 7B                     620 	ld	a, e
+      000249 D6 13                  621 	sub	a, #0x13
+      00024B B2                     622 	or	a, d
+      00024C 20 05                  623 	jr	NZ, 00139$
+      00024E FAr20r01               624 	ld	a, (#_s_tile_is_east_column_mask)
+      000251 18 01                  625 	jr	00140$
+      000253                        626 00139$:
+      000253 AF                     627 	xor	a, a
+      000254                        628 00140$:
+      000254 B1                     629 	or	a, c
+      000255 4F                     630 	ld	c, a
+                                    631 ;main.c:90: board[i] = tile_data;
+      000256 21 75 01               632 	ld	hl,#0x175
+      000259 39                     633 	add	hl,sp
+      00025A 2A                     634 	ld	a, (hl+)
+      00025B 5F                     635 	ld	e, a
+      00025C 56                     636 	ld	d, (hl)
+      00025D 21 87 01               637 	ld	hl, #391
+      000260 39                     638 	add	hl, sp
+      000261 2A                     639 	ld	a,	(hl+)
+      000262 66                     640 	ld	h, (hl)
+      000263 6F                     641 	ld	l, a
+      000264 19                     642 	add	hl, de
+      000265 5D                     643 	ld	e, l
+      000266 54                     644 	ld	d, h
+      000267 79                     645 	ld	a, c
+      000268 12                     646 	ld	(de), a
+                                    647 ;main.c:83: for (i = 0; i < 360; ++i)
+      000269 21 87 01               648 	ld	hl, #391
+      00026C 39                     649 	add	hl, sp
+      00026D 34                     650 	inc	(hl)
+      00026E 20 02                  651 	jr	NZ, 00352$
+      000270 23                     652 	inc	hl
+      000271 34                     653 	inc	(hl)
+      000272                        654 00352$:
+      000272 21 87 01               655 	ld	hl, #391
+      000275 39                     656 	add	hl, sp
+      000276 2A                     657 	ld	a, (hl+)
+      000277 4F                     658 	ld	c, a
+      000278 46                     659 	ld	b, (hl)
+      000279 79                     660 	ld	a, c
+      00027A D6 68                  661 	sub	a, #0x68
+      00027C 78                     662 	ld	a, b
+      00027D DE 01                  663 	sbc	a, #0x01
+      00027F DArDBr01               664 	jp	C, 00123$
+                                    665 ;main.c:94: set_sprite_data(0, 3, sprites);
+      000282 11r88r01               666 	ld	de, #_sprites
+      000285 D5                     667 	push	de
+      000286 21 00 03               668 	ld	hl, #0x300
+      000289 E5                     669 	push	hl
+      00028A CDr00r00               670 	call	_set_sprite_data
+      00028D E8 04                  671 	add	sp, #4
+                                    672 ;main.c:95: set_bkg_data(0, 2, background_tiles);
+      00028F 11r68r01               673 	ld	de, #_background_tiles
+      000292 D5                     674 	push	de
+      000293 21 00 02               675 	ld	hl, #0x200
+      000296 E5                     676 	push	hl
+      000297 CDr00r00               677 	call	_set_bkg_data
+      00029A E8 04                  678 	add	sp, #4
+                                    679 ;main.c:98: set_bkg_tiles(0, 0, 20, 18, background_map);
+      00029C 11r00r00               680 	ld	de, #_background_map
+      00029F D5                     681 	push	de
+      0002A0 21 14 12               682 	ld	hl, #0x1214
+      0002A3 E5                     683 	push	hl
+      0002A4 AF                     684 	xor	a, a
+      0002A5 0F                     685 	rrca
+      0002A6 F5                     686 	push	af
+      0002A7 CDr00r00               687 	call	_set_bkg_tiles
+      0002AA E8 06                  688 	add	sp, #6
+                                    689 ;main.c:101: update_cursor_sprite(highlight_empty_tile_index);
+      0002AC FAr23r01               690 	ld	a, (#_highlight_empty_tile_index)
+      0002AF F5                     691 	push	af
+      0002B0 33                     692 	inc	sp
+      0002B1 CDr07r01               693 	call	_update_cursor_sprite
+      0002B4 33                     694 	inc	sp
+                                    695 ;main.c:102: update_cursor_position(highlight_tile_position[0], highlight_tile_position[1]);
+      0002B5 21 73 01               696 	ld	hl,#0x173
+      0002B8 39                     697 	add	hl,sp
+      0002B9 2A                     698 	ld	a, (hl+)
+      0002BA 5F                     699 	ld	e, a
+      0002BB 3A                     700 	ld	a, (hl-)
+      0002BC 2B                     701 	dec	hl
+      0002BD 2B                     702 	dec	hl
+      0002BE 57                     703 	ld	d, a
+      0002BF 1A                     704 	ld	a, (de)
+      0002C0 47                     705 	ld	b, a
+      0002C1 2A                     706 	ld	a, (hl+)
+      0002C2 5F                     707 	ld	e, a
+      0002C3 56                     708 	ld	d, (hl)
+      0002C4 1A                     709 	ld	a, (de)
+      0002C5 C5                     710 	push	bc
+      0002C6 33                     711 	inc	sp
+      0002C7 F5                     712 	push	af
+      0002C8 33                     713 	inc	sp
+      0002C9 CDr26r01               714 	call	_update_cursor_position
+      0002CC E1                     715 	pop	hl
+                                    716 ;main.c:104: SHOW_BKG;
+      0002CD F0r00                  717 	ldh	a, (_LCDC_REG + 0)
+      0002CF F6 01                  718 	or	a, #0x01
+      0002D1 E0r00                  719 	ldh	(_LCDC_REG + 0), a
+                                    720 ;main.c:105: SHOW_SPRITES;
+      0002D3 F0r00                  721 	ldh	a, (_LCDC_REG + 0)
+      0002D5 F6 02                  722 	or	a, #0x02
+      0002D7 E0r00                  723 	ldh	(_LCDC_REG + 0), a
+                                    724 ;main.c:106: DISPLAY_ON;
+      0002D9 F0r00                  725 	ldh	a, (_LCDC_REG + 0)
+      0002DB F6 80                  726 	or	a, #0x80
+      0002DD E0r00                  727 	ldh	(_LCDC_REG + 0), a
+                                    728 ;main.c:108: while (1)
+      0002DF                        729 00121$:
+                                    730 ;main.c:110: update_input_state(&input_state, joypad());
+      0002DF CDr00r00               731 	call	_joypad
+      0002E2 7B                     732 	ld	a, e
+      0002E3 21 6F 01               733 	ld	hl, #367
+      0002E6 39                     734 	add	hl, sp
+      0002E7 4E                     735 	ld	c, (hl)
+      0002E8 23                     736 	inc	hl
+      0002E9 46                     737 	ld	b, (hl)
+      0002EA F5                     738 	push	af
+      0002EB 33                     739 	inc	sp
+      0002EC C5                     740 	push	bc
+      0002ED CDr00r00               741 	call	_update_input_state
+      0002F0 E8 03                  742 	add	sp, #3
+                                    743 ;main.c:113: if (was_input_released(&input_state, btn_start))
+      0002F2 21 6F 01               744 	ld	hl, #367
+      0002F5 39                     745 	add	hl, sp
+      0002F6 2A                     746 	ld	a, (hl+)
+      0002F7 4F                     747 	ld	c, a
+      0002F8 46                     748 	ld	b, (hl)
+      0002F9 3E 06                  749 	ld	a, #0x06
+      0002FB F5                     750 	push	af
+      0002FC 33                     751 	inc	sp
+      0002FD C5                     752 	push	bc
+      0002FE CDrD7r00               753 	call	_was_input_released
+      000301 E8 03                  754 	add	sp, #3
+      000303 7B                     755 	ld	a, e
+      000304 B7                     756 	or	a, a
+      000305 28 1E                  757 	jr	Z, 00103$
+                                    758 ;main.c:115: execution_state ^= s_execution_state_active_mask;
+      000307 21r1Ar01               759 	ld	hl, #_s_execution_state_active_mask
+      00030A 4E                     760 	ld	c, (hl)
+      00030B 21 86 01               761 	ld	hl, #390
+      00030E 39                     762 	add	hl, sp
+      00030F 7E                     763 	ld	a, (hl)
+      000310 A9                     764 	xor	a, c
+      000311 77                     765 	ld	(hl), a
+                                    766 ;main.c:117: (execution_state & s_execution_state_active_mask) == s_execution_state_active_mask
+      000312 7E                     767 	ld	a, (hl)
+      000313 A1                     768 	and	a, c
+      000314 91                     769 	sub	a, c
+      000315 20 05                  770 	jr	NZ, 00141$
+                                    771 ;main.c:118: ? empty_tile_index
+      000317 FAr21r01               772 	ld	a, (#_empty_tile_index)
+      00031A 18 03                  773 	jr	00142$
+      00031C                        774 00141$:
+                                    775 ;main.c:119: : highlight_empty_tile_index);
+      00031C FAr23r01               776 	ld	a, (#_highlight_empty_tile_index)
+      00031F                        777 00142$:
+      00031F F5                     778 	push	af
+      000320 33                     779 	inc	sp
+      000321 CDr07r01               780 	call	_update_cursor_sprite
+      000324 33                     781 	inc	sp
+      000325                        782 00103$:
+                                    783 ;main.c:123: if ((execution_state & s_execution_state_active_mask) == s_execution_state_active_mask)
+      000325 21r1Ar01               784 	ld	hl, #_s_execution_state_active_mask
+      000328 4E                     785 	ld	c, (hl)
+      000329 21 86 01               786 	ld	hl, #390
+      00032C 39                     787 	add	hl, sp
+      00032D 7E                     788 	ld	a, (hl)
+      00032E A1                     789 	and	a, c
+      00032F 91                     790 	sub	a, c
+      000330 C2r7Fr06               791 	jp	NZ,00118$
+                                    792 ;main.c:126: for (uint16_t i = 0; i < 360; ++i)
+      000333 01 00 00               793 	ld	bc, #0x0000
+      000336                        794 00126$:
+      000336 59                     795 	ld	e, c
+      000337 50                     796 	ld	d, b
+      000338 7B                     797 	ld	a, e
+      000339 D6 68                  798 	sub	a, #0x68
+      00033B 7A                     799 	ld	a, d
+      00033C DE 01                  800 	sbc	a, #0x01
+      00033E 30 1E                  801 	jr	NC, 00104$
+                                    802 ;main.c:128: uint8_t tile_data = board[i];
+      000340 21 75 01               803 	ld	hl, #373
+      000343 39                     804 	add	hl, sp
+      000344 2A                     805 	ld	a,	(hl+)
+      000345 66                     806 	ld	h, (hl)
+      000346 6F                     807 	ld	l, a
+      000347 09                     808 	add	hl, bc
+      000348 5D                     809 	ld	e, l
+      000349 54                     810 	ld	d, h
+      00034A 1A                     811 	ld	a, (de)
+      00034B 67                     812 	ld	h, a
+                                    813 ;	spillPairReg hl
+                                    814 ;	spillPairReg hl
+                                    815 ;main.c:130: board[i] = (tile_data & ~s_tile_was_alive_mask) | ((tile_data & s_tile_is_alive_mask) << tile_was_alive);
+      00034C FAr1Cr01               816 	ld	a, (_s_tile_was_alive_mask)
+                                    817 ;	spillPairReg hl
+                                    818 ;	spillPairReg hl
+      00034F 2F                     819 	cpl
+      000350 A4                     820 	and	a, h
+      000351 6F                     821 	ld	l, a
+                                    822 ;	spillPairReg hl
+                                    823 ;	spillPairReg hl
+      000352 E5                     824 	push	hl
+      000353 FAr1Br01               825 	ld	a, (#_s_tile_is_alive_mask)
+      000356 E1                     826 	pop	hl
+      000357 A4                     827 	and	a, h
+      000358 87                     828 	add	a, a
+      000359 B5                     829 	or	a, l
+      00035A 12                     830 	ld	(de), a
+                                    831 ;main.c:126: for (uint16_t i = 0; i < 360; ++i)
+      00035B 03                     832 	inc	bc
+      00035C 18 D8                  833 	jr	00126$
+      00035E                        834 00104$:
+                                    835 ;main.c:134: for (uint16_t i = 0; i < 360; ++i)
+      00035E AF                     836 	xor	a, a
+      00035F 21 87 01               837 	ld	hl, #391
+      000362 39                     838 	add	hl, sp
+      000363 22                     839 	ld	(hl+), a
+      000364 77                     840 	ld	(hl), a
+      000365                        841 00129$:
+      000365 21 87 01               842 	ld	hl, #391
+      000368 39                     843 	add	hl, sp
+      000369 7E                     844 	ld	a, (hl)
+      00036A 21 77 01               845 	ld	hl, #375
+      00036D 39                     846 	add	hl, sp
+      00036E 77                     847 	ld	(hl), a
+      00036F 21 88 01               848 	ld	hl, #392
+      000372 39                     849 	add	hl, sp
+      000373 7E                     850 	ld	a, (hl)
+      000374 21 78 01               851 	ld	hl, #376
+      000377 39                     852 	add	hl, sp
+      000378 32                     853 	ld	(hl-), a
+      000379 2A                     854 	ld	a, (hl+)
+      00037A D6 68                  855 	sub	a, #0x68
+      00037C 7E                     856 	ld	a, (hl)
+      00037D DE 01                  857 	sbc	a, #0x01
+      00037F D2rDFr02               858 	jp	NC, 00121$
+                                    859 ;main.c:136: uint8_t tile_data = board[i];
+      000382 21 87 01               860 	ld	hl,#0x187
+      000385 39                     861 	add	hl,sp
+      000386 2A                     862 	ld	a, (hl+)
+      000387 5F                     863 	ld	e, a
+      000388 56                     864 	ld	d, (hl)
+      000389 21 75 01               865 	ld	hl, #373
+      00038C 39                     866 	add	hl, sp
+      00038D 2A                     867 	ld	a,	(hl+)
+      00038E 66                     868 	ld	h, (hl)
+      00038F 6F                     869 	ld	l, a
+      000390 19                     870 	add	hl, de
+      000391 E5                     871 	push	hl
+      000392 7D                     872 	ld	a, l
+      000393 21 7B 01               873 	ld	hl, #379
+      000396 39                     874 	add	hl, sp
+      000397 77                     875 	ld	(hl), a
+      000398 E1                     876 	pop	hl
+      000399 7C                     877 	ld	a, h
+      00039A 21 7A 01               878 	ld	hl, #378
+      00039D 39                     879 	add	hl, sp
+      00039E 32                     880 	ld	(hl-), a
+      00039F 2A                     881 	ld	a, (hl+)
+      0003A0 5F                     882 	ld	e, a
+      0003A1 2A                     883 	ld	a, (hl+)
+      0003A2 57                     884 	ld	d, a
+      0003A3 1A                     885 	ld	a, (de)
+                                    886 ;main.c:137: uint8_t neighbour_count = 0;
+      0003A4 22                     887 	ld	(hl+), a
+      0003A5 36 00                  888 	ld	(hl), #0x00
+                                    889 ;main.c:139: uint8_t is_not_north = (tile_data & s_tile_is_north_row_mask) == 0x00;
+      0003A7 FAr1Dr01               890 	ld	a, (#_s_tile_is_north_row_mask)
+      0003AA 21 7B 01               891 	ld	hl, #379
+      0003AD 39                     892 	add	hl, sp
+      0003AE A6                     893 	and	a,(hl)
+      0003AF 3E 01                  894 	ld	a, #0x01
+      0003B1 28 01                  895 	jr	Z, 00358$
+      0003B3 AF                     896 	xor	a, a
+      0003B4                        897 00358$:
+      0003B4 21 7D 01               898 	ld	hl, #381
+      0003B7 39                     899 	add	hl, sp
+      0003B8 77                     900 	ld	(hl), a
+                                    901 ;main.c:140: uint8_t is_not_east = (tile_data & s_tile_is_east_column_mask) == 0x00;
+      0003B9 FAr20r01               902 	ld	a, (#_s_tile_is_east_column_mask)
+      0003BC 21 7B 01               903 	ld	hl, #379
+      0003BF 39                     904 	add	hl, sp
+      0003C0 A6                     905 	and	a,(hl)
+      0003C1 3E 01                  906 	ld	a, #0x01
+      0003C3 28 01                  907 	jr	Z, 00360$
+      0003C5 AF                     908 	xor	a, a
+      0003C6                        909 00360$:
+      0003C6 21 7E 01               910 	ld	hl, #382
+      0003C9 39                     911 	add	hl, sp
+      0003CA 77                     912 	ld	(hl), a
+                                    913 ;main.c:141: uint8_t is_not_south = (tile_data & s_tile_is_south_row_mask) == 0x00;
+      0003CB FAr1Er01               914 	ld	a, (#_s_tile_is_south_row_mask)
+      0003CE 21 7B 01               915 	ld	hl, #379
+      0003D1 39                     916 	add	hl, sp
+      0003D2 A6                     917 	and	a,(hl)
+      0003D3 3E 01                  918 	ld	a, #0x01
+      0003D5 28 01                  919 	jr	Z, 00362$
+      0003D7 AF                     920 	xor	a, a
+      0003D8                        921 00362$:
+      0003D8 21 7F 01               922 	ld	hl, #383
+      0003DB 39                     923 	add	hl, sp
+      0003DC 77                     924 	ld	(hl), a
+                                    925 ;main.c:142: uint8_t is_not_west = (tile_data & s_tile_is_west_column_mask) == 0x00;
+      0003DD FAr1Fr01               926 	ld	a, (#_s_tile_is_west_column_mask)
+      0003E0 21 7B 01               927 	ld	hl, #379
+      0003E3 39                     928 	add	hl, sp
+      0003E4 A6                     929 	and	a,(hl)
+      0003E5 3E 01                  930 	ld	a, #0x01
+      0003E7 28 01                  931 	jr	Z, 00364$
+      0003E9 AF                     932 	xor	a, a
+      0003EA                        933 00364$:
+      0003EA 21 80 01               934 	ld	hl, #384
+      0003ED 39                     935 	add	hl, sp
+      0003EE 77                     936 	ld	(hl), a
+                                    937 ;main.c:130: board[i] = (tile_data & ~s_tile_was_alive_mask) | ((tile_data & s_tile_is_alive_mask) << tile_was_alive);
+      0003EF FAr1Cr01               938 	ld	a, (#_s_tile_was_alive_mask)
+      0003F2 21 81 01               939 	ld	hl, #385
+      0003F5 39                     940 	add	hl, sp
+      0003F6 77                     941 	ld	(hl), a
+                                    942 ;main.c:145: neighbour_count += is_not_north
+      0003F7 21 7D 01               943 	ld	hl, #381
+      0003FA 39                     944 	add	hl, sp
+      0003FB 7E                     945 	ld	a, (hl)
+      0003FC B7                     946 	or	a, a
+      0003FD 28 3B                  947 	jr	Z, 00143$
+                                    948 ;main.c:146: && (board[i - 20] & s_tile_was_alive_mask) != 0x00;
+      0003FF 21 77 01               949 	ld	hl,#0x177
+      000402 39                     950 	add	hl,sp
+      000403 2A                     951 	ld	a, (hl+)
+      000404 5F                     952 	ld	e, a
+      000405 56                     953 	ld	d, (hl)
+      000406 21 14 00               954 	ld	hl, #0x0014
+      000409 7B                     955 	ld	a, e
+      00040A 95                     956 	sub	a, l
+      00040B 5F                     957 	ld	e, a
+      00040C 7A                     958 	ld	a, d
+      00040D 9C                     959 	sbc	a, h
+      00040E 21 83 01               960 	ld	hl, #387
+      000411 39                     961 	add	hl, sp
+      000412 32                     962 	ld	(hl-), a
+      000413 7B                     963 	ld	a, e
+      000414 22                     964 	ld	(hl+), a
+      000415 2B                     965 	dec	hl
+      000416 2A                     966 	ld	a, (hl+)
+      000417 5F                     967 	ld	e, a
+      000418 56                     968 	ld	d, (hl)
+      000419 21 75 01               969 	ld	hl, #373
+      00041C 39                     970 	add	hl, sp
+      00041D 2A                     971 	ld	a,	(hl+)
+      00041E 66                     972 	ld	h, (hl)
+      00041F 6F                     973 	ld	l, a
+      000420 19                     974 	add	hl, de
+      000421 E5                     975 	push	hl
+      000422 7D                     976 	ld	a, l
+      000423 21 86 01               977 	ld	hl, #390
+      000426 39                     978 	add	hl, sp
+      000427 77                     979 	ld	(hl), a
+      000428 E1                     980 	pop	hl
+      000429 7C                     981 	ld	a, h
+      00042A 21 85 01               982 	ld	hl, #389
+      00042D 39                     983 	add	hl, sp
+      00042E 32                     984 	ld	(hl-), a
+      00042F 2A                     985 	ld	a, (hl+)
+      000430 5F                     986 	ld	e, a
+      000431 56                     987 	ld	d, (hl)
+      000432 1A                     988 	ld	a, (de)
+      000433 21 81 01               989 	ld	hl, #385
+      000436 39                     990 	add	hl, sp
+      000437 A6                     991 	and	a,(hl)
+      000438 20 03                  992 	jr	NZ, 00144$
+      00043A                        993 00143$:
+      00043A AF                     994 	xor	a, a
+      00043B 18 02                  995 	jr	00145$
+      00043D                        996 00144$:
+      00043D 3E 01                  997 	ld	a, #0x01
+      00043F                        998 00145$:
+      00043F 21 7C 01               999 	ld	hl, #380
+      000442 39                    1000 	add	hl, sp
+      000443 4E                    1001 	ld	c, (hl)
+      000444 81                    1002 	add	a, c
+      000445 21 85 01              1003 	ld	hl, #389
+      000448 39                    1004 	add	hl, sp
+      000449 77                    1005 	ld	(hl), a
+                                   1006 ;main.c:149: neighbour_count += is_not_north	&& is_not_east
+      00044A 21 7D 01              1007 	ld	hl, #381
+      00044D 39                    1008 	add	hl, sp
+      00044E 7E                    1009 	ld	a, (hl)
+      00044F B7                    1010 	or	a, a
+      000450 28 28                 1011 	jr	Z, 00146$
+      000452 23                    1012 	inc	hl
+      000453 7E                    1013 	ld	a, (hl)
+      000454 B7                    1014 	or	a, a
+      000455 28 23                 1015 	jr	Z, 00146$
+                                   1016 ;main.c:150: && (board[i - 19] & s_tile_was_alive_mask) != 0x00;
+      000457 21 77 01              1017 	ld	hl,#0x177
+      00045A 39                    1018 	add	hl,sp
+      00045B 2A                    1019 	ld	a, (hl+)
+      00045C 5F                    1020 	ld	e, a
+      00045D 56                    1021 	ld	d, (hl)
+      00045E 21 13 00              1022 	ld	hl, #0x0013
+      000461 7B                    1023 	ld	a, e
+      000462 95                    1024 	sub	a, l
+      000463 5F                    1025 	ld	e, a
+      000464 7A                    1026 	ld	a, d
+      000465 9C                    1027 	sbc	a, h
+      000466 47                    1028 	ld	b, a
+      000467 4B                    1029 	ld	c, e
+      000468 21 75 01              1030 	ld	hl, #373
+      00046B 39                    1031 	add	hl, sp
+      00046C 2A                    1032 	ld	a,	(hl+)
+      00046D 66                    1033 	ld	h, (hl)
+      00046E 6F                    1034 	ld	l, a
+      00046F 09                    1035 	add	hl, bc
+      000470 4D                    1036 	ld	c, l
+      000471 44                    1037 	ld	b, h
+      000472 0A                    1038 	ld	a, (bc)
+      000473 21 81 01              1039 	ld	hl, #385
+      000476 39                    1040 	add	hl, sp
+      000477 A6                    1041 	and	a,(hl)
+      000478 20 03                 1042 	jr	NZ, 00147$
+      00047A                       1043 00146$:
+      00047A AF                    1044 	xor	a, a
+      00047B 18 02                 1045 	jr	00148$
+      00047D                       1046 00147$:
+      00047D 3E 01                 1047 	ld	a, #0x01
+      00047F                       1048 00148$:
+      00047F 21 85 01              1049 	ld	hl, #389
+      000482 39                    1050 	add	hl, sp
+      000483 4E                    1051 	ld	c, (hl)
+      000484 81                    1052 	add	a, c
+      000485 4F                    1053 	ld	c, a
+                                   1054 ;main.c:153: neighbour_count += is_not_east
+      000486 21 7E 01              1055 	ld	hl, #382
+      000489 39                    1056 	add	hl, sp
+      00048A 7E                    1057 	ld	a, (hl)
+      00048B B7                    1058 	or	a, a
+      00048C 28 1A                 1059 	jr	Z, 00152$
+                                   1060 ;main.c:154: && (board[i + 1] & s_tile_was_alive_mask) != 0x00;
+      00048E 21 77 01              1061 	ld	hl, #375
+      000491 39                    1062 	add	hl, sp
+      000492 2A                    1063 	ld	a, (hl+)
+      000493 5F                    1064 	ld	e, a
+      000494 56                    1065 	ld	d, (hl)
+      000495 13                    1066 	inc	de
+      000496 21 75 01              1067 	ld	hl, #373
+      000499 39                    1068 	add	hl, sp
+      00049A 2A                    1069 	ld	a,	(hl+)
+      00049B 66                    1070 	ld	h, (hl)
+      00049C 6F                    1071 	ld	l, a
+      00049D 19                    1072 	add	hl, de
+      00049E 5D                    1073 	ld	e, l
+      00049F 54                    1074 	ld	d, h
+      0004A0 1A                    1075 	ld	a, (de)
+      0004A1 21 81 01              1076 	ld	hl, #385
+      0004A4 39                    1077 	add	hl, sp
+      0004A5 A6                    1078 	and	a,(hl)
+      0004A6 20 03                 1079 	jr	NZ, 00153$
+      0004A8                       1080 00152$:
+      0004A8 AF                    1081 	xor	a, a
+      0004A9 18 02                 1082 	jr	00154$
+      0004AB                       1083 00153$:
+      0004AB 3E 01                 1084 	ld	a, #0x01
+      0004AD                       1085 00154$:
+      0004AD 81                    1086 	add	a, c
+      0004AE 4F                    1087 	ld	c, a
+                                   1088 ;main.c:157: neighbour_count += is_not_south && is_not_east
+      0004AF 21 7F 01              1089 	ld	hl, #383
+      0004B2 39                    1090 	add	hl, sp
+      0004B3 7E                    1091 	ld	a, (hl)
+      0004B4 B7                    1092 	or	a, a
+      0004B5 28 24                 1093 	jr	Z, 00155$
+      0004B7 2B                    1094 	dec	hl
+      0004B8 7E                    1095 	ld	a, (hl)
+      0004B9 B7                    1096 	or	a, a
+      0004BA 28 1F                 1097 	jr	Z, 00155$
+                                   1098 ;main.c:158: && (board[i + 21] & s_tile_was_alive_mask) != 0x00;
+      0004BC 21 77 01              1099 	ld	hl,#0x177
+      0004BF 39                    1100 	add	hl,sp
+      0004C0 2A                    1101 	ld	a, (hl+)
+      0004C1 5F                    1102 	ld	e, a
+      0004C2 56                    1103 	ld	d, (hl)
+      0004C3 21 15 00              1104 	ld	hl, #0x0015
+      0004C6 19                    1105 	add	hl, de
+      0004C7 5D                    1106 	ld	e, l
+      0004C8 54                    1107 	ld	d, h
+      0004C9 21 75 01              1108 	ld	hl, #373
+      0004CC 39                    1109 	add	hl, sp
+      0004CD 2A                    1110 	ld	a,	(hl+)
+      0004CE 66                    1111 	ld	h, (hl)
+      0004CF 6F                    1112 	ld	l, a
+      0004D0 19                    1113 	add	hl, de
+      0004D1 5D                    1114 	ld	e, l
+      0004D2 54                    1115 	ld	d, h
+      0004D3 1A                    1116 	ld	a, (de)
+      0004D4 21 81 01              1117 	ld	hl, #385
+      0004D7 39                    1118 	add	hl, sp
+      0004D8 A6                    1119 	and	a,(hl)
+      0004D9 20 03                 1120 	jr	NZ, 00156$
+      0004DB                       1121 00155$:
+      0004DB AF                    1122 	xor	a, a
+      0004DC 18 02                 1123 	jr	00157$
+      0004DE                       1124 00156$:
+      0004DE 3E 01                 1125 	ld	a, #0x01
+      0004E0                       1126 00157$:
+      0004E0 81                    1127 	add	a, c
+      0004E1 4F                    1128 	ld	c, a
+                                   1129 ;main.c:161: neighbour_count += is_not_south
+      0004E2 21 7F 01              1130 	ld	hl, #383
+      0004E5 39                    1131 	add	hl, sp
+      0004E6 7E                    1132 	ld	a, (hl)
+      0004E7 B7                    1133 	or	a, a
+      0004E8 28 1F                 1134 	jr	Z, 00161$
+                                   1135 ;main.c:162: && (board[i + 20] & s_tile_was_alive_mask) != 0x00;
+      0004EA 21 77 01              1136 	ld	hl,#0x177
+      0004ED 39                    1137 	add	hl,sp
+      0004EE 2A                    1138 	ld	a, (hl+)
+      0004EF 5F                    1139 	ld	e, a
+      0004F0 56                    1140 	ld	d, (hl)
+      0004F1 21 14 00              1141 	ld	hl, #0x0014
+      0004F4 19                    1142 	add	hl, de
+      0004F5 5D                    1143 	ld	e, l
+      0004F6 54                    1144 	ld	d, h
+      0004F7 21 75 01              1145 	ld	hl, #373
+      0004FA 39                    1146 	add	hl, sp
+      0004FB 2A                    1147 	ld	a,	(hl+)
+      0004FC 66                    1148 	ld	h, (hl)
+      0004FD 6F                    1149 	ld	l, a
+      0004FE 19                    1150 	add	hl, de
+      0004FF 5D                    1151 	ld	e, l
+      000500 54                    1152 	ld	d, h
+      000501 1A                    1153 	ld	a, (de)
+      000502 21 81 01              1154 	ld	hl, #385
+      000505 39                    1155 	add	hl, sp
+      000506 A6                    1156 	and	a,(hl)
+      000507 20 03                 1157 	jr	NZ, 00162$
+      000509                       1158 00161$:
+      000509 AF                    1159 	xor	a, a
+      00050A 18 02                 1160 	jr	00163$
+      00050C                       1161 00162$:
+      00050C 3E 01                 1162 	ld	a, #0x01
+      00050E                       1163 00163$:
+      00050E 81                    1164 	add	a, c
+      00050F 4F                    1165 	ld	c, a
+                                   1166 ;main.c:165: neighbour_count += is_not_south && is_not_west
+      000510 21 7F 01              1167 	ld	hl, #383
+      000513 39                    1168 	add	hl, sp
+      000514 7E                    1169 	ld	a, (hl)
+      000515 B7                    1170 	or	a, a
+      000516 28 24                 1171 	jr	Z, 00164$
+      000518 23                    1172 	inc	hl
+      000519 7E                    1173 	ld	a, (hl)
+      00051A B7                    1174 	or	a, a
+      00051B 28 1F                 1175 	jr	Z, 00164$
+                                   1176 ;main.c:166: && (board[i + 19] & s_tile_was_alive_mask) != 0x00;
+      00051D 21 77 01              1177 	ld	hl,#0x177
+      000520 39                    1178 	add	hl,sp
+      000521 2A                    1179 	ld	a, (hl+)
+      000522 5F                    1180 	ld	e, a
+      000523 56                    1181 	ld	d, (hl)
+      000524 21 13 00              1182 	ld	hl, #0x0013
+      000527 19                    1183 	add	hl, de
+      000528 5D                    1184 	ld	e, l
+      000529 54                    1185 	ld	d, h
+      00052A 21 75 01              1186 	ld	hl, #373
+      00052D 39                    1187 	add	hl, sp
+      00052E 2A                    1188 	ld	a,	(hl+)
+      00052F 66                    1189 	ld	h, (hl)
+      000530 6F                    1190 	ld	l, a
+      000531 19                    1191 	add	hl, de
+      000532 5D                    1192 	ld	e, l
+      000533 54                    1193 	ld	d, h
+      000534 1A                    1194 	ld	a, (de)
+      000535 21 81 01              1195 	ld	hl, #385
+      000538 39                    1196 	add	hl, sp
+      000539 A6                    1197 	and	a,(hl)
+      00053A 20 03                 1198 	jr	NZ, 00165$
+      00053C                       1199 00164$:
+      00053C AF                    1200 	xor	a, a
+      00053D 18 02                 1201 	jr	00166$
+      00053F                       1202 00165$:
+      00053F 3E 01                 1203 	ld	a, #0x01
+      000541                       1204 00166$:
+      000541 81                    1205 	add	a, c
+      000542 21 7F 01              1206 	ld	hl, #383
+      000545 39                    1207 	add	hl, sp
+                                   1208 ;main.c:169: neighbour_count += is_not_west
+      000546 22                    1209 	ld	(hl+), a
+      000547 7E                    1210 	ld	a, (hl)
+      000548 B7                    1211 	or	a, a
+      000549 28 3B                 1212 	jr	Z, 00170$
+                                   1213 ;main.c:170: && (board[i - 1] & s_tile_was_alive_mask) != 0x00;
+      00054B 21 77 01              1214 	ld	hl,#0x177
+      00054E 39                    1215 	add	hl,sp
+      00054F 2A                    1216 	ld	a, (hl+)
+      000550 5F                    1217 	ld	e, a
+      000551 56                    1218 	ld	d, (hl)
+      000552 21 01 00              1219 	ld	hl, #0x0001
+      000555 7B                    1220 	ld	a, e
+      000556 95                    1221 	sub	a, l
+      000557 5F                    1222 	ld	e, a
+      000558 7A                    1223 	ld	a, d
+      000559 9C                    1224 	sbc	a, h
+      00055A 21 83 01              1225 	ld	hl, #387
+      00055D 39                    1226 	add	hl, sp
+      00055E 32                    1227 	ld	(hl-), a
+      00055F 7B                    1228 	ld	a, e
+      000560 22                    1229 	ld	(hl+), a
+      000561 2B                    1230 	dec	hl
+      000562 2A                    1231 	ld	a, (hl+)
+      000563 5F                    1232 	ld	e, a
+      000564 56                    1233 	ld	d, (hl)
+      000565 21 75 01              1234 	ld	hl, #373
+      000568 39                    1235 	add	hl, sp
+      000569 2A                    1236 	ld	a,	(hl+)
+      00056A 66                    1237 	ld	h, (hl)
+      00056B 6F                    1238 	ld	l, a
+      00056C 19                    1239 	add	hl, de
+      00056D E5                    1240 	push	hl
+      00056E 7D                    1241 	ld	a, l
+      00056F 21 86 01              1242 	ld	hl, #390
+      000572 39                    1243 	add	hl, sp
+      000573 77                    1244 	ld	(hl), a
+      000574 E1                    1245 	pop	hl
+      000575 7C                    1246 	ld	a, h
+      000576 21 85 01              1247 	ld	hl, #389
+      000579 39                    1248 	add	hl, sp
+      00057A 32                    1249 	ld	(hl-), a
+      00057B 2A                    1250 	ld	a, (hl+)
+      00057C 5F                    1251 	ld	e, a
+      00057D 56                    1252 	ld	d, (hl)
+      00057E 1A                    1253 	ld	a, (de)
+      00057F 21 81 01              1254 	ld	hl, #385
+      000582 39                    1255 	add	hl, sp
+      000583 A6                    1256 	and	a,(hl)
+      000584 20 03                 1257 	jr	NZ, 00171$
+      000586                       1258 00170$:
+      000586 AF                    1259 	xor	a, a
+      000587 18 02                 1260 	jr	00172$
+      000589                       1261 00171$:
+      000589 3E 01                 1262 	ld	a, #0x01
+      00058B                       1263 00172$:
+      00058B 21 7F 01              1264 	ld	hl, #383
+      00058E 39                    1265 	add	hl, sp
+      00058F 4E                    1266 	ld	c, (hl)
+      000590 81                    1267 	add	a, c
+      000591 21 85 01              1268 	ld	hl, #389
+      000594 39                    1269 	add	hl, sp
+      000595 77                    1270 	ld	(hl), a
+                                   1271 ;main.c:173: neighbour_count += is_not_north && is_not_west
+      000596 21 7D 01              1272 	ld	hl, #381
+      000599 39                    1273 	add	hl, sp
+      00059A 7E                    1274 	ld	a, (hl)
+      00059B B7                    1275 	or	a, a
+      00059C 28 4B                 1276 	jr	Z, 00173$
+      00059E 21 80 01              1277 	ld	hl, #384
+      0005A1 39                    1278 	add	hl, sp
+      0005A2 7E                    1279 	ld	a, (hl)
+      0005A3 B7                    1280 	or	a, a
+      0005A4 28 43                 1281 	jr	Z, 00173$
+                                   1282 ;main.c:174: && (board[i - 21] & s_tile_was_alive_mask) != 0x00;
+      0005A6 21 77 01              1283 	ld	hl,#0x177
+      0005A9 39                    1284 	add	hl,sp
+      0005AA 2A                    1285 	ld	a, (hl+)
+      0005AB 5F                    1286 	ld	e, a
+      0005AC 56                    1287 	ld	d, (hl)
+      0005AD 21 15 00              1288 	ld	hl, #0x0015
+      0005B0 7B                    1289 	ld	a, e
+      0005B1 95                    1290 	sub	a, l
+      0005B2 5F                    1291 	ld	e, a
+      0005B3 7A                    1292 	ld	a, d
+      0005B4 9C                    1293 	sbc	a, h
+      0005B5 21 84 01              1294 	ld	hl, #388
+      0005B8 39                    1295 	add	hl, sp
+      0005B9 32                    1296 	ld	(hl-), a
+      0005BA 73                    1297 	ld	(hl), e
+      0005BB 21 75 01              1298 	ld	hl,#0x175
+      0005BE 39                    1299 	add	hl,sp
+      0005BF 2A                    1300 	ld	a, (hl+)
+      0005C0 5F                    1301 	ld	e, a
+      0005C1 56                    1302 	ld	d, (hl)
+      0005C2 21 83 01              1303 	ld	hl, #387
+      0005C5 39                    1304 	add	hl, sp
+      0005C6 2A                    1305 	ld	a,	(hl+)
+      0005C7 66                    1306 	ld	h, (hl)
+      0005C8 6F                    1307 	ld	l, a
+      0005C9 19                    1308 	add	hl, de
+      0005CA E5                    1309 	push	hl
+      0005CB 7D                    1310 	ld	a, l
+      0005CC 21 81 01              1311 	ld	hl, #385
+      0005CF 39                    1312 	add	hl, sp
+      0005D0 77                    1313 	ld	(hl), a
+      0005D1 E1                    1314 	pop	hl
+      0005D2 7C                    1315 	ld	a, h
+      0005D3 21 80 01              1316 	ld	hl, #384
+      0005D6 39                    1317 	add	hl, sp
+      0005D7 32                    1318 	ld	(hl-), a
+      0005D8 2A                    1319 	ld	a, (hl+)
+      0005D9 5F                    1320 	ld	e, a
+      0005DA 56                    1321 	ld	d, (hl)
+      0005DB 1A                    1322 	ld	a, (de)
+      0005DC 21 84 01              1323 	ld	hl, #388
+      0005DF 39                    1324 	add	hl, sp
+      0005E0 77                    1325 	ld	(hl), a
+      0005E1 7E                    1326 	ld	a, (hl)
+      0005E2 21 81 01              1327 	ld	hl, #385
+      0005E5 39                    1328 	add	hl, sp
+      0005E6 A6                    1329 	and	a,(hl)
+      0005E7 20 08                 1330 	jr	NZ, 00174$
+      0005E9                       1331 00173$:
+      0005E9 21 84 01              1332 	ld	hl, #388
+      0005EC 39                    1333 	add	hl, sp
+      0005ED 36 00                 1334 	ld	(hl), #0x00
+      0005EF 18 06                 1335 	jr	00175$
+      0005F1                       1336 00174$:
+      0005F1 21 84 01              1337 	ld	hl, #388
+      0005F4 39                    1338 	add	hl, sp
+      0005F5 36 01                 1339 	ld	(hl), #0x01
+      0005F7                       1340 00175$:
+      0005F7 21 84 01              1341 	ld	hl, #388
+      0005FA 39                    1342 	add	hl, sp
+      0005FB 2A                    1343 	ld	a, (hl+)
+      0005FC 4E                    1344 	ld	c, (hl)
+      0005FD 81                    1345 	add	a, c
+      0005FE 21 82 01              1346 	ld	hl, #386
+      000601 39                    1347 	add	hl, sp
+      000602 77                    1348 	ld	(hl), a
+                                   1349 ;main.c:177: uint8_t is_alive = (tile_data & s_tile_is_alive_mask) != 0x00;
+      000603 FAr1Br01              1350 	ld	a, (#_s_tile_is_alive_mask)
+      000606 21 85 01              1351 	ld	hl, #389
+      000609 39                    1352 	add	hl, sp
+      00060A 77                    1353 	ld	(hl), a
+      00060B 21 7B 01              1354 	ld	hl, #379
+      00060E 39                    1355 	add	hl, sp
+      00060F 7E                    1356 	ld	a, (hl)
+      000610 21 85 01              1357 	ld	hl, #389
+      000613 39                    1358 	add	hl, sp
+      000614 A6                    1359 	and	a, (hl)
+      000615 2B                    1360 	dec	hl
+      000616 D6 01                 1361 	sub	a, #0x01
+      000618 3E 00                 1362 	ld	a, #0x00
+      00061A 17                    1363 	rla
+      00061B EE 01                 1364 	xor	a, #0x01
+      00061D 77                    1365 	ld	(hl), a
+                                   1366 ;main.c:178: uint8_t come_to_life = !is_alive && neighbour_count == 3;
+      00061E 7E                    1367 	ld	a, (hl)
+      00061F B7                    1368 	or	a, a
+      000620 20 07                 1369 	jr	NZ, 00179$
+      000622 2B                    1370 	dec	hl
+      000623 2B                    1371 	dec	hl
+      000624 7E                    1372 	ld	a, (hl)
+      000625 D6 03                 1373 	sub	a, #0x03
+      000627 28 03                 1374 	jr	Z, 00180$
+      000629                       1375 00179$:
+      000629 AF                    1376 	xor	a, a
+      00062A 18 02                 1377 	jr	00181$
+      00062C                       1378 00180$:
+      00062C 3E 01                 1379 	ld	a, #0x01
+      00062E                       1380 00181$:
+      00062E 21 83 01              1381 	ld	hl, #387
+      000631 39                    1382 	add	hl, sp
+                                   1383 ;main.c:183: uint8_t remain_alive = is_alive && neighbour_count >= 2 && neighbour_count <= 3;
+      000632 22                    1384 	ld	(hl+), a
+      000633 7E                    1385 	ld	a, (hl)
+      000634 B7                    1386 	or	a, a
+      000635 28 0C                 1387 	jr	Z, 00182$
+      000637 2B                    1388 	dec	hl
+      000638 2B                    1389 	dec	hl
+      000639 7E                    1390 	ld	a, (hl)
+      00063A D6 02                 1391 	sub	a, #0x02
+      00063C 38 05                 1392 	jr	C, 00182$
+      00063E 3E 03                 1393 	ld	a, #0x03
+      000640 96                    1394 	sub	a, (hl)
+      000641 30 08                 1395 	jr	NC, 00183$
+      000643                       1396 00182$:
+      000643 21 84 01              1397 	ld	hl, #388
+      000646 39                    1398 	add	hl, sp
+      000647 36 00                 1399 	ld	(hl), #0x00
+      000649 18 06                 1400 	jr	00184$
+      00064B                       1401 00183$:
+      00064B 21 84 01              1402 	ld	hl, #388
+      00064E 39                    1403 	add	hl, sp
+      00064F 36 01                 1404 	ld	(hl), #0x01
+      000651                       1405 00184$:
+                                   1406 ;main.c:186: board[i] = (tile_data & ~s_tile_is_alive_mask)
+      000651 21 85 01              1407 	ld	hl, #389
+      000654 39                    1408 	add	hl, sp
+      000655 7E                    1409 	ld	a, (hl)
+      000656 2F                    1410 	cpl
+      000657 77                    1411 	ld	(hl), a
+      000658 7E                    1412 	ld	a, (hl)
+      000659 21 7B 01              1413 	ld	hl, #379
+      00065C 39                    1414 	add	hl, sp
+      00065D A6                    1415 	and	a, (hl)
+      00065E 21 85 01              1416 	ld	hl, #389
+      000661 39                    1417 	add	hl, sp
+                                   1418 ;main.c:187: | ((come_to_life | remain_alive) << tile_is_alive);
+      000662 32                    1419 	ld	(hl-), a
+      000663 3A                    1420 	ld	a, (hl-)
+      000664 B6                    1421 	or	a, (hl)
+      000665 23                    1422 	inc	hl
+      000666 77                    1423 	ld	(hl), a
+      000667 2A                    1424 	ld	a, (hl+)
+      000668 B6                    1425 	or	a, (hl)
+      000669 4F                    1426 	ld	c, a
+      00066A 21 79 01              1427 	ld	hl, #377
+      00066D 39                    1428 	add	hl, sp
+      00066E 2A                    1429 	ld	a,	(hl+)
+      00066F 66                    1430 	ld	h, (hl)
+      000670 6F                    1431 	ld	l, a
+      000671 71                    1432 	ld	(hl), c
+                                   1433 ;main.c:134: for (uint16_t i = 0; i < 360; ++i)
+      000672 21 87 01              1434 	ld	hl, #391
+      000675 39                    1435 	add	hl, sp
+      000676 34                    1436 	inc	(hl)
+      000677 C2r65r03              1437 	jp	NZ,00129$
+      00067A 23                    1438 	inc	hl
+      00067B 34                    1439 	inc	(hl)
+      00067C C3r65r03              1440 	jp	00129$
+      00067F                       1441 00118$:
+                                   1442 ;main.c:195: if (was_input_depressed(&input_state, btn_up))
+      00067F 21 6F 01              1443 	ld	hl, #367
+      000682 39                    1444 	add	hl, sp
+      000683 2A                    1445 	ld	a, (hl+)
+      000684 4F                    1446 	ld	c, a
+      000685 46                    1447 	ld	b, (hl)
+      000686 3E 02                 1448 	ld	a, #0x02
+      000688 F5                    1449 	push	af
+      000689 33                    1450 	inc	sp
+      00068A C5                    1451 	push	bc
+      00068B CDrBFr00              1452 	call	_was_input_depressed
+      00068E E8 03                 1453 	add	sp, #3
+      000690 7B                    1454 	ld	a, e
+      000691 B7                    1455 	or	a, a
+      000692 28 10                 1456 	jr	Z, 00115$
+                                   1457 ;main.c:197: highlight_tile_position[1] -= 1;
+      000694 21 73 01              1458 	ld	hl,#0x173
+      000697 39                    1459 	add	hl,sp
+      000698 2A                    1460 	ld	a, (hl+)
+      000699 5F                    1461 	ld	e, a
+      00069A 56                    1462 	ld	d, (hl)
+      00069B 1A                    1463 	ld	a, (de)
+      00069C 4F                    1464 	ld	c, a
+      00069D 0D                    1465 	dec	c
+      00069E 3A                    1466 	ld	a, (hl-)
+      00069F 6E                    1467 	ld	l, (hl)
+      0006A0 67                    1468 	ld	h, a
+      0006A1 71                    1469 	ld	(hl), c
+      0006A2 18 6D                 1470 	jr	00116$
+      0006A4                       1471 00115$:
+                                   1472 ;main.c:199: else if (was_input_depressed(&input_state, btn_down))
+      0006A4 21 6F 01              1473 	ld	hl, #367
+      0006A7 39                    1474 	add	hl, sp
+      0006A8 2A                    1475 	ld	a, (hl+)
+      0006A9 4F                    1476 	ld	c, a
+      0006AA 46                    1477 	ld	b, (hl)
+      0006AB 3E 03                 1478 	ld	a, #0x03
+      0006AD F5                    1479 	push	af
+      0006AE 33                    1480 	inc	sp
+      0006AF C5                    1481 	push	bc
+      0006B0 CDrBFr00              1482 	call	_was_input_depressed
+      0006B3 E8 03                 1483 	add	sp, #3
+      0006B5 7B                    1484 	ld	a, e
+      0006B6 B7                    1485 	or	a, a
+      0006B7 28 10                 1486 	jr	Z, 00112$
+                                   1487 ;main.c:201: highlight_tile_position[1] += 1;
+      0006B9 21 73 01              1488 	ld	hl,#0x173
+      0006BC 39                    1489 	add	hl,sp
+      0006BD 2A                    1490 	ld	a, (hl+)
+      0006BE 5F                    1491 	ld	e, a
+      0006BF 56                    1492 	ld	d, (hl)
+      0006C0 1A                    1493 	ld	a, (de)
+      0006C1 4F                    1494 	ld	c, a
+      0006C2 0C                    1495 	inc	c
+      0006C3 3A                    1496 	ld	a, (hl-)
+      0006C4 6E                    1497 	ld	l, (hl)
+      0006C5 67                    1498 	ld	h, a
+      0006C6 71                    1499 	ld	(hl), c
+      0006C7 18 48                 1500 	jr	00116$
+      0006C9                       1501 00112$:
+                                   1502 ;main.c:203: else if (was_input_depressed(&input_state, btn_left))
+      0006C9 21 6F 01              1503 	ld	hl, #367
+      0006CC 39                    1504 	add	hl, sp
+      0006CD 2A                    1505 	ld	a, (hl+)
+      0006CE 4F                    1506 	ld	c, a
+      0006CF 46                    1507 	ld	b, (hl)
+      0006D0 3E 04                 1508 	ld	a, #0x04
+      0006D2 F5                    1509 	push	af
+      0006D3 33                    1510 	inc	sp
+      0006D4 C5                    1511 	push	bc
+      0006D5 CDrBFr00              1512 	call	_was_input_depressed
+      0006D8 E8 03                 1513 	add	sp, #3
+      0006DA 7B                    1514 	ld	a, e
+      0006DB B7                    1515 	or	a, a
+      0006DC 28 10                 1516 	jr	Z, 00109$
+                                   1517 ;main.c:205: highlight_tile_position[0] -= 1;
+      0006DE 21 71 01              1518 	ld	hl,#0x171
+      0006E1 39                    1519 	add	hl,sp
+      0006E2 2A                    1520 	ld	a, (hl+)
+      0006E3 5F                    1521 	ld	e, a
+      0006E4 56                    1522 	ld	d, (hl)
+      0006E5 1A                    1523 	ld	a, (de)
+      0006E6 4F                    1524 	ld	c, a
+      0006E7 0D                    1525 	dec	c
+      0006E8 3A                    1526 	ld	a, (hl-)
+      0006E9 6E                    1527 	ld	l, (hl)
+      0006EA 67                    1528 	ld	h, a
+      0006EB 71                    1529 	ld	(hl), c
+      0006EC 18 23                 1530 	jr	00116$
+      0006EE                       1531 00109$:
+                                   1532 ;main.c:207: else if (was_input_depressed(&input_state, btn_right))
+      0006EE 21 6F 01              1533 	ld	hl, #367
+      0006F1 39                    1534 	add	hl, sp
+      0006F2 2A                    1535 	ld	a, (hl+)
+      0006F3 4F                    1536 	ld	c, a
+      0006F4 46                    1537 	ld	b, (hl)
+      0006F5 3E 05                 1538 	ld	a, #0x05
+      0006F7 F5                    1539 	push	af
+      0006F8 33                    1540 	inc	sp
+      0006F9 C5                    1541 	push	bc
+      0006FA CDrBFr00              1542 	call	_was_input_depressed
+      0006FD E8 03                 1543 	add	sp, #3
+      0006FF 7B                    1544 	ld	a, e
+      000700 B7                    1545 	or	a, a
+      000701 28 0E                 1546 	jr	Z, 00116$
+                                   1547 ;main.c:209: highlight_tile_position[0] += 1;
+      000703 21 71 01              1548 	ld	hl,#0x171
+      000706 39                    1549 	add	hl,sp
+      000707 2A                    1550 	ld	a, (hl+)
+      000708 5F                    1551 	ld	e, a
+      000709 56                    1552 	ld	d, (hl)
+      00070A 1A                    1553 	ld	a, (de)
+      00070B 4F                    1554 	ld	c, a
+      00070C 0C                    1555 	inc	c
+      00070D 3A                    1556 	ld	a, (hl-)
+      00070E 6E                    1557 	ld	l, (hl)
+      00070F 67                    1558 	ld	h, a
+      000710 71                    1559 	ld	(hl), c
+      000711                       1560 00116$:
+                                   1561 ;main.c:212: update_cursor_position(highlight_tile_position[0], highlight_tile_position[1]);
+      000711 21 73 01              1562 	ld	hl,#0x173
+      000714 39                    1563 	add	hl,sp
+      000715 2A                    1564 	ld	a, (hl+)
+      000716 5F                    1565 	ld	e, a
+      000717 3A                    1566 	ld	a, (hl-)
+      000718 2B                    1567 	dec	hl
+      000719 2B                    1568 	dec	hl
+      00071A 57                    1569 	ld	d, a
+      00071B 1A                    1570 	ld	a, (de)
+      00071C 47                    1571 	ld	b, a
+      00071D 2A                    1572 	ld	a, (hl+)
+      00071E 5F                    1573 	ld	e, a
+      00071F 56                    1574 	ld	d, (hl)
+      000720 1A                    1575 	ld	a, (de)
+      000721 C5                    1576 	push	bc
+      000722 33                    1577 	inc	sp
+      000723 F5                    1578 	push	af
+      000724 33                    1579 	inc	sp
+      000725 CDr26r01              1580 	call	_update_cursor_position
+      000728 E1                    1581 	pop	hl
+      000729 C3rDFr02              1582 	jp	00121$
+                                   1583 ;main.c:215: }
+      00072C 21 89 01              1584 	ld	hl, #393
+      00072F 39                    1585 	add	hl, sp
+      000730 F9                    1586 	ld	sp, hl
+      000731 C9                    1587 	ret
+                                   1588 	.area _CODE
+                                   1589 	.area _INITIALIZER
+      000000                       1590 __xinit__background_map:
+      000000 00                    1591 	.db #0x00	; 0
+      000001 00                    1592 	.db #0x00	; 0
+      000002 00                    1593 	.db #0x00	; 0
+      000003 00                    1594 	.db #0x00	; 0
+      000004 00                    1595 	.db #0x00	; 0
+      000005 00                    1596 	.db #0x00	; 0
+      000006 00                    1597 	.db #0x00	; 0
+      000007 00                    1598 	.db #0x00	; 0
+      000008 00                    1599 	.db #0x00	; 0
+      000009 00                    1600 	.db #0x00	; 0
+      00000A 00                    1601 	.db #0x00	; 0
+      00000B 00                    1602 	.db #0x00	; 0
+      00000C 00                    1603 	.db #0x00	; 0
+      00000D 00                    1604 	.db #0x00	; 0
+      00000E 00                    1605 	.db #0x00	; 0
+      00000F 00                    1606 	.db #0x00	; 0
+      000010 00                    1607 	.db #0x00	; 0
+      000011 00                    1608 	.db #0x00	; 0
+      000012 00                    1609 	.db #0x00	; 0
+      000013 00                    1610 	.db #0x00	; 0
+      000014 00                    1611 	.db #0x00	; 0
+      000015 00                    1612 	.db #0x00	; 0
+      000016 00                    1613 	.db #0x00	; 0
+      000017 00                    1614 	.db #0x00	; 0
+      000018 00                    1615 	.db #0x00	; 0
+      000019 00                    1616 	.db #0x00	; 0
+      00001A 00                    1617 	.db #0x00	; 0
+      00001B 00                    1618 	.db #0x00	; 0
+      00001C 00                    1619 	.db #0x00	; 0
+      00001D 00                    1620 	.db #0x00	; 0
+      00001E 00                    1621 	.db #0x00	; 0
+      00001F 00                    1622 	.db #0x00	; 0
+      000020 00                    1623 	.db #0x00	; 0
+      000021 00                    1624 	.db #0x00	; 0
+      000022 00                    1625 	.db #0x00	; 0
+      000023 00                    1626 	.db #0x00	; 0
+      000024 00                    1627 	.db #0x00	; 0
+      000025 00                    1628 	.db #0x00	; 0
+      000026 00                    1629 	.db #0x00	; 0
+      000027 00                    1630 	.db #0x00	; 0
+      000028 00                    1631 	.db #0x00	; 0
+      000029 00                    1632 	.db #0x00	; 0
+      00002A 00                    1633 	.db #0x00	; 0
+      00002B 00                    1634 	.db #0x00	; 0
+      00002C 00                    1635 	.db #0x00	; 0
+      00002D 00                    1636 	.db #0x00	; 0
+      00002E 00                    1637 	.db #0x00	; 0
+      00002F 00                    1638 	.db #0x00	; 0
+      000030 00                    1639 	.db #0x00	; 0
+      000031 00                    1640 	.db #0x00	; 0
+      000032 00                    1641 	.db #0x00	; 0
+      000033 00                    1642 	.db #0x00	; 0
+      000034 00                    1643 	.db #0x00	; 0
+      000035 00                    1644 	.db #0x00	; 0
+      000036 00                    1645 	.db #0x00	; 0
+      000037 00                    1646 	.db #0x00	; 0
+      000038 00                    1647 	.db #0x00	; 0
+      000039 00                    1648 	.db #0x00	; 0
+      00003A 00                    1649 	.db #0x00	; 0
+      00003B 00                    1650 	.db #0x00	; 0
+      00003C 00                    1651 	.db #0x00	; 0
+      00003D 00                    1652 	.db #0x00	; 0
+      00003E 00                    1653 	.db #0x00	; 0
+      00003F 00                    1654 	.db #0x00	; 0
+      000040 00                    1655 	.db #0x00	; 0
+      000041 00                    1656 	.db #0x00	; 0
+      000042 00                    1657 	.db #0x00	; 0
+      000043 00                    1658 	.db #0x00	; 0
+      000044 00                    1659 	.db #0x00	; 0
+      000045 00                    1660 	.db #0x00	; 0
+      000046 00                    1661 	.db #0x00	; 0
+      000047 00                    1662 	.db #0x00	; 0
+      000048 00                    1663 	.db #0x00	; 0
+      000049 00                    1664 	.db #0x00	; 0
+      00004A 00                    1665 	.db #0x00	; 0
+      00004B 00                    1666 	.db #0x00	; 0
+      00004C 00                    1667 	.db #0x00	; 0
+      00004D 00                    1668 	.db #0x00	; 0
+      00004E 00                    1669 	.db #0x00	; 0
+      00004F 00                    1670 	.db #0x00	; 0
+      000050 00                    1671 	.db #0x00	; 0
+      000051 00                    1672 	.db #0x00	; 0
+      000052 00                    1673 	.db #0x00	; 0
+      000053 00                    1674 	.db #0x00	; 0
+      000054 00                    1675 	.db #0x00	; 0
+      000055 00                    1676 	.db #0x00	; 0
+      000056 00                    1677 	.db #0x00	; 0
+      000057 00                    1678 	.db #0x00	; 0
+      000058 00                    1679 	.db #0x00	; 0
+      000059 00                    1680 	.db #0x00	; 0
+      00005A 00                    1681 	.db #0x00	; 0
+      00005B 00                    1682 	.db #0x00	; 0
+      00005C 00                    1683 	.db #0x00	; 0
+      00005D 00                    1684 	.db #0x00	; 0
+      00005E 00                    1685 	.db #0x00	; 0
+      00005F 00                    1686 	.db #0x00	; 0
+      000060 00                    1687 	.db #0x00	; 0
+      000061 00                    1688 	.db #0x00	; 0
+      000062 00                    1689 	.db #0x00	; 0
+      000063 00                    1690 	.db #0x00	; 0
+      000064 00                    1691 	.db #0x00	; 0
+      000065 00                    1692 	.db #0x00	; 0
+      000066 00                    1693 	.db #0x00	; 0
+      000067 00                    1694 	.db #0x00	; 0
+      000068 00                    1695 	.db #0x00	; 0
+      000069 00                    1696 	.db #0x00	; 0
+      00006A 00                    1697 	.db #0x00	; 0
+      00006B 00                    1698 	.db #0x00	; 0
+      00006C 00                    1699 	.db #0x00	; 0
+      00006D 00                    1700 	.db #0x00	; 0
+      00006E 00                    1701 	.db #0x00	; 0
+      00006F 00                    1702 	.db #0x00	; 0
+      000070 00                    1703 	.db #0x00	; 0
+      000071 00                    1704 	.db #0x00	; 0
+      000072 00                    1705 	.db #0x00	; 0
+      000073 00                    1706 	.db #0x00	; 0
+      000074 00                    1707 	.db #0x00	; 0
+      000075 00                    1708 	.db #0x00	; 0
+      000076 00                    1709 	.db #0x00	; 0
+      000077 00                    1710 	.db #0x00	; 0
+      000078 00                    1711 	.db #0x00	; 0
+      000079 00                    1712 	.db #0x00	; 0
+      00007A 00                    1713 	.db #0x00	; 0
+      00007B 00                    1714 	.db #0x00	; 0
+      00007C 00                    1715 	.db #0x00	; 0
+      00007D 00                    1716 	.db #0x00	; 0
+      00007E 00                    1717 	.db #0x00	; 0
+      00007F 00                    1718 	.db #0x00	; 0
+      000080 00                    1719 	.db #0x00	; 0
+      000081 00                    1720 	.db #0x00	; 0
+      000082 00                    1721 	.db #0x00	; 0
+      000083 00                    1722 	.db #0x00	; 0
+      000084 00                    1723 	.db #0x00	; 0
+      000085 00                    1724 	.db #0x00	; 0
+      000086 00                    1725 	.db #0x00	; 0
+      000087 00                    1726 	.db #0x00	; 0
+      000088 00                    1727 	.db #0x00	; 0
+      000089 00                    1728 	.db #0x00	; 0
+      00008A 00                    1729 	.db #0x00	; 0
+      00008B 00                    1730 	.db #0x00	; 0
+      00008C 00                    1731 	.db #0x00	; 0
+      00008D 00                    1732 	.db #0x00	; 0
+      00008E 00                    1733 	.db #0x00	; 0
+      00008F 00                    1734 	.db #0x00	; 0
+      000090 00                    1735 	.db #0x00	; 0
+      000091 00                    1736 	.db #0x00	; 0
+      000092 00                    1737 	.db #0x00	; 0
+      000093 00                    1738 	.db #0x00	; 0
+      000094 00                    1739 	.db #0x00	; 0
+      000095 00                    1740 	.db #0x00	; 0
+      000096 00                    1741 	.db #0x00	; 0
+      000097 00                    1742 	.db #0x00	; 0
+      000098 00                    1743 	.db #0x00	; 0
+      000099 00                    1744 	.db #0x00	; 0
+      00009A 00                    1745 	.db #0x00	; 0
+      00009B 00                    1746 	.db #0x00	; 0
+      00009C 00                    1747 	.db #0x00	; 0
+      00009D 00                    1748 	.db #0x00	; 0
+      00009E 00                    1749 	.db #0x00	; 0
+      00009F 00                    1750 	.db #0x00	; 0
+      0000A0 00                    1751 	.db #0x00	; 0
+      0000A1 00                    1752 	.db #0x00	; 0
+      0000A2 00                    1753 	.db #0x00	; 0
+      0000A3 00                    1754 	.db #0x00	; 0
+      0000A4 00                    1755 	.db #0x00	; 0
+      0000A5 00                    1756 	.db #0x00	; 0
+      0000A6 00                    1757 	.db #0x00	; 0
+      0000A7 00                    1758 	.db #0x00	; 0
+      0000A8 00                    1759 	.db #0x00	; 0
+      0000A9 00                    1760 	.db #0x00	; 0
+      0000AA 00                    1761 	.db #0x00	; 0
+      0000AB 00                    1762 	.db #0x00	; 0
+      0000AC 00                    1763 	.db #0x00	; 0
+      0000AD 00                    1764 	.db #0x00	; 0
+      0000AE 00                    1765 	.db #0x00	; 0
+      0000AF 00                    1766 	.db #0x00	; 0
+      0000B0 00                    1767 	.db #0x00	; 0
+      0000B1 00                    1768 	.db #0x00	; 0
+      0000B2 00                    1769 	.db #0x00	; 0
+      0000B3 00                    1770 	.db #0x00	; 0
+      0000B4 00                    1771 	.db #0x00	; 0
+      0000B5 00                    1772 	.db #0x00	; 0
+      0000B6 00                    1773 	.db #0x00	; 0
+      0000B7 00                    1774 	.db #0x00	; 0
+      0000B8 00                    1775 	.db #0x00	; 0
+      0000B9 00                    1776 	.db #0x00	; 0
+      0000BA 00                    1777 	.db #0x00	; 0
+      0000BB 00                    1778 	.db #0x00	; 0
+      0000BC 00                    1779 	.db #0x00	; 0
+      0000BD 00                    1780 	.db #0x00	; 0
+      0000BE 00                    1781 	.db #0x00	; 0
+      0000BF 00                    1782 	.db #0x00	; 0
+      0000C0 00                    1783 	.db #0x00	; 0
+      0000C1 00                    1784 	.db #0x00	; 0
+      0000C2 00                    1785 	.db #0x00	; 0
+      0000C3 00                    1786 	.db #0x00	; 0
+      0000C4 00                    1787 	.db #0x00	; 0
+      0000C5 00                    1788 	.db #0x00	; 0
+      0000C6 00                    1789 	.db #0x00	; 0
+      0000C7 00                    1790 	.db #0x00	; 0
+      0000C8 00                    1791 	.db #0x00	; 0
+      0000C9 00                    1792 	.db #0x00	; 0
+      0000CA 00                    1793 	.db #0x00	; 0
+      0000CB 00                    1794 	.db #0x00	; 0
+      0000CC 00                    1795 	.db #0x00	; 0
+      0000CD 00                    1796 	.db #0x00	; 0
+      0000CE 00                    1797 	.db #0x00	; 0
+      0000CF 00                    1798 	.db #0x00	; 0
+      0000D0 00                    1799 	.db #0x00	; 0
+      0000D1 00                    1800 	.db #0x00	; 0
+      0000D2 00                    1801 	.db #0x00	; 0
+      0000D3 00                    1802 	.db #0x00	; 0
+      0000D4 00                    1803 	.db #0x00	; 0
+      0000D5 00                    1804 	.db #0x00	; 0
+      0000D6 00                    1805 	.db #0x00	; 0
+      0000D7 00                    1806 	.db #0x00	; 0
+      0000D8 00                    1807 	.db #0x00	; 0
+      0000D9 00                    1808 	.db #0x00	; 0
+      0000DA 00                    1809 	.db #0x00	; 0
+      0000DB 00                    1810 	.db #0x00	; 0
+      0000DC 00                    1811 	.db #0x00	; 0
+      0000DD 00                    1812 	.db #0x00	; 0
+      0000DE 00                    1813 	.db #0x00	; 0
+      0000DF 00                    1814 	.db #0x00	; 0
+      0000E0 00                    1815 	.db #0x00	; 0
+      0000E1 00                    1816 	.db #0x00	; 0
+      0000E2 00                    1817 	.db #0x00	; 0
+      0000E3 00                    1818 	.db #0x00	; 0
+      0000E4 00                    1819 	.db #0x00	; 0
+      0000E5 00                    1820 	.db #0x00	; 0
+      0000E6 00                    1821 	.db #0x00	; 0
+      0000E7 00                    1822 	.db #0x00	; 0
+      0000E8 00                    1823 	.db #0x00	; 0
+      0000E9 00                    1824 	.db #0x00	; 0
+      0000EA 00                    1825 	.db #0x00	; 0
+      0000EB 00                    1826 	.db #0x00	; 0
+      0000EC 00                    1827 	.db #0x00	; 0
+      0000ED 00                    1828 	.db #0x00	; 0
+      0000EE 00                    1829 	.db #0x00	; 0
+      0000EF 00                    1830 	.db #0x00	; 0
+      0000F0 00                    1831 	.db #0x00	; 0
+      0000F1 00                    1832 	.db #0x00	; 0
+      0000F2 00                    1833 	.db #0x00	; 0
+      0000F3 00                    1834 	.db #0x00	; 0
+      0000F4 00                    1835 	.db #0x00	; 0
+      0000F5 00                    1836 	.db #0x00	; 0
+      0000F6 00                    1837 	.db #0x00	; 0
+      0000F7 00                    1838 	.db #0x00	; 0
+      0000F8 00                    1839 	.db #0x00	; 0
+      0000F9 00                    1840 	.db #0x00	; 0
+      0000FA 00                    1841 	.db #0x00	; 0
+      0000FB 00                    1842 	.db #0x00	; 0
+      0000FC 00                    1843 	.db #0x00	; 0
+      0000FD 00                    1844 	.db #0x00	; 0
+      0000FE 00                    1845 	.db #0x00	; 0
+      0000FF 00                    1846 	.db #0x00	; 0
+      000100 00                    1847 	.db #0x00	; 0
+      000101 00                    1848 	.db #0x00	; 0
+      000102 00                    1849 	.db #0x00	; 0
+      000103 00                    1850 	.db #0x00	; 0
+      000104 00                    1851 	.db #0x00	; 0
+      000105 00                    1852 	.db #0x00	; 0
+      000106 00                    1853 	.db #0x00	; 0
+      000107 00                    1854 	.db #0x00	; 0
+      000108 00                    1855 	.db #0x00	; 0
+      000109 00                    1856 	.db #0x00	; 0
+      00010A 00                    1857 	.db #0x00	; 0
+      00010B 00                    1858 	.db #0x00	; 0
+      00010C 00                    1859 	.db #0x00	; 0
+      00010D 00                    1860 	.db #0x00	; 0
+      00010E 00                    1861 	.db #0x00	; 0
+      00010F 00                    1862 	.db #0x00	; 0
+      000110 00                    1863 	.db #0x00	; 0
+      000111 00                    1864 	.db #0x00	; 0
+      000112 00                    1865 	.db #0x00	; 0
+      000113 00                    1866 	.db #0x00	; 0
+      000114 00                    1867 	.db #0x00	; 0
+      000115 00                    1868 	.db #0x00	; 0
+      000116 00                    1869 	.db #0x00	; 0
+      000117 00                    1870 	.db #0x00	; 0
+      000118 00                    1871 	.db #0x00	; 0
+      000119 00                    1872 	.db #0x00	; 0
+      00011A 00                    1873 	.db #0x00	; 0
+      00011B 00                    1874 	.db #0x00	; 0
+      00011C 00                    1875 	.db #0x00	; 0
+      00011D 00                    1876 	.db #0x00	; 0
+      00011E 00                    1877 	.db #0x00	; 0
+      00011F 00                    1878 	.db #0x00	; 0
+      000120 00                    1879 	.db #0x00	; 0
+      000121 00                    1880 	.db #0x00	; 0
+      000122 00                    1881 	.db #0x00	; 0
+      000123 00                    1882 	.db #0x00	; 0
+      000124 00                    1883 	.db #0x00	; 0
+      000125 00                    1884 	.db #0x00	; 0
+      000126 00                    1885 	.db #0x00	; 0
+      000127 00                    1886 	.db #0x00	; 0
+      000128 00                    1887 	.db #0x00	; 0
+      000129 00                    1888 	.db #0x00	; 0
+      00012A 00                    1889 	.db #0x00	; 0
+      00012B 00                    1890 	.db #0x00	; 0
+      00012C 00                    1891 	.db #0x00	; 0
+      00012D 00                    1892 	.db #0x00	; 0
+      00012E 00                    1893 	.db #0x00	; 0
+      00012F 00                    1894 	.db #0x00	; 0
+      000130 00                    1895 	.db #0x00	; 0
+      000131 00                    1896 	.db #0x00	; 0
+      000132 00                    1897 	.db #0x00	; 0
+      000133 00                    1898 	.db #0x00	; 0
+      000134 00                    1899 	.db #0x00	; 0
+      000135 00                    1900 	.db #0x00	; 0
+      000136 00                    1901 	.db #0x00	; 0
+      000137 00                    1902 	.db #0x00	; 0
+      000138 00                    1903 	.db #0x00	; 0
+      000139 00                    1904 	.db #0x00	; 0
+      00013A 00                    1905 	.db #0x00	; 0
+      00013B 00                    1906 	.db #0x00	; 0
+      00013C 00                    1907 	.db #0x00	; 0
+      00013D 00                    1908 	.db #0x00	; 0
+      00013E 00                    1909 	.db #0x00	; 0
+      00013F 00                    1910 	.db #0x00	; 0
+      000140 00                    1911 	.db #0x00	; 0
+      000141 00                    1912 	.db #0x00	; 0
+      000142 00                    1913 	.db #0x00	; 0
+      000143 00                    1914 	.db #0x00	; 0
+      000144 00                    1915 	.db #0x00	; 0
+      000145 00                    1916 	.db #0x00	; 0
+      000146 00                    1917 	.db #0x00	; 0
+      000147 00                    1918 	.db #0x00	; 0
+      000148 00                    1919 	.db #0x00	; 0
+      000149 00                    1920 	.db #0x00	; 0
+      00014A 00                    1921 	.db #0x00	; 0
+      00014B 00                    1922 	.db #0x00	; 0
+      00014C 00                    1923 	.db #0x00	; 0
+      00014D 00                    1924 	.db #0x00	; 0
+      00014E 00                    1925 	.db #0x00	; 0
+      00014F 00                    1926 	.db #0x00	; 0
+      000150 00                    1927 	.db #0x00	; 0
+      000151 00                    1928 	.db #0x00	; 0
+      000152 00                    1929 	.db #0x00	; 0
+      000153 00                    1930 	.db #0x00	; 0
+      000154 00                    1931 	.db #0x00	; 0
+      000155 00                    1932 	.db #0x00	; 0
+      000156 00                    1933 	.db #0x00	; 0
+      000157 00                    1934 	.db #0x00	; 0
+      000158 00                    1935 	.db #0x00	; 0
+      000159 00                    1936 	.db #0x00	; 0
+      00015A 00                    1937 	.db #0x00	; 0
+      00015B 00                    1938 	.db #0x00	; 0
+      00015C 00                    1939 	.db #0x00	; 0
+      00015D 00                    1940 	.db #0x00	; 0
+      00015E 00                    1941 	.db #0x00	; 0
+      00015F 00                    1942 	.db #0x00	; 0
+      000160 00                    1943 	.db #0x00	; 0
+      000161 00                    1944 	.db #0x00	; 0
+      000162 00                    1945 	.db #0x00	; 0
+      000163 00                    1946 	.db #0x00	; 0
+      000164 00                    1947 	.db #0x00	; 0
+      000165 00                    1948 	.db #0x00	; 0
+      000166 00                    1949 	.db #0x00	; 0
+      000167 00                    1950 	.db #0x00	; 0
+      000168                       1951 __xinit__background_tiles:
+      000168 FF                    1952 	.db #0xff	; 255
+      000169 00                    1953 	.db #0x00	; 0
+      00016A 80                    1954 	.db #0x80	; 128
+      00016B 00                    1955 	.db #0x00	; 0
+      00016C 80                    1956 	.db #0x80	; 128
+      00016D 00                    1957 	.db #0x00	; 0
+      00016E 80                    1958 	.db #0x80	; 128
+      00016F 00                    1959 	.db #0x00	; 0
+      000170 80                    1960 	.db #0x80	; 128
+      000171 00                    1961 	.db #0x00	; 0
+      000172 80                    1962 	.db #0x80	; 128
+      000173 00                    1963 	.db #0x00	; 0
+      000174 80                    1964 	.db #0x80	; 128
+      000175 00                    1965 	.db #0x00	; 0
+      000176 80                    1966 	.db #0x80	; 128
+      000177 00                    1967 	.db #0x00	; 0
+      000178 FF                    1968 	.db #0xff	; 255
+      000179 00                    1969 	.db #0x00	; 0
+      00017A 80                    1970 	.db #0x80	; 128
+      00017B 00                    1971 	.db #0x00	; 0
+      00017C 80                    1972 	.db #0x80	; 128
+      00017D 00                    1973 	.db #0x00	; 0
+      00017E 80                    1974 	.db #0x80	; 128
+      00017F 00                    1975 	.db #0x00	; 0
+      000180 80                    1976 	.db #0x80	; 128
+      000181 00                    1977 	.db #0x00	; 0
+      000182 80                    1978 	.db #0x80	; 128
+      000183 00                    1979 	.db #0x00	; 0
+      000184 80                    1980 	.db #0x80	; 128
+      000185 00                    1981 	.db #0x00	; 0
+      000186 80                    1982 	.db #0x80	; 128
+      000187 00                    1983 	.db #0x00	; 0
+      000188                       1984 __xinit__sprites:
+      000188 00                    1985 	.db #0x00	; 0
+      000189 00                    1986 	.db #0x00	; 0
+      00018A 00                    1987 	.db #0x00	; 0
+      00018B 00                    1988 	.db #0x00	; 0
+      00018C 00                    1989 	.db #0x00	; 0
+      00018D 00                    1990 	.db #0x00	; 0
+      00018E 00                    1991 	.db #0x00	; 0
+      00018F 00                    1992 	.db #0x00	; 0
+      000190 00                    1993 	.db #0x00	; 0
+      000191 00                    1994 	.db #0x00	; 0
+      000192 00                    1995 	.db #0x00	; 0
+      000193 00                    1996 	.db #0x00	; 0
+      000194 00                    1997 	.db #0x00	; 0
+      000195 00                    1998 	.db #0x00	; 0
+      000196 00                    1999 	.db #0x00	; 0
+      000197 00                    2000 	.db #0x00	; 0
+      000198 00                    2001 	.db #0x00	; 0
+      000199 00                    2002 	.db #0x00	; 0
+      00019A 7F                    2003 	.db #0x7f	; 127
+      00019B 7F                    2004 	.db #0x7f	; 127
+      00019C 7F                    2005 	.db #0x7f	; 127
+      00019D 7F                    2006 	.db #0x7f	; 127
+      00019E 7F                    2007 	.db #0x7f	; 127
+      00019F 7F                    2008 	.db #0x7f	; 127
+      0001A0 7F                    2009 	.db #0x7f	; 127
+      0001A1 7F                    2010 	.db #0x7f	; 127
+      0001A2 7F                    2011 	.db #0x7f	; 127
+      0001A3 7F                    2012 	.db #0x7f	; 127
+      0001A4 7F                    2013 	.db #0x7f	; 127
+      0001A5 7F                    2014 	.db #0x7f	; 127
+      0001A6 7F                    2015 	.db #0x7f	; 127
+      0001A7 7F                    2016 	.db #0x7f	; 127
+      0001A8 00                    2017 	.db #0x00	; 0
+      0001A9 00                    2018 	.db #0x00	; 0
+      0001AA 00                    2019 	.db #0x00	; 0
+      0001AB 3E                    2020 	.db #0x3e	; 62
+      0001AC 00                    2021 	.db #0x00	; 0
+      0001AD 41                    2022 	.db #0x41	; 65	'A'
+      0001AE 00                    2023 	.db #0x00	; 0
+      0001AF 41                    2024 	.db #0x41	; 65	'A'
+      0001B0 00                    2025 	.db #0x00	; 0
+      0001B1 41                    2026 	.db #0x41	; 65	'A'
+      0001B2 00                    2027 	.db #0x00	; 0
+      0001B3 41                    2028 	.db #0x41	; 65	'A'
+      0001B4 00                    2029 	.db #0x00	; 0
+      0001B5 41                    2030 	.db #0x41	; 65	'A'
+      0001B6 00                    2031 	.db #0x00	; 0
+      0001B7 3E                    2032 	.db #0x3e	; 62
+      0001B8 00                    2033 	.db #0x00	; 0
+      0001B9 00                    2034 	.db #0x00	; 0
+      0001BA 41                    2035 	.db #0x41	; 65	'A'
+      0001BB 7F                    2036 	.db #0x7f	; 127
+      0001BC 3E                    2037 	.db #0x3e	; 62
+      0001BD 7F                    2038 	.db #0x7f	; 127
+      0001BE 3E                    2039 	.db #0x3e	; 62
+      0001BF 7F                    2040 	.db #0x7f	; 127
+      0001C0 3E                    2041 	.db #0x3e	; 62
+      0001C1 7F                    2042 	.db #0x7f	; 127
+      0001C2 3E                    2043 	.db #0x3e	; 62
+      0001C3 7F                    2044 	.db #0x7f	; 127
+      0001C4 3E                    2045 	.db #0x3e	; 62
+      0001C5 7F                    2046 	.db #0x7f	; 127
+      0001C6 41                    2047 	.db #0x41	; 65	'A'
+      0001C7 7F                    2048 	.db #0x7f	; 127
+                                   2049 	.area _CABS (ABS)

@@ -1,0 +1,9 @@
+{
+    "C_Cpp.default.includePath": [
+        "c:/gameboy-dev/gbdk/include"
+	],
+	"files.associations": {
+		"gb.h": "c",
+		"jump.h": "c"
+	}
+}
