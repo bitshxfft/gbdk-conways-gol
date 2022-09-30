@@ -34,14 +34,14 @@ void update_input_state(struct input_state* is, uint8_t button_state)
 	is->previous_state = is->current_state;
 
 	// set our current input state relative to the passed in button state
-	is->current_state = (button_state == J_A) << btn_a;
-	is->current_state |= (button_state == J_B) << btn_b;
-	is->current_state |= (button_state == J_UP) << btn_up;
-	is->current_state |= (button_state == J_DOWN) << btn_down;
-	is->current_state |= (button_state == J_LEFT) << btn_left;
-	is->current_state |= (button_state == J_RIGHT) << btn_right;
-	is->current_state |= (button_state == J_START) << btn_start;
-	is->current_state |= (button_state == J_SELECT) << btn_select;
+	is->current_state = ((button_state & J_A) == J_A) << btn_a;
+	is->current_state |= ((button_state & J_B) == J_B) << btn_b;
+	is->current_state |= ((button_state & J_UP) == J_UP) << btn_up;
+	is->current_state |= ((button_state & J_DOWN) == J_DOWN) << btn_down;
+	is->current_state |= ((button_state & J_LEFT) == J_LEFT) << btn_left;
+	is->current_state |= ((button_state & J_RIGHT) == J_RIGHT) << btn_right;
+	is->current_state |= ((button_state & J_START) == J_START) << btn_start;
+	is->current_state |= ((button_state & J_SELECT) == J_SELECT) << btn_select;
 
 	// calculate which buttons have been held
 	is->held_buttons = is->previous_state & is->current_state;
