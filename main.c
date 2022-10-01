@@ -22,19 +22,22 @@ enum e_tile_state_masks
 {
 	tile_is_alive		= 0,
 	tile_was_alive		= 1,
-	tile_is_north_row	= 2,
-	tile_is_south_row	= 3,
-	tile_is_west_column	= 4,
-	tile_is_east_column	= 5,
 };
 
-const uint16_t k_tile_is_alive_mask = 1 << tile_is_alive;
-const uint16_t k_tile_was_alive_mask = 1 << tile_was_alive;
-const uint16_t s_tile_is_north_row_mask = 1 << tile_is_north_row;
-const uint16_t k_tile_is_south_row_mask = 1 << tile_is_south_row;
-const uint16_t k_tile_is_west_column_mask = 1 << tile_is_west_column;
-const uint16_t k_tile_is_east_column_mask = 1 << tile_is_east_column;
-const uint16_t k_tile_sprite_index_mask = 0xFF00; // 1111 1111 0000 0000
+const uint8_t k_tile_is_alive_mask = 1 << tile_is_alive;
+const uint8_t k_tile_was_alive_mask = 1 << tile_was_alive;
+
+// ------------------------------------------------------------------------------------
+
+// #TODO: change this back to a uint8_t with
+//	- bit 7 used for is_alive
+//	- bit 6 used for was_alive
+//	- bits 0 - 5 bits used for sprite_index
+struct tile_state
+{
+	uint8_t sprite_index;
+	uint8_t tile_flags;
+};
 
 // ------------------------------------------------------------------------------------
 
@@ -94,8 +97,7 @@ int main()
 
 	// screen width: 160 pixels, 20 tiles
 	// screen height: 144 pixels, 18 tiles
-	// total tiles: 360
-	uint16_t board[360];
+	struct tile_state board[20][18];
 
 	// pool our available sprites
 	uint8_t available_sprites[39];
@@ -104,18 +106,19 @@ int main()
 	for (uint8_t i = 0; i < 39; ++i)
 	{
 		available_sprites[i] = i + 1;
-		update_tile_sprite(i + 1, k_empty_tile_index);
-		update_tile_position(i + 1, 21, 19);
+		update_tile_sprite(i + 1, k_live_tile_index);
+		update_tile_position(i + 1, 0, 19);
 	}
 
-	for (uint16_t i = 0; i < 360; ++i)
+	for (uint8_t x = 0; x < 20; ++x)
 	{
-		uint16_t tile_data = 0x0000;
-		tile_data |= (i < 20 ? s_tile_is_north_row_mask : 0x0000);
-		tile_data |= (i >= 340 ? k_tile_is_south_row_mask : 0x0000);
-		tile_data |= (i % 20 == 0 ? k_tile_is_west_column_mask : 0x0000);
-		tile_data |= (i % 20 == 19 ? k_tile_is_east_column_mask : 0x0000);
-		board[i] = tile_data;
+		for (uint8_t y = 0; y < 18; ++y)
+		{
+			struct tile_state tile_data;
+			tile_data.sprite_index = 0x00;
+			tile_data.tile_flags = 0x00;
+			board[x][y] = tile_data;
+		}
 	}
 
 	// load sprites
@@ -152,129 +155,150 @@ int main()
 		// game of life
 		if ((execution_state & k_execution_state_active_mask) == k_execution_state_active_mask)
 		{
-			// set previous states
-			for (uint16_t i = 0; i < 360; ++i)
+			for (uint8_t x = 0; x < 20; ++x)
 			{
-				uint8_t tile_data = board[i];
+				for (uint8_t y = 0; y < 18; ++y)
+				{
+					uint8_t tile_flags = board[x][y].tile_flags;
 
-				// reset the was_alive flag
-				tile_data &= ~k_tile_was_alive_mask;
-				// update was_alive flag with the last frame's is_alive flag
-				tile_data |= ((tile_data & k_tile_is_alive_mask) << tile_was_alive);
+					// reset the was_alive flag
+					tile_flags &= ~k_tile_was_alive_mask;
 
-				board[i] = tile_data;
+					// update was_alive flag with the last frame's is_alive flag
+					tile_flags |= ((tile_flags & k_tile_is_alive_mask) != 0x00) << tile_was_alive;
+
+					// update tile data
+					board[x][y].tile_flags = tile_flags;
+				}
 			}
 
 			// run game of life
-			for (uint16_t i = 0; i < 360; ++i)
+			for (uint8_t x = 0; x < 20; ++x)
 			{
-				uint16_t tile_data = board[i];
-				uint8_t neighbour_count = 0;
-
-				uint16_t is_not_north_row = (tile_data & s_tile_is_north_row_mask) == 0x00;
-				uint16_t is_not_east_col = (tile_data & k_tile_is_east_column_mask) == 0x00;
-				uint16_t is_not_south_row = (tile_data & k_tile_is_south_row_mask) == 0x00;
-				uint16_t is_not_west_col = (tile_data & k_tile_is_west_column_mask) == 0x00;
-
-				// north
-				neighbour_count += is_not_north_row
-					&& ((board[i - 20] & k_tile_was_alive_mask) != 0x00);
-
-				// north-east
-				neighbour_count += is_not_north_row	&& is_not_east_col
-					&& ((board[i - 19] & k_tile_was_alive_mask) != 0x00);
-
-				// east
-				neighbour_count += is_not_east_col
-					&& ((board[i + 1] & k_tile_was_alive_mask) != 0x00);
-
-				// south-east
-				neighbour_count += is_not_south_row && is_not_east_col
-					&& ((board[i + 21] & k_tile_was_alive_mask) != 0x00);
-
-				// south
-				neighbour_count += is_not_south_row
-					&& ((board[i + 20] & k_tile_was_alive_mask) != 0x00);
-
-				// south-west
-				neighbour_count += is_not_south_row && is_not_west_col
-					&& ((board[i + 19] & k_tile_was_alive_mask) != 0x00);
-
-				// west
-				neighbour_count += is_not_west_col
-					&& ((board[i - 1] & k_tile_was_alive_mask) != 0x00);
-
-				// north-west
-				neighbour_count += is_not_north_row && is_not_west_col
-					&& ((board[i - 21] & k_tile_was_alive_mask) != 0x00);
-
-				// a dead tile with exactly 3 live neighbours comes to life, otherwise it remains dead
-				uint8_t is_alive = (tile_data & k_tile_is_alive_mask) != 0x00;
-				uint8_t come_to_life = !is_alive && neighbour_count == 3;
-
-				// a live tile with < 2 live neighbours dies
-				// a live tile with > 3 live neighbours dies
-				// a live tile with 2 or 3 live neighbours lives on
-				uint8_t remain_alive = is_alive && neighbour_count >= 2 && neighbour_count <= 3;
-
-				// un-set tile is alive mask, re-set if tile should remain alive or come to life
-				tile_data &= ~k_tile_is_alive_mask;
-				tile_data |= (come_to_life | remain_alive) << tile_is_alive;
-
-				// get updated is_alive and was_alive flags
-				is_alive = (tile_data & k_tile_is_alive_mask) != 0x00;
-				uint8_t was_alive = (tile_data & k_tile_was_alive_mask) != 0x00;
-
-				// update sprite state if anything has changed
-				if (!was_alive && is_alive)
+				for (uint8_t y = 0; y < 18; ++y)
 				{
-					// tile has come alive
-					if (next_available_sprite_index < 39)
+					uint8_t tile_flags = board[x][y].tile_flags;
+					uint8_t sprite_index = board[x][y].sprite_index;
+					uint8_t neighbour_count = 0;
+
+					// north
+					if (y > 0
+						&& (board[x][y - 1].tile_flags & k_tile_was_alive_mask) != 0x00)
 					{
-						// take a new sprite index from the pool
-						uint8_t sprite_index = available_sprites[next_available_sprite_index];
-						next_available_sprite_index++;
-
-						// update this sprite to the correct tile sprite and position
-						update_tile_sprite(sprite_index, k_live_tile_index);
-						update_tile_position(sprite_index, i % 20, i / 20);
-
-						// update the tile index in use
-						tile_data |= sprite_index << 8;
+						neighbour_count += 1;
 					}
-					else
+
+					// north-east
+					if (x < 19
+						&& y > 0
+						&& (board[x + 1][y - 1].tile_flags & k_tile_was_alive_mask) != 0x00)
 					{
-						// we have no availale sprites, cull this tile
-						tile_data &= ~k_tile_is_alive_mask;
+						neighbour_count += 1;
 					}
-				}
-				else if (was_alive && !is_alive)
-				{
-					// debug - don't kill tiles
-					tile_data |= k_tile_is_alive_mask;
-					// \debug
 
-//					// get the sprite index that was being used by this tile
-//					uint8_t sprite_index = (tile_data & k_tile_sprite_index_mask) >> 8;
-//
-//					// update it to the empty tile sprite
-//					update_tile_sprite(sprite_index, k_empty_tile_index);
-//
-//					// return the sprite to the pool
-//					next_available_sprite_index--;
-//					available_sprites[next_available_sprite_index] = sprite_index;
-//
-//					// un-set the sprite index from this tile
-//					tile_data &= ~k_tile_sprite_index_mask;
-				}
+					// east
+					if (x < 19
+						&& (board[x + 1][y].tile_flags & k_tile_was_alive_mask) != 0x00)
+					{
+						neighbour_count += 1;
+					}
 
-				board[i] = tile_data;
+					// south-east
+					if (x < 19
+						&& y < 17
+						&& (board[x + 1][y + 1].tile_flags & k_tile_was_alive_mask) != 0x00)
+					{
+						neighbour_count += 1;
+					}
+
+					// south
+					if (y < 17
+						&& (board[x][y + 1].tile_flags & k_tile_was_alive_mask) != 0x00)
+					{
+						neighbour_count += 1;
+					}
+
+					// south-west
+					if (x > 0
+						&& y < 17
+						&& (board[x - 1][y + 1].tile_flags & k_tile_was_alive_mask) != 0x00)
+					{
+						neighbour_count += 1;
+					}
+
+					// west
+					if (x > 0
+						&& (board[x - 1][y].tile_flags & k_tile_was_alive_mask) != 0x00)
+					{
+						neighbour_count += 1;
+					}
+
+					// north-west
+					if (x > 0
+						&& y > 0
+						&& (board[x - 1][y - 1].tile_flags & k_tile_was_alive_mask) != 0x00)
+					{
+						neighbour_count += 1;
+					}
+
+					// a dead tile with exactly 3 live neighbours comes to life, otherwise it remains dead
+					uint8_t is_alive = (tile_flags & k_tile_is_alive_mask) != 0x00;
+					uint8_t come_to_life = !is_alive && neighbour_count == 3;
+
+					// a live tile with < 2 live neighbours dies
+					// a live tile with > 3 live neighbours dies
+					// a live tile with 2 or 3 live neighbours lives on
+					uint8_t remain_alive = is_alive && neighbour_count >= 2 && neighbour_count <= 3;
+
+					// un-set tile is alive mask, re-set if tile should remain alive or come to life
+					tile_flags &= ~k_tile_is_alive_mask;
+					tile_flags |= ((come_to_life | remain_alive) != 0x00) << tile_is_alive;
+
+					// get updated is_alive and was_alive flags
+					is_alive = (tile_flags & k_tile_is_alive_mask) != 0x00;
+					uint8_t was_alive = (tile_flags & k_tile_was_alive_mask) != 0x00;
+
+					// update sprite state if anything has changed
+					if (!was_alive && is_alive)
+					{
+						// tile has come alive
+						if (next_available_sprite_index < 39)
+						{
+							// take a new sprite index from the pool
+							sprite_index = available_sprites[next_available_sprite_index];
+							next_available_sprite_index++;
+
+							// update this sprite to the correct tile sprite and position
+							update_tile_position(sprite_index, x, y);
+						}
+						else
+						{
+							// we have no availale sprites, cull this tile
+							tile_flags &= ~k_tile_is_alive_mask;
+						}
+					}
+					else if (was_alive && !is_alive)
+					{
+						// move the sprite off-screen
+						update_tile_position(sprite_index, 0, 19);
+
+						// return the sprite to the pool
+						next_available_sprite_index--;
+						available_sprites[next_available_sprite_index] = sprite_index;
+
+						// un-set the sprite index this tile is using
+						sprite_index = 0x00;
+					}
+
+					board[x][y].tile_flags = tile_flags;
+					board[x][y].sprite_index = sprite_index;
+				}
 			}
 
 			// debugging --------------------------------------
 			// stop after first update of all tiles
-			execution_state &= ~k_execution_state_active_mask;
-			update_cursor_sprite(k_cursor_empty_tile_index);
+			//execution_state &= ~k_execution_state_active_mask;
+			//update_cursor_sprite(k_cursor_empty_tile_index);
 			// -------------------------------------- debugging
 		}
 		else
@@ -316,51 +340,44 @@ int main()
 			// place tiles
 			if (was_input_depressed(&input_state, btn_b))
 			{
-				uint16_t board_index = cursor_tile_x + (cursor_tile_y * 20);
-				uint16_t tile_data = board[board_index];
-				uint8_t is_alive = tile_data & k_tile_is_alive_mask;
+				uint8_t tile_flags = board[cursor_tile_x][cursor_tile_y].tile_flags;
+				uint8_t sprite_index = board[cursor_tile_x][cursor_tile_y].sprite_index;
+				uint8_t is_alive = tile_flags & k_tile_is_alive_mask;
 
 				if (!is_alive)
 				{
 					if (next_available_sprite_index < 39)
 					{
 						// take a new sprite index from the pool
-						uint8_t sprite_index = available_sprites[next_available_sprite_index];
+						sprite_index = available_sprites[next_available_sprite_index];
 						next_available_sprite_index++;
 
 						// update this sprite to the correct tile sprite and position
-						update_tile_sprite(sprite_index, k_live_tile_index);
 						update_tile_position(sprite_index, cursor_tile_x, cursor_tile_y);
 
-						// update the tile index in use
-						tile_data |= sprite_index << 8;
-
 						// set our is_alive bit
-						tile_data |= k_tile_is_alive_mask;
+						tile_flags |= k_tile_is_alive_mask;
 					}
 				}
 				else
 				{
-					// get the sprite index that was being used by this tile
-					uint8_t sprite_index = (tile_data & k_tile_sprite_index_mask) >> 8;
-
-					// update it to the empty tile sprite
-					update_tile_sprite(sprite_index, k_empty_tile_index);
-					update_tile_position(sprite_index, 21, 19);
+					// move the sprite off-screen
+					update_tile_position(sprite_index, 0, 19);
 
 					// return the sprite to the pool
 					next_available_sprite_index--;
 					available_sprites[next_available_sprite_index] = sprite_index;
 
 					// un-set the sprite index from this tile
-					tile_data &= ~k_tile_sprite_index_mask;
+					sprite_index = 0x00;
 
 					// un-set our is_alive bit
-					tile_data &= ~k_tile_is_alive_mask;
+					tile_flags &= ~k_tile_is_alive_mask;
 				}
 
 				// update the board
-				board[board_index] = tile_data;
+				board[cursor_tile_x][cursor_tile_y].tile_flags = tile_flags;
+				board[cursor_tile_x][cursor_tile_y].sprite_index = sprite_index;
 			}
 		}
 
