@@ -57,17 +57,17 @@ void update_input_state(struct input_state* is, uint8_t button_state)
 
 uint8_t was_input_depressed(struct input_state* is, uint8_t button)
 {
-	return is->depressed_buttons & (1 << button);
+	return (is->depressed_buttons & (1 << button)) != 0x00;
 }
 
 uint8_t was_input_released(struct input_state* is, uint8_t button)
 {
-	return is->released_buttons & (1 << button);
+	return (is->released_buttons & (1 << button)) != 0x00;
 }
 
 uint8_t is_input_held(struct input_state* is, uint8_t button)
 {
-	return is->held_buttons & (1 << button);
+	return (is->held_buttons & (1 << button)) != 0x00;
 }
 
 #endif // __INPUT_STATE_H__

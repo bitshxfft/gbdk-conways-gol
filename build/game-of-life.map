@@ -27,9 +27,9 @@ Area                       Addr        Size        Decimal Bytes (Attributes)
      0000000C  l__GSINIT |    00000019  l__DATA   |    00000030  l__HEADER
      00000041  l__INITIA |    00000041  l__INITIA |    0000004E  l__HEADER
      00000082  l__HEADER |    000001D7  l__HOME   |    00000200  s__CODE  
-     00000BE0  l__CODE   |    00000DE0  s__HOME   |    00000FB7  s__BASE  
-     00000FB7  s__CODE_0 |    00000FB7  s__INITIA |    00000FB7  s__LIT   
-     00000FF8  s__GSINIT |    00001004  s__GSFINA |    00002000  _rROMB0  
+     00000BD4  l__CODE   |    00000DD4  s__HOME   |    00000FAB  s__BASE  
+     00000FAB  s__CODE_0 |    00000FAB  s__INITIA |    00000FAB  s__LIT   
+     00000FEC  s__GSINIT |    00000FF8  s__GSFINA |    00002000  _rROMB0  
      00003000  _rROMB1   |    00004000  _rRAMB    |    00008000  __VRAM   
      00008000  __VRAM800 |    00008800  __VRAM880 |    00009000  __VRAM900
      00009800  __SCRN0   |    00009C00  __SCRN1   |    0000A000  __SRAM   
@@ -62,17 +62,17 @@ Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_CODE                  00000200    00000BE0 =        3040. bytes (REL,CON)
+_CODE                  00000200    00000BD4 =        3028. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
      00000200  _update_i |    000002E9  _k_backgr |    00000451  _k_backgr
-     00000477  _was_inpu |    0000048F  _was_inpu |    000004A8  _is_input
-     000004BF  _wait_vbl |    000004CC  _update_c |    000004DF  _k_execut
-     000004E0  _k_tile_s |    000004E1  _k_tile_i |    000004E2  _k_tile_w
-     000004E3  _k_empty_ |    000004E4  _k_live_t |    000004E5  _k_cursor
-     000004E6  _k_cursor |    000004E7  _k_cursor |    000004E8  _update_c
-     00000520  _update_t |    00000531  _update_t |    00000568  _main    
+     00000477  _was_inpu |    0000049C  _was_inpu |    000004C2  _is_input
+     000004E6  _wait_vbl |    000004F3  _update_c |    00000506  _k_execut
+     00000507  _k_tile_s |    00000508  _k_tile_i |    00000509  _k_tile_w
+     0000050A  _k_empty_ |    0000050B  _k_live_t |    0000050C  _k_cursor
+     0000050D  _k_cursor |    0000050E  _k_cursor |    0000050F  _update_c
+     00000547  _update_t |    00000558  _update_t |    0000058F  _main    
 ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
 Hexadecimal  [32-Bits]
 
@@ -247,27 +247,27 @@ Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_HOME                  00000DE0    000001D7 =         471. bytes (REL,CON)
+_HOME                  00000DD4    000001D7 =         471. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
-     00000DE0  .memset_s |    00000DE9  .memcpy_s |    00000E06  .remove_V
-     00000E09  .remove_i |    00000E26  .add_VBL  |    00000E29  .add_int 
-     00000E34  .wait_vbl |    00000E34  _wait_vbl |    00000E44  .display_
-     00000E44  _display_ |    00000E5C  _remove_V |    00000E67  _add_VBL 
-     00000E72  _set_tile |    00000E77  _set_bkg_ |    00000E77  _set_win_
-     00000E7F  _set_spri |    00000EAF  __mulsuch |    00000EB9  __mulusch
-     00000EC3  __mulscha |    00000ED5  __mulucha |    00000EE1  __mulint 
-     00000F07  .padup    |    00000F07  _waitpadu |    00000F17  .jpad    
-     00000F17  _joypad   |    00000F3F  _waitpad  |    00000F42  .wait_pad
-     00000F49  _set_bkg_ |    00000F5D  .set_xy_w |    00000F66  .set_xy_b
-     00000F75  .set_xy_t
+     00000DD4  .memset_s |    00000DDD  .memcpy_s |    00000DFA  .remove_V
+     00000DFD  .remove_i |    00000E1A  .add_VBL  |    00000E1D  .add_int 
+     00000E28  .wait_vbl |    00000E28  _wait_vbl |    00000E38  .display_
+     00000E38  _display_ |    00000E50  _remove_V |    00000E5B  _add_VBL 
+     00000E66  _set_tile |    00000E6B  _set_bkg_ |    00000E6B  _set_win_
+     00000E73  _set_spri |    00000EA3  __mulsuch |    00000EAD  __mulusch
+     00000EB7  __mulscha |    00000EC9  __mulucha |    00000ED5  __mulint 
+     00000EFB  .padup    |    00000EFB  _waitpadu |    00000F0B  .jpad    
+     00000F0B  _joypad   |    00000F33  _waitpad  |    00000F36  .wait_pad
+     00000F3D  _set_bkg_ |    00000F51  .set_xy_w |    00000F5A  .set_xy_b
+     00000F69  .set_xy_t
 ASxxxx Linker V03.00 + NoICE + sdld,  page 22.
 Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_INITIALIZER           00000FB7    00000041 =          65. bytes (REL,CON)
+_INITIALIZER           00000FAB    00000041 =          65. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
@@ -276,17 +276,17 @@ Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_GSINIT                00000FF8    0000000C =          12. bytes (REL,CON)
+_GSINIT                00000FEC    0000000C =          12. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
-     00000FF8  gsinit   
+     00000FEC  gsinit   
 ASxxxx Linker V03.00 + NoICE + sdld,  page 24.
 Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_GSFINAL               00001004    00000001 =           1. bytes (REL,CON)
+_GSFINAL               00000FF8    00000001 =           1. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    

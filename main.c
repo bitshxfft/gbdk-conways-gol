@@ -157,64 +157,28 @@ int main()
 					uint8_t neighbour_count = 0;
 
 					// north
-					if (y > 0
-						&& (board[x][y - 1] & k_tile_was_alive_mask) != 0x00)
-					{
-						neighbour_count += 1;
-					}
+					neighbour_count += y > 0 && (board[x][y - 1] & k_tile_was_alive_mask) != 0x00;
 
 					// north-east
-					if (x < 19
-						&& y > 0
-						&& (board[x + 1][y - 1] & k_tile_was_alive_mask) != 0x00)
-					{
-						neighbour_count += 1;
-					}
+					neighbour_count += x < 19 && y > 0 && (board[x + 1][y - 1] & k_tile_was_alive_mask) != 0x00;
 
 					// east
-					if (x < 19
-						&& (board[x + 1][y] & k_tile_was_alive_mask) != 0x00)
-					{
-						neighbour_count += 1;
-					}
+					neighbour_count += x < 19 && (board[x + 1][y] & k_tile_was_alive_mask) != 0x00;
 
 					// south-east
-					if (x < 19
-						&& y < 17
-						&& (board[x + 1][y + 1] & k_tile_was_alive_mask) != 0x00)
-					{
-						neighbour_count += 1;
-					}
+					neighbour_count += x < 19 && y < 17 && (board[x + 1][y + 1] & k_tile_was_alive_mask) != 0x00;
 
 					// south
-					if (y < 17
-						&& (board[x][y + 1] & k_tile_was_alive_mask) != 0x00)
-					{
-						neighbour_count += 1;
-					}
+					neighbour_count +=y < 17 && (board[x][y + 1] & k_tile_was_alive_mask) != 0x00;
 
 					// south-west
-					if (x > 0
-						&& y < 17
-						&& (board[x - 1][y + 1] & k_tile_was_alive_mask) != 0x00)
-					{
-						neighbour_count += 1;
-					}
+					neighbour_count += x > 0 && y < 17 && (board[x - 1][y + 1] & k_tile_was_alive_mask) != 0x00;
 
 					// west
-					if (x > 0
-						&& (board[x - 1][y] & k_tile_was_alive_mask) != 0x00)
-					{
-						neighbour_count += 1;
-					}
+					neighbour_count += x > 0 && (board[x - 1][y] & k_tile_was_alive_mask) != 0x00;
 
 					// north-west
-					if (x > 0
-						&& y > 0
-						&& (board[x - 1][y - 1] & k_tile_was_alive_mask) != 0x00)
-					{
-						neighbour_count += 1;
-					}
+					neighbour_count += x > 0 && y > 0 && (board[x - 1][y - 1] & k_tile_was_alive_mask) != 0x00;
 
 					// a dead tile with exactly 3 live neighbours comes to life, otherwise it remains dead
 					uint8_t is_alive = (tile_data & k_tile_is_alive_mask) != 0x00;
@@ -226,11 +190,7 @@ int main()
 					uint8_t remain_alive = is_alive && neighbour_count >= 2 && neighbour_count <= 3;
 
 					// un-set tile is alive mask, re-set if tile should remain alive or come to life
-					tile_data &= ~k_tile_is_alive_mask;
-					if ((come_to_life | remain_alive) != 0x00)
-					{
-						tile_data |= k_tile_is_alive_mask;
-					}
+					tile_data = (tile_data & ~k_tile_is_alive_mask) | (((come_to_life | remain_alive) != 0x00) << 6);
 
 					// get updated is_alive and was_alive flags
 					is_alive = (tile_data & k_tile_is_alive_mask) != 0x00;
@@ -281,22 +241,10 @@ int main()
 		else
 		{
 			// move cursor using d-pad
-			if (was_input_depressed(&input_state, btn_up))
-			{
-				cursor_tile_y -= 1;
-			}
-			else if (was_input_depressed(&input_state, btn_down))
-			{
-				cursor_tile_y += 1;
-			}
-			else if (was_input_depressed(&input_state, btn_left))
-			{
-				cursor_tile_x -= 1;
-			}
-			else if (was_input_depressed(&input_state, btn_right))
-			{
-				cursor_tile_x += 1;
-			}
+			cursor_tile_y -= was_input_depressed(&input_state, btn_up);
+			cursor_tile_y += was_input_depressed(&input_state, btn_down);
+			cursor_tile_x -= was_input_depressed(&input_state, btn_left);
+			cursor_tile_x += was_input_depressed(&input_state, btn_right);
 
 			// wrap cursor x position
 			cursor_tile_x = cursor_tile_x == 255

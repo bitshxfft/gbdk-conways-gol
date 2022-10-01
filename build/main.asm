@@ -688,7 +688,7 @@ _SPRITE_TILE_HEIGHT:
 ; Function was_input_depressed
 ; ---------------------------------
 _was_input_depressed::
-;input.h:60: return is->depressed_buttons & (1 << button);
+;input.h:60: return (is->depressed_buttons & (1 << button)) != 0x00;
 	ldhl	sp,	#2
 	ld	a, (hl+)
 	ld	c, a
@@ -699,15 +699,24 @@ _was_input_depressed::
 	inc	bc
 	ld	a, (bc)
 	ld	c, (hl)
-	ld	b, #0x01
+	ld	hl, #0x0001
 	inc	c
 	jr	00104$
 00103$:
-	sla	b
+	add	hl, hl
 00104$:
 	dec	c
 	jr	NZ,00103$
-	and	a, b
+	ld	c, #0x00
+	and	a, l
+	ld	e, a
+	ld	a, c
+	and	a, h
+	or	a, e
+	sub	a,#0x01
+	ld	a, #0x00
+	rla
+	xor	a, #0x01
 	ld	e, a
 ;input.h:61: }
 	ret
@@ -716,25 +725,36 @@ _was_input_depressed::
 ; Function was_input_released
 ; ---------------------------------
 _was_input_released::
-;input.h:65: return is->released_buttons & (1 << button);
+;input.h:65: return (is->released_buttons & (1 << button)) != 0x00;
 	ldhl	sp,	#2
 	ld	a, (hl+)
 	ld	c, a
-	ld	b, (hl)
-	ld	hl, #0x0004
-	add	hl, bc
+	ld	a, (hl+)
+	ld	b, a
+	inc	bc
+	inc	bc
+	inc	bc
+	inc	bc
+	ld	a, (bc)
 	ld	c, (hl)
-	ldhl	sp,	#4
-	ld	b, (hl)
-	ld	a, #0x01
-	inc	b
+	ld	hl, #0x0001
+	inc	c
 	jr	00104$
 00103$:
-	add	a, a
+	add	hl, hl
 00104$:
-	dec	b
+	dec	c
 	jr	NZ,00103$
-	and	a, c
+	ld	c, #0x00
+	and	a, l
+	ld	e, a
+	ld	a, c
+	and	a, h
+	or	a, e
+	sub	a,#0x01
+	ld	a, #0x00
+	rla
+	xor	a, #0x01
 	ld	e, a
 ;input.h:66: }
 	ret
@@ -743,7 +763,7 @@ _was_input_released::
 ; Function is_input_held
 ; ---------------------------------
 _is_input_held::
-;input.h:70: return is->held_buttons & (1 << button);
+;input.h:70: return (is->held_buttons & (1 << button)) != 0x00;
 	ldhl	sp,	#2
 	ld	a, (hl+)
 	ld	c, a
@@ -753,15 +773,24 @@ _is_input_held::
 	inc	bc
 	ld	a, (bc)
 	ld	c, (hl)
-	ld	b, #0x01
+	ld	hl, #0x0001
 	inc	c
 	jr	00104$
 00103$:
-	sla	b
+	add	hl, hl
 00104$:
 	dec	c
 	jr	NZ,00103$
-	and	a, b
+	ld	c, #0x00
+	and	a, l
+	ld	e, a
+	ld	a, c
+	and	a, h
+	or	a, e
+	sub	a,#0x01
+	ld	a, #0x00
+	rla
+	xor	a, #0x01
 	ld	e, a
 ;input.h:71: }
 	ret
@@ -964,7 +993,7 @@ _update_tile_position::
 ; Function main
 ; ---------------------------------
 _main::
-	ld	hl, #-439
+	ld	hl, #-438
 	add	hl, sp
 	ld	sp, hl
 ;main.c:68: input_state.previous_state = 0x00;
@@ -1019,7 +1048,7 @@ _main::
 	xor	a, a
 	ld	(bc), a
 ;main.c:75: uint8_t execution_state = 0x00;
-	ld	hl, #435
+	ld	hl, #434
 	add	hl, sp
 	ld	(hl), #0x00
 ;main.c:78: uint8_t cursor_tile_x = 10;
@@ -1030,7 +1059,7 @@ _main::
 	ld	(hl+), a
 	ld	(hl), #0x09
 ;main.c:87: uint8_t next_available_sprite_index = 0;
-	ld	hl, #436
+	ld	hl, #435
 	add	hl, sp
 	ld	(hl), #0x00
 ;main.c:90: for (uint8_t i = 0; i < 39; ++i)
@@ -1043,7 +1072,7 @@ _main::
 	ld	(hl+), a
 	ld	(hl), d
 	ld	e, #0x00
-00175$:
+00134$:
 	ld	a, e
 	sub	a, #0x27
 	jr	NC, 00101$
@@ -1084,7 +1113,7 @@ _main::
 	pop	de
 ;main.c:90: for (uint8_t i = 0; i < 39; ++i)
 	inc	e
-	jr	00175$
+	jr	00134$
 00101$:
 ;main.c:98: for (uint8_t x = 0; x < 20; ++x)
 	ldhl	sp,	#7
@@ -1094,11 +1123,11 @@ _main::
 	add	hl, sp
 	ld	(hl+), a
 	ld	(hl), d
-	ld	hl, #438
+	ld	hl, #437
 	add	hl, sp
 	ld	(hl), #0x00
-00181$:
-	ld	hl, #438
+00140$:
+	ld	hl, #437
 	add	hl, sp
 	ld	a, (hl)
 	sub	a, #0x14
@@ -1124,10 +1153,10 @@ _main::
 	ld	e, l
 	ld	d, h
 	ld	c, #0x00
-00178$:
+00137$:
 	ld	a, c
 	sub	a, #0x12
-	jr	NC, 00182$
+	jr	NC, 00141$
 ;main.c:102: board[x][y] = 0x00;
 	ld	l, c
 	ld	h, #0x00
@@ -1135,13 +1164,13 @@ _main::
 	ld	(hl), #0x00
 ;main.c:100: for (uint8_t y = 0; y < 18; ++y)
 	inc	c
-	jr	00178$
-00182$:
+	jr	00137$
+00141$:
 ;main.c:98: for (uint8_t x = 0; x < 20; ++x)
-	ld	hl, #438
+	ld	hl, #437
 	add	hl, sp
 	inc	(hl)
-	jr	00181$
+	jr	00140$
 00103$:
 ;main.c:107: set_sprite_data(0, 3, k_sprites);
 	ld	de, #_k_sprites
@@ -1191,7 +1220,7 @@ _main::
 	or	a, #0x80
 	ldh	(_LCDC_REG + 0), a
 ;main.c:121: while (1)
-00172$:
+00131$:
 ;main.c:124: update_input_state(&input_state, joypad());
 	call	_joypad
 	ld	a, e
@@ -1223,7 +1252,7 @@ _main::
 ;main.c:129: execution_state ^= k_execution_state_active_mask;
 	ld	hl, #_k_execution_state_active_mask
 	ld	c, (hl)
-	ld	hl, #435
+	ld	hl, #434
 	add	hl, sp
 	ld	a, (hl)
 	xor	a, c
@@ -1232,14 +1261,14 @@ _main::
 	ld	a, (hl)
 	and	a, c
 	sub	a, c
-	jr	NZ, 00197$
+	jr	NZ, 00156$
 ;main.c:133: ? k_empty_tile_index
 	ld	a, (#_k_empty_tile_index)
-	jr	00198$
-00197$:
+	jr	00157$
+00156$:
 ;main.c:134: : k_cursor_empty_tile_index);
 	ld	a, (#_k_cursor_empty_tile_index)
-00198$:
+00157$:
 	push	af
 	inc	sp
 	call	_update_cursor_sprite
@@ -1248,30 +1277,30 @@ _main::
 ;main.c:138: if ((execution_state & k_execution_state_active_mask) == k_execution_state_active_mask)
 	ld	hl, #_k_execution_state_active_mask
 	ld	c, (hl)
-	ld	hl, #435
+	ld	hl, #434
 	add	hl, sp
 	ld	a, (hl)
 	and	a, c
 	sub	a, c
-	jp	NZ,00169$
+	jp	NZ,00128$
 ;main.c:140: for (uint8_t x = 0; x < 20; ++x)
 	ld	hl, #412
 	add	hl, sp
 	ld	a, (hl)
-	ld	hl, #429
+	ld	hl, #428
 	add	hl, sp
 	ld	(hl), a
 	ld	hl, #413
 	add	hl, sp
 	ld	a, (hl)
-	ld	hl, #430
+	ld	hl, #429
 	add	hl, sp
 	ld	(hl), a
-	ld	hl, #437
+	ld	hl, #436
 	add	hl, sp
 	ld	(hl), #0x00
-00187$:
-	ld	hl, #437
+00146$:
+	ld	hl, #436
 	add	hl, sp
 	ld	a, (hl)
 	sub	a, #0x14
@@ -1288,7 +1317,7 @@ _main::
 	add	hl, hl
 	ld	c, l
 	ld	b, h
-	ld	hl, #429
+	ld	hl, #428
 	add	hl, sp
 	ld	a,	(hl+)
 	ld	h, (hl)
@@ -1296,42 +1325,42 @@ _main::
 	add	hl, bc
 	push	hl
 	ld	a, l
-	ld	hl, #433
+	ld	hl, #432
 	add	hl, sp
 	ld	(hl), a
 	pop	hl
 	ld	a, h
-	ld	hl, #432
+	ld	hl, #431
 	add	hl, sp
 	ld	(hl), a
-	ld	hl, #438
+	ld	hl, #437
 	add	hl, sp
 	ld	(hl), #0x00
-00184$:
-	ld	hl, #438
+00143$:
+	ld	hl, #437
 	add	hl, sp
 	ld	a, (hl)
 	sub	a, #0x12
-	jr	NC, 00188$
+	jr	NC, 00147$
 ;main.c:144: uint8_t tile_data = board[x][y];
-	ld	hl,#0x1af
+	ld	hl,#0x1ae
 	add	hl,sp
 	ld	a, (hl+)
 	ld	e, a
 	ld	d, (hl)
-	ld	hl, #438
+	ld	hl, #437
 	add	hl, sp
 	ld	l, (hl)
 	ld	h, #0x00
 	add	hl, de
 	push	hl
 	ld	a, l
-	ld	hl, #435
+	ld	hl, #434
 	add	hl, sp
 	ld	(hl), a
 	pop	hl
 	ld	a, h
-	ld	hl, #434
+	ld	hl, #433
 	add	hl, sp
 	ld	(hl-), a
 	ld	a, (hl+)
@@ -1349,23 +1378,23 @@ _main::
 	add	a, a
 	or	a, c
 	ld	c, a
-	ld	hl, #433
+	ld	hl, #432
 	add	hl, sp
 	ld	a,	(hl+)
 	ld	h, (hl)
 	ld	l, a
 	ld	(hl), c
 ;main.c:142: for (uint8_t y = 0; y < 18; ++y)
-	ld	hl, #438
-	add	hl, sp
-	inc	(hl)
-	jr	00184$
-00188$:
-;main.c:140: for (uint8_t x = 0; x < 20; ++x)
 	ld	hl, #437
 	add	hl, sp
 	inc	(hl)
-	jp	00187$
+	jr	00143$
+00147$:
+;main.c:140: for (uint8_t x = 0; x < 20; ++x)
+	ld	hl, #436
+	add	hl, sp
+	inc	(hl)
+	jp	00146$
 00107$:
 ;main.c:152: for (uint8_t x = 0; x < 20; ++x)
 	ld	hl, #412
@@ -1400,15 +1429,15 @@ _main::
 	ld	hl, #419
 	add	hl, sp
 	ld	(hl), a
-	ld	hl, #437
+	ld	hl, #436
 	add	hl, sp
 	ld	(hl), #0x00
-00193$:
-	ld	hl, #437
+00152$:
+	ld	hl, #436
 	add	hl, sp
 	ld	a, (hl)
 	sub	a, #0x14
-	jp	NC, 00170$
+	jp	NC, 00129$
 ;main.c:154: for (uint8_t y = 0; y < 18; ++y)
 	ld	c, (hl)
 	ld	b, #0x00
@@ -1437,7 +1466,7 @@ _main::
 	ld	hl, #421
 	add	hl, sp
 	ld	(hl), a
-	ld	hl, #437
+	ld	hl, #436
 	add	hl, sp
 	ld	a, (hl)
 	sub	a, #0x13
@@ -1446,22 +1475,22 @@ _main::
 	ld	hl, #422
 	add	hl, sp
 	ld	(hl), a
-	ld	hl, #438
+	ld	hl, #437
 	add	hl, sp
 	ld	(hl), #0x00
-00190$:
-	ld	hl, #438
+00149$:
+	ld	hl, #437
 	add	hl, sp
 	ld	a, (hl)
 	sub	a, #0x12
-	jp	NC, 00194$
+	jp	NC, 00153$
 ;main.c:156: uint8_t tile_data = board[x][y];
 	ld	hl,#0x1a4
 	add	hl,sp
 	ld	a, (hl+)
 	ld	e, a
 	ld	d, (hl)
-	ld	hl, #438
+	ld	hl, #437
 	add	hl, sp
 	ld	l, (hl)
 	ld	h, #0x00
@@ -1481,59 +1510,79 @@ _main::
 	ld	a, (hl+)
 	ld	d, a
 	ld	a, (de)
+	ld	(hl), a
 ;main.c:157: uint8_t neighbour_count = 0;
-	ld	(hl+), a
+	ld	hl, #432
+	add	hl, sp
 	ld	(hl), #0x00
 ;main.c:147: board[x][y] = (tile_data & ~k_tile_was_alive_mask) | ((tile_data & k_tile_is_alive_mask) << 1);
 	ld	a, (#_k_tile_was_alive_mask)
-	ld	hl, #427
+	ld	hl, #426
 	add	hl, sp
 	ld	(hl), a
-;main.c:161: && (board[x][y - 1] & k_tile_was_alive_mask) != 0x00)
-	ld	hl, #438
+;main.c:160: neighbour_count += y > 0 && (board[x][y - 1] & k_tile_was_alive_mask) != 0x00;
+	ld	hl, #437
 	add	hl, sp
 	ld	a, (hl)
-	ld	hl, #434
+	ld	hl, #433
 	add	hl, sp
 	ld	(hl), a
 	ld	a, (hl)
 	dec	a
-	ld	hl, #428
+	ld	hl, #427
 	add	hl, sp
 	ld	(hl), a
-;main.c:160: if (y > 0
-	ld	hl, #438
+	ld	hl, #437
 	add	hl, sp
 	ld	a, (hl)
 	or	a, a
-	jr	Z, 00109$
-;main.c:161: && (board[x][y - 1] & k_tile_was_alive_mask) != 0x00)
+	jr	Z, 00158$
 	ld	hl,#0x1a4
 	add	hl,sp
 	ld	a, (hl+)
 	ld	e, a
 	ld	d, (hl)
-	ld	hl, #428
+	ld	hl, #427
 	add	hl, sp
 	ld	l, (hl)
 	ld	h, #0x00
 	add	hl, de
-	ld	c, l
-	ld	b, h
-	ld	a, (bc)
-	ld	hl, #427
+	push	hl
+	ld	a, l
+	ld	hl, #432
+	add	hl, sp
+	ld	(hl), a
+	pop	hl
+	ld	a, h
+	ld	hl, #431
+	add	hl, sp
+	ld	(hl-), a
+	ld	a, (hl+)
+	ld	e, a
+	ld	d, (hl)
+	ld	a, (de)
+	ld	hl, #426
 	add	hl, sp
 	and	a,(hl)
-	jr	Z, 00109$
-;main.c:163: neighbour_count += 1;
+	jr	NZ, 00159$
+00158$:
+	xor	a, a
+	jr	00160$
+00159$:
+	ld	a, #0x01
+00160$:
+	ld	hl, #431
+	add	hl, sp
+	ld	(hl+), a
+	ld	a, (hl-)
+	add	a, (hl)
 	dec	hl
-	ld	(hl), #0x01
-00109$:
-;main.c:169: && (board[x + 1][y - 1] & k_tile_was_alive_mask) != 0x00)
-	ld	hl, #437
+	ld	(hl), a
+;main.c:163: neighbour_count += x < 19 && y > 0 && (board[x + 1][y - 1] & k_tile_was_alive_mask) != 0x00;
+	ld	hl, #436
 	add	hl, sp
 	ld	a, (hl)
-	ld	hl, #429
+	ld	hl, #428
 	add	hl, sp
 	ld	(hl+), a
 	xor	a, a
@@ -1557,138 +1606,21 @@ _main::
 	ld	h, (hl)
 	ld	l, a
 	add	hl, bc
+	inc	sp
+	inc	sp
 	push	hl
-	ld	a, l
-	ld	hl, #433
-	add	hl, sp
-	ld	(hl), a
-	pop	hl
-	ld	a, h
-	ld	hl, #432
-	add	hl, sp
-	ld	(hl), a
-;main.c:168: && y > 0
 	ld	hl, #422
 	add	hl, sp
-	ld	a, (hl)
-	or	a, a
-	jr	Z, 00112$
-	ld	hl, #438
+	bit	0, (hl)
+	jr	Z, 00161$
+	ld	hl, #437
 	add	hl, sp
 	ld	a, (hl)
 	or	a, a
-	jr	Z, 00112$
-;main.c:169: && (board[x + 1][y - 1] & k_tile_was_alive_mask) != 0x00)
-	ld	hl,#0x1af
-	add	hl,sp
-	ld	a, (hl+)
-	ld	e, a
-	ld	d, (hl)
-	ld	hl, #428
-	add	hl, sp
-	ld	l, (hl)
-	ld	h, #0x00
-	add	hl, de
-	inc	sp
-	inc	sp
-	ld	e, l
-	ld	d, h
+	jr	Z, 00161$
+	pop	de
 	push	de
-	ld	a, (de)
 	ld	hl, #427
-	add	hl, sp
-	and	a,(hl)
-	jr	Z, 00112$
-;main.c:171: neighbour_count += 1;
-	dec	hl
-	inc	(hl)
-	ld	a, (hl)
-00112$:
-;main.c:176: && (board[x + 1][y] & k_tile_was_alive_mask) != 0x00)
-	ld	hl, #422
-	add	hl, sp
-	ld	a, (hl)
-	or	a, a
-	jr	Z, 00116$
-	ld	hl,#0x1af
-	add	hl,sp
-	ld	a, (hl+)
-	ld	e, a
-	ld	d, (hl)
-	ld	hl, #438
-	add	hl, sp
-	ld	l, (hl)
-	ld	h, #0x00
-	add	hl, de
-	ld	c, l
-	ld	b, h
-	ld	a, (bc)
-	ld	hl, #427
-	add	hl, sp
-	and	a,(hl)
-	jr	Z, 00116$
-;main.c:178: neighbour_count += 1;
-	dec	hl
-	inc	(hl)
-	ld	a, (hl)
-00116$:
-;main.c:184: && (board[x + 1][y + 1] & k_tile_was_alive_mask) != 0x00)
-	ld	hl, #438
-	add	hl, sp
-	ld	a, (hl)
-	sub	a, #0x11
-	ld	a, #0x00
-	rla
-	ld	hl, #433
-	add	hl, sp
-	ld	(hl+), a
-	inc	(hl)
-;main.c:183: && y < 17
-	ld	hl, #422
-	add	hl, sp
-	ld	a, (hl)
-	or	a, a
-	jr	Z, 00119$
-;main.c:184: && (board[x + 1][y + 1] & k_tile_was_alive_mask) != 0x00)
-	ld	hl, #433
-	add	hl, sp
-	ld	a, (hl)
-	or	a, a
-	jr	Z, 00119$
-	dec	hl
-	dec	hl
-	ld	a, (hl+)
-	ld	e, a
-	ld	a, (hl+)
-	inc	hl
-	ld	d, a
-	ld	l, (hl)
-	ld	h, #0x00
-	add	hl, de
-	ld	c, l
-	ld	b, h
-	ld	a, (bc)
-	ld	hl, #427
-	add	hl, sp
-	and	a,(hl)
-	jr	Z, 00119$
-;main.c:186: neighbour_count += 1;
-	dec	hl
-	inc	(hl)
-	ld	a, (hl)
-00119$:
-;main.c:191: && (board[x][y + 1] & k_tile_was_alive_mask) != 0x00)
-	ld	hl, #433
-	add	hl, sp
-	ld	a, (hl)
-	or	a, a
-	jr	Z, 00123$
-	ld	hl,#0x1a4
-	add	hl,sp
-	ld	a, (hl+)
-	ld	e, a
-	ld	d, (hl)
-	ld	hl, #434
 	add	hl, sp
 	ld	l, (hl)
 	ld	h, #0x00
@@ -1707,17 +1639,138 @@ _main::
 	ld	e, a
 	ld	d, (hl)
 	ld	a, (de)
-	ld	hl, #427
+	ld	hl, #426
 	add	hl, sp
 	and	a,(hl)
-	jr	Z, 00123$
-;main.c:193: neighbour_count += 1;
-	dec	hl
-	inc	(hl)
+	jr	NZ, 00162$
+00161$:
+	xor	a, a
+	jr	00163$
+00162$:
+	ld	a, #0x01
+00163$:
+	ld	hl, #430
+	add	hl, sp
+	ld	c, (hl)
+	add	a, c
+	ld	c, a
+;main.c:166: neighbour_count += x < 19 && (board[x + 1][y] & k_tile_was_alive_mask) != 0x00;
+	ld	hl, #422
+	add	hl, sp
+	bit	0, (hl)
+	jr	Z, 00167$
+	pop	de
+	push	de
+	ld	hl, #437
+	add	hl, sp
+	ld	l, (hl)
+	ld	h, #0x00
+	add	hl, de
+	ld	e, l
+	ld	d, h
+	ld	a, (de)
+	ld	hl, #426
+	add	hl, sp
+	and	a,(hl)
+	jr	NZ, 00168$
+00167$:
+	xor	a, a
+	jr	00169$
+00168$:
+	ld	a, #0x01
+00169$:
+	add	a, c
+	ld	c, a
+;main.c:169: neighbour_count += x < 19 && y < 17 && (board[x + 1][y + 1] & k_tile_was_alive_mask) != 0x00;
+	ld	hl, #437
+	add	hl, sp
 	ld	a, (hl)
-00123$:
-;main.c:199: && (board[x - 1][y + 1] & k_tile_was_alive_mask) != 0x00)
-	ld	hl,#0x1ad
+	sub	a, #0x11
+	ld	a, #0x00
+	rla
+	ld	hl, #430
+	add	hl, sp
+	ld	(hl), a
+	ld	hl, #433
+	add	hl, sp
+	ld	a, (hl-)
+	inc	a
+	ld	(hl), a
+	ld	hl, #422
+	add	hl, sp
+	bit	0, (hl)
+	jr	Z, 00170$
+	ld	hl, #430
+	add	hl, sp
+	bit	0, (hl)
+	jr	Z, 00170$
+	inc	hl
+	inc	hl
+	pop	de
+	push	de
+	ld	l, (hl)
+	ld	h, #0x00
+	add	hl, de
+	ld	e, l
+	ld	d, h
+	ld	a, (de)
+	ld	hl, #426
+	add	hl, sp
+	and	a,(hl)
+	jr	NZ, 00171$
+00170$:
+	xor	a, a
+	jr	00172$
+00171$:
+	ld	a, #0x01
+00172$:
+	add	a, c
+	ld	hl, #433
+	add	hl, sp
+	ld	(hl), a
+;main.c:172: neighbour_count +=y < 17 && (board[x][y + 1] & k_tile_was_alive_mask) != 0x00;
+	ld	hl, #430
+	add	hl, sp
+	bit	0, (hl)
+	jr	Z, 00176$
+	ld	hl,#0x1a4
+	add	hl,sp
+	ld	a, (hl+)
+	ld	e, a
+	ld	d, (hl)
+	ld	hl, #432
+	add	hl, sp
+	ld	l, (hl)
+	ld	h, #0x00
+	add	hl, de
+	inc	sp
+	inc	sp
+	ld	e, l
+	ld	d, h
+	push	de
+	ld	a, (de)
+	ld	hl, #426
+	add	hl, sp
+	and	a,(hl)
+	jr	NZ, 00177$
+00176$:
+	xor	a, a
+	jr	00178$
+00177$:
+	ld	a, #0x01
+00178$:
+	ld	hl, #431
+	add	hl, sp
+	ld	(hl+), a
+	inc	hl
+	ld	a, (hl-)
+	dec	hl
+	add	a, (hl)
+	inc	hl
+	inc	hl
+	ld	(hl), a
+;main.c:175: neighbour_count += x > 0 && y < 17 && (board[x - 1][y + 1] & k_tile_was_alive_mask) != 0x00;
+	ld	hl,#0x1ac
 	add	hl,sp
 	ld	a, (hl+)
 	ld	c, a
@@ -1740,93 +1793,28 @@ _main::
 	add	hl, bc
 	push	hl
 	ld	a, l
-	ld	hl, #433
+	ld	hl, #430
 	add	hl, sp
 	ld	(hl), a
 	pop	hl
 	ld	a, h
-	ld	hl, #432
+	ld	hl, #429
 	add	hl, sp
 	ld	(hl), a
-;main.c:197: if (x > 0
-	ld	hl, #437
+	ld	hl, #436
 	add	hl, sp
 	ld	a, (hl)
 	or	a, a
-	jr	Z, 00126$
-;main.c:199: && (board[x - 1][y + 1] & k_tile_was_alive_mask) != 0x00)
-	ld	hl, #433
+	jr	Z, 00179$
+	ld	hl, #430
 	add	hl, sp
-	ld	a, (hl)
-	or	a, a
-	jr	Z, 00126$
+	bit	0, (hl)
+	jr	Z, 00179$
+	inc	hl
 	inc	hl
 	ld	e, (hl)
 	ld	d, #0x00
-	ld	hl, #431
-	add	hl, sp
-	ld	a,	(hl+)
-	ld	h, (hl)
-	ld	l, a
-	add	hl, de
-	ld	c, l
-	ld	b, h
-	ld	a, (bc)
-	ld	hl, #427
-	add	hl, sp
-	and	a,(hl)
-	jr	Z, 00126$
-;main.c:201: neighbour_count += 1;
-	dec	hl
-	inc	(hl)
-	ld	a, (hl)
-00126$:
-;main.c:205: if (x > 0
-	ld	hl, #437
-	add	hl, sp
-	ld	a, (hl)
-	or	a, a
-	jr	Z, 00130$
-;main.c:206: && (board[x - 1][y] & k_tile_was_alive_mask) != 0x00)
-	ld	hl,#0x1af
-	add	hl,sp
-	ld	a, (hl+)
-	ld	e, a
-	ld	d, (hl)
-	ld	hl, #438
-	add	hl, sp
-	ld	l, (hl)
-	ld	h, #0x00
-	add	hl, de
-	ld	c, l
-	ld	b, h
-	ld	a, (bc)
-	ld	hl, #427
-	add	hl, sp
-	and	a,(hl)
-	jr	Z, 00130$
-;main.c:208: neighbour_count += 1;
-	dec	hl
-	inc	(hl)
-	ld	a, (hl)
-00130$:
-;main.c:212: if (x > 0
-	ld	hl, #437
-	add	hl, sp
-	ld	a, (hl)
-	or	a, a
-	jr	Z, 00133$
-;main.c:213: && y > 0
-	inc	hl
-	ld	a, (hl)
-	or	a, a
-	jr	Z, 00133$
-;main.c:214: && (board[x - 1][y - 1] & k_tile_was_alive_mask) != 0x00)
 	ld	hl, #428
-	add	hl, sp
-	ld	e, (hl)
-	ld	d, #0x00
-	ld	hl, #431
 	add	hl, sp
 	ld	a,	(hl+)
 	ld	h, (hl)
@@ -1834,155 +1822,47 @@ _main::
 	add	hl, de
 	push	hl
 	ld	a, l
-	ld	hl, #435
+	ld	hl, #433
 	add	hl, sp
 	ld	(hl), a
 	pop	hl
 	ld	a, h
-	ld	hl, #434
+	ld	hl, #432
 	add	hl, sp
 	ld	(hl-), a
 	ld	a, (hl+)
 	ld	e, a
 	ld	d, (hl)
 	ld	a, (de)
-	ld	hl, #427
-	add	hl, sp
-	and	a,(hl)
-	jr	Z, 00133$
-;main.c:216: neighbour_count += 1;
-	dec	hl
-	inc	(hl)
-	ld	a, (hl)
-00133$:
-;main.c:147: board[x][y] = (tile_data & ~k_tile_was_alive_mask) | ((tile_data & k_tile_is_alive_mask) << 1);
-	ld	hl, #_k_tile_is_alive_mask
-	ld	c, (hl)
-;main.c:220: uint8_t is_alive = (tile_data & k_tile_is_alive_mask) != 0x00;
-	ld	hl, #425
-	add	hl, sp
-	ld	a, (hl)
-	and	a, c
-	sub	a,#0x01
-	ld	a, #0x00
-	rla
-	xor	a, #0x01
-;main.c:221: uint8_t come_to_life = !is_alive && neighbour_count == 3;
-	ld	e, a
-	or	a, a
-	jr	NZ, 00199$
-	inc	hl
-	ld	a, (hl)
-	sub	a, #0x03
-	jr	Z, 00200$
-00199$:
-	xor	a, a
-	jr	00201$
-00200$:
-	ld	a, #0x01
-00201$:
-	ld	hl, #432
-	add	hl, sp
-	ld	(hl), a
-;main.c:226: uint8_t remain_alive = is_alive && neighbour_count >= 2 && neighbour_count <= 3;
-	ld	a, e
-	or	a, a
-	jr	Z, 00202$
 	ld	hl, #426
 	add	hl, sp
-	ld	a, (hl)
-	sub	a, #0x02
-	jr	C, 00202$
-	ld	a, #0x03
-	sub	a, (hl)
-	jr	NC, 00203$
-00202$:
-	ld	e, #0x00
-	jr	00204$
-00203$:
-	ld	e, #0x01
-00204$:
-;main.c:229: tile_data &= ~k_tile_is_alive_mask;
-	ld	a, c
-	cpl
+	and	a,(hl)
+	jr	NZ, 00180$
+00179$:
+	xor	a, a
+	jr	00181$
+00180$:
+	ld	a, #0x01
+00181$:
 	ld	hl, #433
 	add	hl, sp
-	ld	(hl), a
-	ld	hl, #425
-	add	hl, sp
-	ld	a, (hl)
-	ld	hl, #433
-	add	hl, sp
-	and	a, (hl)
-	inc	hl
-;main.c:230: if ((come_to_life | remain_alive) != 0x00)
-	ld	(hl-), a
+	ld	c, (hl)
 	dec	hl
-	ld	a, (hl)
-	or	a, e
-	or	a, a
-	jr	Z, 00137$
-;main.c:232: tile_data |= k_tile_is_alive_mask;
-	inc	hl
-	inc	hl
-	ld	a, (hl)
-	or	a, c
-	ld	(hl), a
-00137$:
-;main.c:236: is_alive = (tile_data & k_tile_is_alive_mask) != 0x00;
-	ld	hl, #434
-	add	hl, sp
-	ld	a, (hl-)
 	dec	hl
-	and	a, c
-	sub	a, #0x01
-	ld	a, #0x00
-	rla
-	xor	a, #0x01
-;main.c:237: uint8_t was_alive = (tile_data & k_tile_was_alive_mask) != 0x00;
-	ld	(hl+), a
-	inc	hl
-	ld	a, (hl)
-	ld	hl, #427
-	add	hl, sp
-	and	a, (hl)
-	inc	hl
-	inc	hl
-	sub	a, #0x01
-	ld	a, #0x00
-	rla
-	xor	a, #0x01
+	add	a, c
 	ld	(hl), a
-	ld	a, (hl+)
-	ld	(hl), a
-;main.c:250: update_tile_position(tile_data & k_tile_sprite_index_mask, x, y);
-	ld	a, (#_k_tile_sprite_index_mask)
-	ld	hl, #431
-	add	hl, sp
-;main.c:240: if (!was_alive && is_alive)
-	ld	(hl-), a
-	dec	hl
-	ld	a, (hl)
-	or	a, a
-	jr	NZ, 00145$
-	ld	hl, #432
-	add	hl, sp
-	ld	a, (hl)
-	or	a, a
-	jr	Z, 00145$
-;main.c:243: if (next_available_sprite_index < 39)
+;main.c:178: neighbour_count += x > 0 && (board[x - 1][y] & k_tile_was_alive_mask) != 0x00;
 	ld	hl, #436
 	add	hl, sp
 	ld	a, (hl)
-	sub	a, #0x27
-	jr	NC, 00139$
-;main.c:246: tile_data |= available_sprites[next_available_sprite_index];
-	ld	hl,#0x1a2
+	or	a, a
+	jr	Z, 00185$
+	ld	hl,#0x1ac
 	add	hl,sp
 	ld	a, (hl+)
 	ld	e, a
 	ld	d, (hl)
-	ld	hl, #436
+	ld	hl, #437
 	add	hl, sp
 	ld	l, (hl)
 	ld	h, #0x00
@@ -1995,6 +1875,224 @@ _main::
 	pop	hl
 	ld	a, h
 	ld	hl, #433
+	add	hl, sp
+	ld	(hl-), a
+	ld	a, (hl+)
+	ld	e, a
+	ld	d, (hl)
+	ld	a, (de)
+	ld	hl, #426
+	add	hl, sp
+	and	a,(hl)
+	jr	NZ, 00186$
+00185$:
+	xor	a, a
+	jr	00187$
+00186$:
+	ld	a, #0x01
+00187$:
+	ld	hl, #431
+	add	hl, sp
+	ld	c, (hl)
+	add	a, c
+	ld	(hl), a
+;main.c:181: neighbour_count += x > 0 && y > 0 && (board[x - 1][y - 1] & k_tile_was_alive_mask) != 0x00;
+	ld	hl, #436
+	add	hl, sp
+	ld	a, (hl)
+	or	a, a
+	jr	Z, 00188$
+	inc	hl
+	ld	a, (hl)
+	or	a, a
+	jr	Z, 00188$
+	ld	hl, #427
+	add	hl, sp
+	ld	a, (hl+)
+	ld	e, a
+	ld	d, #0x00
+	ld	a,	(hl+)
+	ld	h, (hl)
+	ld	l, a
+	add	hl, de
+	push	hl
+	ld	a, l
+	ld	hl, #434
+	add	hl, sp
+	ld	(hl), a
+	pop	hl
+	ld	a, h
+	ld	hl, #433
+	add	hl, sp
+	ld	(hl-), a
+	ld	a, (hl+)
+	ld	e, a
+	ld	d, (hl)
+	ld	a, (de)
+	ld	hl, #426
+	add	hl, sp
+	and	a,(hl)
+	jr	NZ, 00189$
+00188$:
+	ld	hl, #433
+	add	hl, sp
+	ld	(hl), #0x00
+	jr	00190$
+00189$:
+	ld	hl, #433
+	add	hl, sp
+	ld	(hl), #0x01
+00190$:
+	ld	hl, #433
+	add	hl, sp
+	ld	a, (hl-)
+	dec	hl
+	ld	c, (hl)
+	inc	hl
+	inc	hl
+	add	a, c
+	ld	(hl), a
+;main.c:147: board[x][y] = (tile_data & ~k_tile_was_alive_mask) | ((tile_data & k_tile_is_alive_mask) << 1);
+	ld	a, (#_k_tile_is_alive_mask)
+	ld	hl, #431
+	add	hl, sp
+	ld	(hl), a
+;main.c:184: uint8_t is_alive = (tile_data & k_tile_is_alive_mask) != 0x00;
+	ld	hl, #425
+	add	hl, sp
+	ld	a, (hl)
+	ld	hl, #431
+	add	hl, sp
+	and	a, (hl)
+	sub	a,#0x01
+	ld	a, #0x00
+	rla
+	xor	a, #0x01
+;main.c:185: uint8_t come_to_life = !is_alive && neighbour_count == 3;
+	ld	b, a
+	or	a, a
+	jr	NZ, 00194$
+	inc	hl
+	inc	hl
+	ld	a, (hl)
+	sub	a, #0x03
+	jr	Z, 00195$
+00194$:
+	ld	c, #0x00
+	jr	00196$
+00195$:
+	ld	c, #0x01
+00196$:
+;main.c:190: uint8_t remain_alive = is_alive && neighbour_count >= 2 && neighbour_count <= 3;
+	ld	a, b
+	or	a, a
+	jr	Z, 00197$
+	ld	hl, #433
+	add	hl, sp
+	ld	a, (hl)
+	sub	a, #0x02
+	jr	C, 00197$
+	ld	a, #0x03
+	sub	a, (hl)
+	jr	NC, 00198$
+00197$:
+	ld	e, #0x00
+	jr	00199$
+00198$:
+	ld	e, #0x01
+00199$:
+;main.c:193: tile_data = (tile_data & ~k_tile_is_alive_mask) | (((come_to_life | remain_alive) != 0x00) << 6);
+	ld	hl, #431
+	add	hl, sp
+	ld	a, (hl+)
+	cpl
+	ld	(hl), a
+	ld	hl, #425
+	add	hl, sp
+	ld	a, (hl)
+	ld	hl, #432
+	add	hl, sp
+	and	a, (hl)
+	ld	l, a
+;	spillPairReg hl
+;	spillPairReg hl
+	ld	a, c
+	or	a, e
+	sub	a,#0x01
+	ld	a, #0x00
+	rla
+	xor	a, #0x01
+	rrca
+	rrca
+	and	a, #0xc0
+	or	a, l
+	ld	hl, #433
+	add	hl, sp
+	ld	(hl), a
+;main.c:196: is_alive = (tile_data & k_tile_is_alive_mask) != 0x00;
+	ld	a, (hl-)
+	dec	hl
+	and	a, (hl)
+	sub	a,#0x01
+	ld	a, #0x00
+	rla
+	xor	a, #0x01
+;main.c:197: uint8_t was_alive = (tile_data & k_tile_was_alive_mask) != 0x00;
+	ld	(hl+), a
+	inc	hl
+	ld	a, (hl)
+	ld	hl, #426
+	add	hl, sp
+	and	a, (hl)
+	inc	hl
+	inc	hl
+	sub	a, #0x01
+	ld	a, #0x00
+	rla
+	xor	a, #0x01
+	ld	(hl), a
+	ld	a, (hl+)
+	ld	(hl), a
+;main.c:210: update_tile_position(tile_data & k_tile_sprite_index_mask, x, y);
+	ld	a, (#_k_tile_sprite_index_mask)
+	ld	hl, #430
+	add	hl, sp
+;main.c:200: if (!was_alive && is_alive)
+	ld	(hl-), a
+	dec	hl
+	ld	a, (hl)
+	or	a, a
+	jr	NZ, 00115$
+	ld	hl, #431
+	add	hl, sp
+	ld	a, (hl)
+	or	a, a
+	jr	Z, 00115$
+;main.c:203: if (next_available_sprite_index < 39)
+	ld	hl, #435
+	add	hl, sp
+	ld	a, (hl)
+	sub	a, #0x27
+	jr	NC, 00109$
+;main.c:206: tile_data |= available_sprites[next_available_sprite_index];
+	ld	hl,#0x1a2
+	add	hl,sp
+	ld	a, (hl+)
+	ld	e, a
+	ld	d, (hl)
+	ld	hl, #435
+	add	hl, sp
+	ld	l, (hl)
+	ld	h, #0x00
+	add	hl, de
+	push	hl
+	ld	a, l
+	ld	hl, #433
+	add	hl, sp
+	ld	(hl), a
+	pop	hl
+	ld	a, h
+	ld	hl, #432
 	add	hl, sp
 	ld	(hl-), a
 	ld	a, (hl+)
@@ -2003,25 +2101,25 @@ _main::
 	ld	d, a
 	ld	a, (de)
 	or	a, (hl)
-;main.c:247: next_available_sprite_index++;
+;main.c:207: next_available_sprite_index++;
 	ld	(hl+), a
 	inc	hl
 	inc	(hl)
-;main.c:250: update_tile_position(tile_data & k_tile_sprite_index_mask, x, y);
+;main.c:210: update_tile_position(tile_data & k_tile_sprite_index_mask, x, y);
 	dec	hl
 	dec	hl
 	ld	a, (hl)
-	ld	hl, #431
+	ld	hl, #430
 	add	hl, sp
 	and	a, (hl)
-	ld	hl, #438
+	ld	hl, #437
 	add	hl, sp
 	ld	h, (hl)
 ;	spillPairReg hl
 ;	spillPairReg hl
 	push	hl
 	inc	sp
-	ld	hl, #438
+	ld	hl, #437
 	add	hl, sp
 	ld	h, (hl)
 ;	spillPairReg hl
@@ -2032,33 +2130,33 @@ _main::
 	inc	sp
 	call	_update_tile_position
 	add	sp, #3
-	jr	00146$
-00139$:
-;main.c:255: tile_data &= ~k_tile_is_alive_mask;
-	ld	hl, #434
+	jr	00116$
+00109$:
+;main.c:215: tile_data &= ~k_tile_is_alive_mask;
+	ld	hl, #433
 	add	hl, sp
 	ld	a, (hl-)
 	and	a, (hl)
 	inc	hl
 	ld	(hl), a
-	jr	00146$
-00145$:
-;main.c:258: else if (was_alive && !is_alive)
-	ld	hl, #430
+	jr	00116$
+00115$:
+;main.c:218: else if (was_alive && !is_alive)
+	ld	hl, #429
 	add	hl, sp
 	ld	a, (hl)
 	or	a, a
-	jr	Z, 00146$
+	jr	Z, 00116$
 	inc	hl
 	inc	hl
 	ld	a, (hl)
 	or	a, a
-	jr	NZ, 00146$
-;main.c:261: update_tile_position(tile_data & k_tile_sprite_index_mask, 0, 19);
+	jr	NZ, 00116$
+;main.c:221: update_tile_position(tile_data & k_tile_sprite_index_mask, 0, 19);
 	inc	hl
 	inc	hl
 	ld	a, (hl)
-	ld	hl, #431
+	ld	hl, #430
 	add	hl, sp
 	and	a, (hl)
 	ld	h, #0x13
@@ -2075,17 +2173,17 @@ _main::
 	inc	sp
 	call	_update_tile_position
 	add	sp, #3
-;main.c:264: next_available_sprite_index--;
-	ld	hl, #436
+;main.c:224: next_available_sprite_index--;
+	ld	hl, #435
 	add	hl, sp
 	dec	(hl)
-;main.c:265: available_sprites[next_available_sprite_index] = tile_data & k_tile_sprite_index_mask;
+;main.c:225: available_sprites[next_available_sprite_index] = tile_data & k_tile_sprite_index_mask;
 	ld	hl,#0x1a0
 	add	hl,sp
 	ld	a, (hl+)
 	ld	e, a
 	ld	d, (hl)
-	ld	hl, #436
+	ld	hl, #435
 	add	hl, sp
 	ld	l, (hl)
 	ld	h, #0x00
@@ -2094,289 +2192,170 @@ _main::
 	ld	d, h
 	ld	hl, #_k_tile_sprite_index_mask
 	ld	c, (hl)
-	ld	hl, #434
+	ld	hl, #433
 	add	hl, sp
 	ld	a, (hl)
 	and	a, c
 	ld	(de), a
-;main.c:268: tile_data &= ~k_tile_sprite_index_mask;
+;main.c:228: tile_data &= ~k_tile_sprite_index_mask;
 	ld	a, c
 	cpl
 	and	a, (hl)
 	ld	(hl), a
-00146$:
-;main.c:271: board[x][y] = tile_data;
+00116$:
+;main.c:231: board[x][y] = tile_data;
 	ld	hl,#0x1a7
 	add	hl,sp
 	ld	a, (hl+)
 	ld	e, a
 	ld	d, (hl)
-	ld	hl, #434
+	ld	hl, #433
 	add	hl, sp
 	ld	a, (hl)
 	ld	(de), a
 ;main.c:154: for (uint8_t y = 0; y < 18; ++y)
-	ld	hl, #438
-	add	hl, sp
-	inc	(hl)
-	jp	00190$
-00194$:
-;main.c:152: for (uint8_t x = 0; x < 20; ++x)
 	ld	hl, #437
 	add	hl, sp
 	inc	(hl)
-	jp	00193$
-00169$:
-;main.c:284: if (was_input_depressed(&input_state, btn_up))
+	jp	00149$
+00153$:
+;main.c:152: for (uint8_t x = 0; x < 20; ++x)
+	ld	hl, #436
+	add	hl, sp
+	inc	(hl)
+	jp	00152$
+00128$:
+;main.c:244: cursor_tile_y -= was_input_depressed(&input_state, btn_up);
 	ld	hl, #406
 	add	hl, sp
-	ld	a, (hl)
-	ld	hl, #437
-	add	hl, sp
-	ld	(hl), a
-	ld	hl, #407
-	add	hl, sp
-	ld	a, (hl)
-	ld	hl, #438
-	add	hl, sp
-	ld	(hl-), a
+	ld	a, (hl+)
+	ld	c, a
+	ld	b, (hl)
 	ld	a, #0x02
 	push	af
 	inc	sp
+	push	bc
+	call	_was_input_depressed
+	add	sp, #3
+	ld	hl, #409
+	add	hl, sp
+	ld	a, (hl)
+	sub	a, e
+	ld	c, a
+;main.c:245: cursor_tile_y += was_input_depressed(&input_state, btn_down);
+	ld	hl, #406
+	add	hl, sp
 	ld	a, (hl+)
 	ld	e, a
 	ld	d, (hl)
-	push	de
-	call	_was_input_depressed
-	add	sp, #3
-	ld	hl, #438
-	add	hl, sp
-	ld	(hl), e
-;main.c:286: cursor_tile_y -= 1;
-	ld	hl, #409
-	add	hl, sp
-	ld	a, (hl)
-	ld	hl, #434
-	add	hl, sp
-	ld	(hl), a
-;main.c:284: if (was_input_depressed(&input_state, btn_up))
-	ld	hl, #438
-	add	hl, sp
-	ld	a, (hl)
-	or	a, a
-	jr	Z, 00159$
-;main.c:286: cursor_tile_y -= 1;
-	ld	hl, #434
-	add	hl, sp
-	ld	a, (hl)
-	dec	a
-	ld	hl, #409
-	add	hl, sp
-	ld	(hl), a
-	jp	00160$
-00159$:
-;main.c:288: else if (was_input_depressed(&input_state, btn_down))
-	ld	hl, #406
-	add	hl, sp
-	ld	a, (hl)
-	ld	hl, #437
-	add	hl, sp
-	ld	(hl), a
-	ld	hl, #407
-	add	hl, sp
-	ld	a, (hl)
-	ld	hl, #438
-	add	hl, sp
-	ld	(hl-), a
+	push	bc
 	ld	a, #0x03
 	push	af
 	inc	sp
-	ld	a, (hl+)
-	ld	e, a
-	ld	d, (hl)
 	push	de
 	call	_was_input_depressed
 	add	sp, #3
 	ld	a, e
-	or	a, a
-	jr	Z, 00156$
-;main.c:290: cursor_tile_y += 1;
-	ld	hl, #434
-	add	hl, sp
-	ld	a, (hl)
-	inc	a
-	ld	hl, #409
-	add	hl, sp
-	ld	(hl), a
-	jr	00160$
-00156$:
-;main.c:292: else if (was_input_depressed(&input_state, btn_left))
-	ld	hl, #406
-	add	hl, sp
-	ld	a, (hl)
+	pop	bc
+	add	a, c
 	ld	hl, #437
 	add	hl, sp
 	ld	(hl), a
-	ld	hl, #407
+;main.c:246: cursor_tile_x -= was_input_depressed(&input_state, btn_left);
+	ld	hl, #406
 	add	hl, sp
-	ld	a, (hl)
-	ld	hl, #438
-	add	hl, sp
-	ld	(hl-), a
+	ld	a, (hl+)
+	ld	c, a
+	ld	b, (hl)
 	ld	a, #0x04
 	push	af
 	inc	sp
+	push	bc
+	call	_was_input_depressed
+	add	sp, #3
+	ld	hl, #408
+	add	hl, sp
+;main.c:247: cursor_tile_x += was_input_depressed(&input_state, btn_right);
+	ld	a, (hl-)
+	dec	hl
+	sub	a, e
+	ld	c, a
 	ld	a, (hl+)
 	ld	e, a
 	ld	d, (hl)
-	push	de
-	call	_was_input_depressed
-	add	sp, #3
-;main.c:294: cursor_tile_x -= 1;
-	ld	hl, #408
-	add	hl, sp
-	ld	a, (hl)
-	ld	hl, #434
-	add	hl, sp
-	ld	(hl), a
-;main.c:292: else if (was_input_depressed(&input_state, btn_left))
-	ld	a, e
-	or	a, a
-	jr	Z, 00153$
-;main.c:294: cursor_tile_x -= 1;
-	ld	a, (hl)
-	dec	a
-	ld	hl, #408
-	add	hl, sp
-	ld	(hl), a
-	jr	00160$
-00153$:
-;main.c:296: else if (was_input_depressed(&input_state, btn_right))
-	ld	hl, #406
-	add	hl, sp
-	ld	a, (hl)
-	ld	hl, #437
-	add	hl, sp
-	ld	(hl), a
-	ld	hl, #407
-	add	hl, sp
-	ld	a, (hl)
-	ld	hl, #438
-	add	hl, sp
-	ld	(hl-), a
+	push	bc
 	ld	a, #0x05
 	push	af
 	inc	sp
-	ld	a, (hl+)
-	ld	e, a
-	ld	d, (hl)
 	push	de
 	call	_was_input_depressed
 	add	sp, #3
 	ld	a, e
-	or	a, a
-	jr	Z, 00160$
-;main.c:298: cursor_tile_x += 1;
-	ld	hl, #434
-	add	hl, sp
-	ld	a, (hl)
+	pop	bc
+	add	a, c
+;main.c:251: ? 19
+	ld	e, a
 	inc	a
+	jr	NZ, 00203$
+	ld	de, #0x0013
+	jr	00204$
+00203$:
+;main.c:253: ? 0
+	ld	a, #0x13
+	sub	a, e
+	jr	NC, 00205$
+	ld	de, #0x0000
+;main.c:254: : cursor_tile_x;
+00205$:
+00204$:
 	ld	hl, #408
 	add	hl, sp
-	ld	(hl), a
-00160$:
-;main.c:303: ? 19
-	ld	hl, #408
-	add	hl, sp
-	ld	a, (hl)
-	inc	a
-	jr	NZ, 00208$
+	ld	(hl), e
+;main.c:258: ? 17
 	ld	hl, #437
 	add	hl, sp
-	ld	a, #0x13
-	ld	(hl+), a
-	xor	a, a
-	ld	(hl), a
-	jr	00209$
-00208$:
-;main.c:305: ? 0
-	ld	a, #0x13
-	ld	hl, #408
+	ld	a, (hl)
+	inc	a
+	jr	NZ, 00207$
+	ld	bc, #0x0011
+	jr	00208$
+00207$:
+;main.c:260: ? 0
+	ld	a, #0x11
+	ld	hl, #437
 	add	hl, sp
 	sub	a, (hl)
-	jr	NC, 00210$
+	jr	NC, 00209$
+	dec	hl
 	xor	a, a
-	ld	hl, #437
-	add	hl, sp
 	ld	(hl+), a
 	ld	(hl), a
-	jr	00211$
-00210$:
-;main.c:306: : cursor_tile_x;
-	ld	hl, #408
-	add	hl, sp
-	ld	a, (hl)
-	ld	hl, #437
-	add	hl, sp
-	ld	(hl+), a
-	ld	(hl), #0x00
-00211$:
+	jr	00210$
 00209$:
+;main.c:261: : cursor_tile_y;
 	ld	hl, #437
 	add	hl, sp
-	ld	a, (hl)
-	ld	hl, #408
-	add	hl, sp
-;main.c:310: ? 17
-	ld	(hl+), a
-	ld	a, (hl)
-	inc	a
-	jr	NZ, 00212$
-	ld	hl, #437
-	add	hl, sp
-	ld	a, #0x11
-	ld	(hl+), a
-	xor	a, a
-	ld	(hl), a
-	jr	00213$
-00212$:
-;main.c:312: ? 0
-	ld	a, #0x11
-	ld	hl, #409
-	add	hl, sp
-	sub	a, (hl)
-	jr	NC, 00214$
-	xor	a, a
-	ld	hl, #437
-	add	hl, sp
-	ld	(hl+), a
-	ld	(hl), a
-	jr	00215$
-00214$:
-;main.c:313: : cursor_tile_y;
-	ld	hl, #409
-	add	hl, sp
-	ld	a, (hl)
-	ld	hl, #437
-	add	hl, sp
+	ld	a, (hl-)
 	ld	(hl+), a
 	ld	(hl), #0x00
-00215$:
-00213$:
-	ld	hl, #437
+00210$:
+	ld	hl, #436
 	add	hl, sp
-	ld	a, (hl)
+	ld	a, (hl+)
+	ld	c, a
+	ld	b, (hl)
+00208$:
 	ld	hl, #409
 	add	hl, sp
-	ld	(hl), a
-;main.c:315: update_cursor_position(cursor_tile_x, cursor_tile_y);
+	ld	(hl), c
+;main.c:263: update_cursor_position(cursor_tile_x, cursor_tile_y);
 	ld	a, (hl-)
 	ld	d, a
 	ld	e, (hl)
 	push	de
 	call	_update_cursor_position
 	pop	hl
-;main.c:318: if (was_input_depressed(&input_state, btn_b))
+;main.c:266: if (was_input_depressed(&input_state, btn_b))
 	ld	hl, #406
 	add	hl, sp
 	ld	a, (hl+)
@@ -2390,8 +2369,8 @@ _main::
 	add	sp, #3
 	ld	a, e
 	or	a, a
-	jp	Z, 00170$
-;main.c:320: uint8_t tile_data = board[cursor_tile_x][cursor_tile_y];
+	jp	Z, 00129$
+;main.c:268: uint8_t tile_data = board[cursor_tile_x][cursor_tile_y];
 	ld	hl, #408
 	add	hl, sp
 	ld	c, (hl)
@@ -2420,52 +2399,52 @@ _main::
 	add	hl, bc
 	push	hl
 	ld	a, l
-	ld	hl, #435
+	ld	hl, #434
 	add	hl, sp
 	ld	(hl), a
 	pop	hl
 	ld	a, h
-	ld	hl, #434
+	ld	hl, #433
 	add	hl, sp
 	ld	(hl-), a
 	ld	a, (hl+)
 	ld	e, a
 	ld	d, (hl)
 	ld	a, (de)
-	ld	hl, #438
-	add	hl, sp
-	ld	(hl), a
-;main.c:321: uint8_t is_alive = tile_data & k_tile_is_alive_mask;
-	ld	hl, #_k_tile_is_alive_mask
-	ld	c, (hl)
-;main.c:250: update_tile_position(tile_data & k_tile_sprite_index_mask, x, y);
-	ld	a, (#_k_tile_sprite_index_mask)
 	ld	hl, #437
 	add	hl, sp
-;main.c:321: uint8_t is_alive = tile_data & k_tile_is_alive_mask;
+	ld	(hl), a
+;main.c:269: uint8_t is_alive = tile_data & k_tile_is_alive_mask;
+	ld	hl, #_k_tile_is_alive_mask
+	ld	c, (hl)
+;main.c:210: update_tile_position(tile_data & k_tile_sprite_index_mask, x, y);
+	ld	a, (#_k_tile_sprite_index_mask)
+	ld	hl, #436
+	add	hl, sp
+;main.c:269: uint8_t is_alive = tile_data & k_tile_is_alive_mask;
 	ld	(hl+), a
 	ld	a, (hl)
 	and	a, c
-	ld	hl, #432
+	ld	hl, #431
 	add	hl, sp
 	ld	(hl), a
-;main.c:323: if (!is_alive)
+;main.c:271: if (!is_alive)
 	ld	a, (hl)
 	or	a, a
-	jr	NZ, 00164$
-;main.c:325: if (next_available_sprite_index < 39)
-	ld	hl, #436
+	jr	NZ, 00123$
+;main.c:273: if (next_available_sprite_index < 39)
+	ld	hl, #435
 	add	hl, sp
 	ld	a, (hl)
 	sub	a, #0x27
-	jp	NC, 00165$
-;main.c:328: tile_data |= available_sprites[next_available_sprite_index];
+	jp	NC, 00124$
+;main.c:276: tile_data |= available_sprites[next_available_sprite_index];
 	ld	hl,#0x19a
 	add	hl,sp
 	ld	a, (hl+)
 	ld	e, a
 	ld	d, (hl)
-	ld	hl, #436
+	ld	hl, #435
 	add	hl, sp
 	ld	l, (hl)
 	ld	h, #0x00
@@ -2473,15 +2452,15 @@ _main::
 	ld	c, l
 	ld	b, h
 	ld	a, (bc)
-	ld	hl, #438
+	ld	hl, #437
 	add	hl, sp
 	or	a, (hl)
-;main.c:329: next_available_sprite_index++;
+;main.c:277: next_available_sprite_index++;
 	dec	hl
 	dec	hl
 	ld	c, a
 	inc	(hl)
-;main.c:332: update_tile_position(tile_data & k_tile_sprite_index_mask, cursor_tile_x, cursor_tile_y);
+;main.c:280: update_tile_position(tile_data & k_tile_sprite_index_mask, cursor_tile_x, cursor_tile_y);
 	inc	hl
 	ld	a, c
 	and	a, (hl)
@@ -2505,16 +2484,16 @@ _main::
 	call	_update_tile_position
 	add	sp, #3
 	pop	bc
-;main.c:335: tile_data |= k_tile_is_alive_mask;
+;main.c:283: tile_data |= k_tile_is_alive_mask;
 	ld	a, (#_k_tile_is_alive_mask)
 	or	a, c
-	ld	hl, #438
+	ld	hl, #437
 	add	hl, sp
 	ld	(hl), a
-	jr	00165$
-00164$:
-;main.c:341: update_tile_position(tile_data & k_tile_sprite_index_mask, 0, 19);
-	ld	hl, #437
+	jr	00124$
+00123$:
+;main.c:289: update_tile_position(tile_data & k_tile_sprite_index_mask, 0, 19);
+	ld	hl, #436
 	add	hl, sp
 	ld	a, (hl+)
 	and	a, (hl)
@@ -2531,89 +2510,89 @@ _main::
 	inc	sp
 	call	_update_tile_position
 	add	sp, #3
-;main.c:344: next_available_sprite_index--;
-	ld	hl, #436
+;main.c:292: next_available_sprite_index--;
+	ld	hl, #435
 	add	hl, sp
 	dec	(hl)
-;main.c:345: available_sprites[next_available_sprite_index] = tile_data & k_tile_sprite_index_mask;
+;main.c:293: available_sprites[next_available_sprite_index] = tile_data & k_tile_sprite_index_mask;
 	ld	hl,#0x19a
 	add	hl,sp
 	ld	a, (hl+)
 	ld	e, a
 	ld	d, (hl)
-	ld	hl, #436
+	ld	hl, #435
 	add	hl, sp
 	ld	l, (hl)
 	ld	h, #0x00
 	add	hl, de
 	push	hl
 	ld	a, l
-	ld	hl, #433
+	ld	hl, #432
 	add	hl, sp
 	ld	(hl), a
 	pop	hl
 	ld	a, h
-	ld	hl, #432
+	ld	hl, #431
 	add	hl, sp
 	ld	(hl), a
 	ld	a, (#_k_tile_sprite_index_mask)
-	ld	hl, #437
+	ld	hl, #436
 	add	hl, sp
 	ld	(hl+), a
 	ld	a, (hl-)
 	and	a, (hl)
 	ld	c, a
-	ld	hl, #431
+	ld	hl, #430
 	add	hl, sp
 	ld	a,	(hl+)
 	ld	h, (hl)
 	ld	l, a
 	ld	(hl), c
-;main.c:348: tile_data &= ~k_tile_sprite_index_mask;
+;main.c:296: tile_data &= ~k_tile_sprite_index_mask;
+	ld	hl, #436
+	add	hl, sp
+	ld	a, (hl)
+	cpl
+	ld	hl, #431
+	add	hl, sp
+	ld	(hl), a
 	ld	hl, #437
 	add	hl, sp
 	ld	a, (hl)
-	cpl
-	ld	hl, #432
-	add	hl, sp
-	ld	(hl), a
-	ld	hl, #438
-	add	hl, sp
-	ld	a, (hl)
-	ld	hl, #432
+	ld	hl, #431
 	add	hl, sp
 	and	a, (hl)
-	ld	hl, #438
+	ld	hl, #437
 	add	hl, sp
 	ld	(hl), a
-;main.c:351: tile_data &= ~k_tile_is_alive_mask;
+;main.c:299: tile_data &= ~k_tile_is_alive_mask;
 	ld	a, (#_k_tile_is_alive_mask)
 	cpl
-	ld	hl, #438
+	ld	hl, #437
 	add	hl, sp
 	and	a, (hl)
 	ld	(hl), a
-00165$:
-;main.c:355: board[cursor_tile_x][cursor_tile_y] = tile_data;
-	ld	hl,#0x1b1
+00124$:
+;main.c:303: board[cursor_tile_x][cursor_tile_y] = tile_data;
+	ld	hl,#0x1b0
 	add	hl,sp
 	ld	a, (hl+)
 	ld	e, a
 	ld	d, (hl)
-	ld	hl, #438
+	ld	hl, #437
 	add	hl, sp
 	ld	a, (hl)
 	ld	(de), a
-00170$:
-;main.c:360: wait_vbls_done(1);
+00129$:
+;main.c:308: wait_vbls_done(1);
 	ld	a, #0x01
 	push	af
 	inc	sp
 	call	_wait_vbls_done
 	inc	sp
-	jp	00172$
-;main.c:362: }
-	ld	hl, #439
+	jp	00131$
+;main.c:310: }
+	ld	hl, #438
 	add	hl, sp
 	ld	sp, hl
 	ret
