@@ -14,32 +14,32 @@ Symbol Table
   0 _SCREEN_WIDTH                                                  000273 R
   0 _SPRITE_TILE_HEIGHT                                            000276 R
   0 _SPRITE_TILE_WIDTH                                             000275 R
-    ___memcpy                                                      ****** GX
     __muluchar                                                     ****** GX
   7 __xinit__k_sprites                                             000000 R
   0 _is_input_held                                                 0002A8 GR
     _joypad                                                        ****** GX
   0 _k_background_map                                              0000E9 GR
   0 _k_background_tiles                                            000251 GR
-  0 _k_cursor_empty_tile_index                                     0002E4 GR
-  0 _k_cursor_live_tile_index                                      0002E5 GR
-  0 _k_cursor_sprite_index                                         0002E6 GR
-  0 _k_empty_tile_index                                            0002E2 GR
+  0 _k_cursor_empty_tile_index                                     0002E5 GR
+  0 _k_cursor_live_tile_index                                      0002E6 GR
+  0 _k_cursor_sprite_index                                         0002E7 GR
+  0 _k_empty_tile_index                                            0002E3 GR
   0 _k_execution_state_active_mask                                 0002DF GR
-  0 _k_live_tile_index                                             0002E3 GR
+  0 _k_live_tile_index                                             0002E4 GR
   2 _k_sprites                                                     000000 GR
-  0 _k_tile_is_alive_mask                                          0002E0 GR
-  0 _k_tile_was_alive_mask                                         0002E1 GR
-  0 _main                                                          000367 GR
+  0 _k_tile_is_alive_mask                                          0002E1 GR
+  0 _k_tile_sprite_index_mask                                      0002E0 GR
+  0 _k_tile_was_alive_mask                                         0002E2 GR
+  0 _main                                                          000368 GR
     _set_bkg_data                                                  ****** GX
     _set_bkg_tiles                                                 ****** GX
     _set_sprite_data                                               ****** GX
     _shadow_OAM                                                    ****** GX
-  0 _update_cursor_position                                        0002E7 GR
+  0 _update_cursor_position                                        0002E8 GR
   0 _update_cursor_sprite                                          0002CC GR
   0 _update_input_state                                            000000 GR
-  0 _update_tile_position                                          000330 GR
-  0 _update_tile_sprite                                            00031F GR
+  0 _update_tile_position                                          000331 GR
+  0 _update_tile_sprite                                            000320 GR
     _wait_vbl_done                                                 ****** GX
   0 _wait_vbls_done                                                0002BF GR
   0 _was_input_depressed                                           000277 GR
@@ -51,7 +51,7 @@ Hexadecimal [24-Bits]
 
 Area Table
 
-   0 _CODE                                      size    CC3   flags    0
+   0 _CODE                                      size    BEE   flags    0
    1 _DATA                                      size      0   flags    0
    2 _INITIALIZED                               size     40   flags    0
    3 _DABS                                      size      0   flags    8
