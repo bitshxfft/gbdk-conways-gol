@@ -143,17 +143,8 @@ int main()
 				{
 					uint8_t tile_data = board[x][y];
 
-					// reset the was_alive flag
-					tile_data &= ~k_tile_was_alive_mask;
-
-					// update the was_alive flag with the last frame's is_alive flag
-					if ((tile_data & k_tile_is_alive_mask) != 0x00)
-					{
-						tile_data |= k_tile_was_alive_mask;
-					}
-
-					// update tile data
-					board[x][y] = tile_data;
+					// reset the was_alive flag, then set the was_alive flag to the last frame's is_alive flag
+					board[x][y] = (tile_data & ~k_tile_was_alive_mask) | ((tile_data & k_tile_is_alive_mask) << 1);
 				}
 			}
 

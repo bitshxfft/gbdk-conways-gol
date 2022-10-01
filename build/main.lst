@@ -1043,7 +1043,7 @@
       0003C0 22                    1043 	ld	(hl+), a
       0003C1 72                    1044 	ld	(hl), d
       0003C2 1E 00                 1045 	ld	e, #0x00
-      0003C4                       1046 00177$:
+      0003C4                       1046 00175$:
       0003C4 7B                    1047 	ld	a, e
       0003C5 D6 27                 1048 	sub	a, #0x27
       0003C7 30 2F                 1049 	jr	NC, 00101$
@@ -1084,7 +1084,7 @@
       0003F4 D1                    1084 	pop	de
                                    1085 ;main.c:90: for (uint8_t i = 0; i < 39; ++i)
       0003F5 1C                    1086 	inc	e
-      0003F6 18 CC                 1087 	jr	00177$
+      0003F6 18 CC                 1087 	jr	00175$
       0003F8                       1088 00101$:
                                    1089 ;main.c:98: for (uint8_t x = 0; x < 20; ++x)
       0003F8 F8 07                 1090 	ldhl	sp,	#7
@@ -1097,7 +1097,7 @@
       000402 21 B6 01              1097 	ld	hl, #438
       000405 39                    1098 	add	hl, sp
       000406 36 00                 1099 	ld	(hl), #0x00
-      000408                       1100 00183$:
+      000408                       1100 00181$:
       000408 21 B6 01              1101 	ld	hl, #438
       00040B 39                    1102 	add	hl, sp
       00040C 7E                    1103 	ld	a, (hl)
@@ -1124,10 +1124,10 @@
       000425 5D                    1124 	ld	e, l
       000426 54                    1125 	ld	d, h
       000427 0E 00                 1126 	ld	c, #0x00
-      000429                       1127 00180$:
+      000429                       1127 00178$:
       000429 79                    1128 	ld	a, c
       00042A D6 12                 1129 	sub	a, #0x12
-      00042C 30 09                 1130 	jr	NC, 00184$
+      00042C 30 09                 1130 	jr	NC, 00182$
                                    1131 ;main.c:102: board[x][y] = 0x00;
       00042E 69                    1132 	ld	l, c
       00042F 26 00                 1133 	ld	h, #0x00
@@ -1135,13 +1135,13 @@
       000432 36 00                 1135 	ld	(hl), #0x00
                                    1136 ;main.c:100: for (uint8_t y = 0; y < 18; ++y)
       000434 0C                    1137 	inc	c
-      000435 18 F2                 1138 	jr	00180$
-      000437                       1139 00184$:
+      000435 18 F2                 1138 	jr	00178$
+      000437                       1139 00182$:
                                    1140 ;main.c:98: for (uint8_t x = 0; x < 20; ++x)
       000437 21 B6 01              1141 	ld	hl, #438
       00043A 39                    1142 	add	hl, sp
       00043B 34                    1143 	inc	(hl)
-      00043C 18 CA                 1144 	jr	00183$
+      00043C 18 CA                 1144 	jr	00181$
       00043E                       1145 00103$:
                                    1146 ;main.c:107: set_sprite_data(0, 3, k_sprites);
       00043E 11r00r00              1147 	ld	de, #_k_sprites
@@ -1191,7 +1191,7 @@
       000487 F6 80                 1191 	or	a, #0x80
       000489 E0r00                 1192 	ldh	(_LCDC_REG + 0), a
                                    1193 ;main.c:121: while (1)
-      00048B                       1194 00174$:
+      00048B                       1194 00172$:
                                    1195 ;main.c:124: update_input_state(&input_state, joypad());
       00048B CDr00r00              1196 	call	_joypad
       00048E 7B                    1197 	ld	a, e
@@ -1232,14 +1232,14 @@
       0004BE 7E                    1232 	ld	a, (hl)
       0004BF A1                    1233 	and	a, c
       0004C0 91                    1234 	sub	a, c
-      0004C1 20 05                 1235 	jr	NZ, 00199$
+      0004C1 20 05                 1235 	jr	NZ, 00197$
                                    1236 ;main.c:133: ? k_empty_tile_index
       0004C3 FArE3r02              1237 	ld	a, (#_k_empty_tile_index)
-      0004C6 18 03                 1238 	jr	00200$
-      0004C8                       1239 00199$:
+      0004C6 18 03                 1238 	jr	00198$
+      0004C8                       1239 00197$:
                                    1240 ;main.c:134: : k_cursor_empty_tile_index);
       0004C8 FArE5r02              1241 	ld	a, (#_k_cursor_empty_tile_index)
-      0004CB                       1242 00200$:
+      0004CB                       1242 00198$:
       0004CB F5                    1243 	push	af
       0004CC 33                    1244 	inc	sp
       0004CD CDrCCr02              1245 	call	_update_cursor_sprite
@@ -1253,1447 +1253,1435 @@
       0004D9 7E                    1253 	ld	a, (hl)
       0004DA A1                    1254 	and	a, c
       0004DB 91                    1255 	sub	a, c
-      0004DC C2r56r09              1256 	jp	NZ,00171$
+      0004DC C2r48r09              1256 	jp	NZ,00169$
                                    1257 ;main.c:140: for (uint8_t x = 0; x < 20; ++x)
       0004DF 21 9C 01              1258 	ld	hl, #412
       0004E2 39                    1259 	add	hl, sp
       0004E3 7E                    1260 	ld	a, (hl)
-      0004E4 21 AC 01              1261 	ld	hl, #428
+      0004E4 21 AD 01              1261 	ld	hl, #429
       0004E7 39                    1262 	add	hl, sp
       0004E8 77                    1263 	ld	(hl), a
       0004E9 21 9D 01              1264 	ld	hl, #413
       0004EC 39                    1265 	add	hl, sp
       0004ED 7E                    1266 	ld	a, (hl)
-      0004EE 21 AD 01              1267 	ld	hl, #429
+      0004EE 21 AE 01              1267 	ld	hl, #430
       0004F1 39                    1268 	add	hl, sp
       0004F2 77                    1269 	ld	(hl), a
-      0004F3 21 B2 01              1270 	ld	hl, #434
+      0004F3 21 B5 01              1270 	ld	hl, #437
       0004F6 39                    1271 	add	hl, sp
       0004F7 36 00                 1272 	ld	(hl), #0x00
-      0004F9                       1273 00189$:
-      0004F9 21 B2 01              1274 	ld	hl, #434
+      0004F9                       1273 00187$:
+      0004F9 21 B5 01              1274 	ld	hl, #437
       0004FC 39                    1275 	add	hl, sp
       0004FD 7E                    1276 	ld	a, (hl)
       0004FE D6 14                 1277 	sub	a, #0x14
-      000500 D2r87r05              1278 	jp	NC, 00109$
+      000500 30 77                 1278 	jr	NC, 00107$
                                    1279 ;main.c:142: for (uint8_t y = 0; y < 18; ++y)
-      000503 4E                    1280 	ld	c, (hl)
-      000504 06 00                 1281 	ld	b, #0x00
-      000506 69                    1282 	ld	l, c
-      000507 60                    1283 	ld	h, b
-      000508 29                    1284 	add	hl, hl
-      000509 29                    1285 	add	hl, hl
-      00050A 29                    1286 	add	hl, hl
-      00050B 09                    1287 	add	hl, bc
-      00050C 29                    1288 	add	hl, hl
-      00050D 4D                    1289 	ld	c, l
-      00050E 44                    1290 	ld	b, h
-      00050F 21 AC 01              1291 	ld	hl, #428
-      000512 39                    1292 	add	hl, sp
-      000513 2A                    1293 	ld	a,	(hl+)
-      000514 66                    1294 	ld	h, (hl)
-      000515 6F                    1295 	ld	l, a
-      000516 09                    1296 	add	hl, bc
-      000517 E5                    1297 	push	hl
-      000518 7D                    1298 	ld	a, l
-      000519 21 B0 01              1299 	ld	hl, #432
-      00051C 39                    1300 	add	hl, sp
-      00051D 77                    1301 	ld	(hl), a
-      00051E E1                    1302 	pop	hl
-      00051F 7C                    1303 	ld	a, h
-      000520 21 AF 01              1304 	ld	hl, #431
-      000523 39                    1305 	add	hl, sp
-      000524 77                    1306 	ld	(hl), a
-      000525 21 B5 01              1307 	ld	hl, #437
-      000528 39                    1308 	add	hl, sp
-      000529 36 00                 1309 	ld	(hl), #0x00
-      00052B                       1310 00186$:
-      00052B 21 B5 01              1311 	ld	hl, #437
-      00052E 39                    1312 	add	hl, sp
-      00052F 7E                    1313 	ld	a, (hl)
-      000530 D6 12                 1314 	sub	a, #0x12
-      000532 30 4B                 1315 	jr	NC, 00190$
+      000502 4E                    1280 	ld	c, (hl)
+      000503 06 00                 1281 	ld	b, #0x00
+      000505 69                    1282 	ld	l, c
+      000506 60                    1283 	ld	h, b
+      000507 29                    1284 	add	hl, hl
+      000508 29                    1285 	add	hl, hl
+      000509 29                    1286 	add	hl, hl
+      00050A 09                    1287 	add	hl, bc
+      00050B 29                    1288 	add	hl, hl
+      00050C 4D                    1289 	ld	c, l
+      00050D 44                    1290 	ld	b, h
+      00050E 21 AD 01              1291 	ld	hl, #429
+      000511 39                    1292 	add	hl, sp
+      000512 2A                    1293 	ld	a,	(hl+)
+      000513 66                    1294 	ld	h, (hl)
+      000514 6F                    1295 	ld	l, a
+      000515 09                    1296 	add	hl, bc
+      000516 E5                    1297 	push	hl
+      000517 7D                    1298 	ld	a, l
+      000518 21 B1 01              1299 	ld	hl, #433
+      00051B 39                    1300 	add	hl, sp
+      00051C 77                    1301 	ld	(hl), a
+      00051D E1                    1302 	pop	hl
+      00051E 7C                    1303 	ld	a, h
+      00051F 21 B0 01              1304 	ld	hl, #432
+      000522 39                    1305 	add	hl, sp
+      000523 77                    1306 	ld	(hl), a
+      000524 21 B6 01              1307 	ld	hl, #438
+      000527 39                    1308 	add	hl, sp
+      000528 36 00                 1309 	ld	(hl), #0x00
+      00052A                       1310 00184$:
+      00052A 21 B6 01              1311 	ld	hl, #438
+      00052D 39                    1312 	add	hl, sp
+      00052E 7E                    1313 	ld	a, (hl)
+      00052F D6 12                 1314 	sub	a, #0x12
+      000531 30 3E                 1315 	jr	NC, 00188$
                                    1316 ;main.c:144: uint8_t tile_data = board[x][y];
-      000534 21 AE 01              1317 	ld	hl,#0x1ae
-      000537 39                    1318 	add	hl,sp
-      000538 2A                    1319 	ld	a, (hl+)
-      000539 5F                    1320 	ld	e, a
-      00053A 56                    1321 	ld	d, (hl)
-      00053B 21 B5 01              1322 	ld	hl, #437
-      00053E 39                    1323 	add	hl, sp
-      00053F 6E                    1324 	ld	l, (hl)
-      000540 26 00                 1325 	ld	h, #0x00
-      000542 19                    1326 	add	hl, de
-      000543 E5                    1327 	push	hl
-      000544 7D                    1328 	ld	a, l
-      000545 21 B2 01              1329 	ld	hl, #434
-      000548 39                    1330 	add	hl, sp
-      000549 77                    1331 	ld	(hl), a
-      00054A E1                    1332 	pop	hl
-      00054B 7C                    1333 	ld	a, h
-      00054C 21 B1 01              1334 	ld	hl, #433
-      00054F 39                    1335 	add	hl, sp
-      000550 32                    1336 	ld	(hl-), a
-      000551 2A                    1337 	ld	a, (hl+)
-      000552 5F                    1338 	ld	e, a
-      000553 56                    1339 	ld	d, (hl)
-      000554 1A                    1340 	ld	a, (de)
-      000555 47                    1341 	ld	b, a
-                                   1342 ;main.c:147: tile_data &= ~k_tile_was_alive_mask;
-      000556 21rE2r02              1343 	ld	hl, #_k_tile_was_alive_mask
-      000559 4E                    1344 	ld	c, (hl)
-      00055A 79                    1345 	ld	a, c
-      00055B 2F                    1346 	cpl
-      00055C A0                    1347 	and	a, b
-      00055D 21 B6 01              1348 	ld	hl, #438
-      000560 39                    1349 	add	hl, sp
-      000561 77                    1350 	ld	(hl), a
-                                   1351 ;main.c:150: if ((tile_data & k_tile_is_alive_mask) != 0x00)
-      000562 FArE1r02              1352 	ld	a, (#_k_tile_is_alive_mask)
-      000565 21 B6 01              1353 	ld	hl, #438
-      000568 39                    1354 	add	hl, sp
-      000569 A6                    1355 	and	a,(hl)
-      00056A 28 03                 1356 	jr	Z, 00107$
-                                   1357 ;main.c:152: tile_data |= k_tile_was_alive_mask;
-      00056C 7E                    1358 	ld	a, (hl)
-      00056D B1                    1359 	or	a, c
-      00056E 77                    1360 	ld	(hl), a
-      00056F                       1361 00107$:
-                                   1362 ;main.c:156: board[x][y] = tile_data;
-      00056F 21 B0 01              1363 	ld	hl,#0x1b0
-      000572 39                    1364 	add	hl,sp
-      000573 2A                    1365 	ld	a, (hl+)
-      000574 5F                    1366 	ld	e, a
-      000575 56                    1367 	ld	d, (hl)
-      000576 21 B6 01              1368 	ld	hl, #438
-      000579 39                    1369 	add	hl, sp
-                                   1370 ;main.c:142: for (uint8_t y = 0; y < 18; ++y)
-      00057A 3A                    1371 	ld	a, (hl-)
-      00057B 12                    1372 	ld	(de), a
-      00057C 34                    1373 	inc	(hl)
-      00057D 18 AC                 1374 	jr	00186$
-      00057F                       1375 00190$:
-                                   1376 ;main.c:140: for (uint8_t x = 0; x < 20; ++x)
-      00057F 21 B2 01              1377 	ld	hl, #434
-      000582 39                    1378 	add	hl, sp
-      000583 34                    1379 	inc	(hl)
-      000584 C3rF9r04              1380 	jp	00189$
-      000587                       1381 00109$:
-                                   1382 ;main.c:161: for (uint8_t x = 0; x < 20; ++x)
-      000587 21 9C 01              1383 	ld	hl, #412
-      00058A 39                    1384 	add	hl, sp
-      00058B 2A                    1385 	ld	a, (hl+)
-      00058C 23                    1386 	inc	hl
-      00058D 32                    1387 	ld	(hl-), a
-      00058E 2A                    1388 	ld	a, (hl+)
-      00058F 23                    1389 	inc	hl
-      000590 77                    1390 	ld	(hl), a
-      000591 21 9A 01              1391 	ld	hl, #410
-      000594 39                    1392 	add	hl, sp
-      000595 7E                    1393 	ld	a, (hl)
-      000596 21 A0 01              1394 	ld	hl, #416
-      000599 39                    1395 	add	hl, sp
-      00059A 77                    1396 	ld	(hl), a
-      00059B 21 9B 01              1397 	ld	hl, #411
-      00059E 39                    1398 	add	hl, sp
-      00059F 7E                    1399 	ld	a, (hl)
-      0005A0 21 A1 01              1400 	ld	hl, #417
-      0005A3 39                    1401 	add	hl, sp
-      0005A4 77                    1402 	ld	(hl), a
-      0005A5 21 9A 01              1403 	ld	hl, #410
-      0005A8 39                    1404 	add	hl, sp
-      0005A9 7E                    1405 	ld	a, (hl)
-      0005AA 21 A2 01              1406 	ld	hl, #418
-      0005AD 39                    1407 	add	hl, sp
-      0005AE 77                    1408 	ld	(hl), a
-      0005AF 21 9B 01              1409 	ld	hl, #411
-      0005B2 39                    1410 	add	hl, sp
-      0005B3 7E                    1411 	ld	a, (hl)
-      0005B4 21 A3 01              1412 	ld	hl, #419
-      0005B7 39                    1413 	add	hl, sp
-      0005B8 77                    1414 	ld	(hl), a
-      0005B9 21 B5 01              1415 	ld	hl, #437
-      0005BC 39                    1416 	add	hl, sp
-      0005BD 36 00                 1417 	ld	(hl), #0x00
-      0005BF                       1418 00195$:
-      0005BF 21 B5 01              1419 	ld	hl, #437
-      0005C2 39                    1420 	add	hl, sp
-      0005C3 7E                    1421 	ld	a, (hl)
-      0005C4 D6 14                 1422 	sub	a, #0x14
-      0005C6 D2rDDr0B              1423 	jp	NC, 00172$
-                                   1424 ;main.c:163: for (uint8_t y = 0; y < 18; ++y)
-      0005C9 4E                    1425 	ld	c, (hl)
-      0005CA 06 00                 1426 	ld	b, #0x00
-      0005CC 69                    1427 	ld	l, c
-      0005CD 60                    1428 	ld	h, b
-      0005CE 29                    1429 	add	hl, hl
-      0005CF 29                    1430 	add	hl, hl
-      0005D0 29                    1431 	add	hl, hl
-      0005D1 09                    1432 	add	hl, bc
-      0005D2 29                    1433 	add	hl, hl
-      0005D3 4D                    1434 	ld	c, l
-      0005D4 44                    1435 	ld	b, h
-      0005D5 21 9E 01              1436 	ld	hl, #414
-      0005D8 39                    1437 	add	hl, sp
-      0005D9 2A                    1438 	ld	a,	(hl+)
-      0005DA 66                    1439 	ld	h, (hl)
-      0005DB 6F                    1440 	ld	l, a
-      0005DC 09                    1441 	add	hl, bc
-      0005DD E5                    1442 	push	hl
-      0005DE 7D                    1443 	ld	a, l
-      0005DF 21 A6 01              1444 	ld	hl, #422
-      0005E2 39                    1445 	add	hl, sp
-      0005E3 77                    1446 	ld	(hl), a
-      0005E4 E1                    1447 	pop	hl
-      0005E5 7C                    1448 	ld	a, h
-      0005E6 21 A5 01              1449 	ld	hl, #421
-      0005E9 39                    1450 	add	hl, sp
-      0005EA 77                    1451 	ld	(hl), a
-      0005EB 21 B5 01              1452 	ld	hl, #437
-      0005EE 39                    1453 	add	hl, sp
-      0005EF 7E                    1454 	ld	a, (hl)
-      0005F0 D6 13                 1455 	sub	a, #0x13
-      0005F2 3E 00                 1456 	ld	a, #0x00
-      0005F4 17                    1457 	rla
-      0005F5 21 A6 01              1458 	ld	hl, #422
-      0005F8 39                    1459 	add	hl, sp
-      0005F9 77                    1460 	ld	(hl), a
-      0005FA 21 B6 01              1461 	ld	hl, #438
-      0005FD 39                    1462 	add	hl, sp
-      0005FE 36 00                 1463 	ld	(hl), #0x00
-      000600                       1464 00192$:
-      000600 21 B6 01              1465 	ld	hl, #438
-      000603 39                    1466 	add	hl, sp
-      000604 7E                    1467 	ld	a, (hl)
-      000605 D6 12                 1468 	sub	a, #0x12
-      000607 D2r4Er09              1469 	jp	NC, 00196$
-                                   1470 ;main.c:165: uint8_t tile_data = board[x][y];
-      00060A 21 A4 01              1471 	ld	hl,#0x1a4
-      00060D 39                    1472 	add	hl,sp
-      00060E 2A                    1473 	ld	a, (hl+)
-      00060F 5F                    1474 	ld	e, a
-      000610 56                    1475 	ld	d, (hl)
-      000611 21 B6 01              1476 	ld	hl, #438
-      000614 39                    1477 	add	hl, sp
-      000615 6E                    1478 	ld	l, (hl)
-      000616 26 00                 1479 	ld	h, #0x00
-      000618 19                    1480 	add	hl, de
-      000619 E5                    1481 	push	hl
-      00061A 7D                    1482 	ld	a, l
-      00061B 21 A9 01              1483 	ld	hl, #425
-      00061E 39                    1484 	add	hl, sp
-      00061F 77                    1485 	ld	(hl), a
-      000620 E1                    1486 	pop	hl
-      000621 7C                    1487 	ld	a, h
-      000622 21 A8 01              1488 	ld	hl, #424
-      000625 39                    1489 	add	hl, sp
-      000626 32                    1490 	ld	(hl-), a
-      000627 2A                    1491 	ld	a, (hl+)
-      000628 5F                    1492 	ld	e, a
-      000629 2A                    1493 	ld	a, (hl+)
-      00062A 57                    1494 	ld	d, a
-      00062B 1A                    1495 	ld	a, (de)
-                                   1496 ;main.c:166: uint8_t neighbour_count = 0;
-      00062C 22                    1497 	ld	(hl+), a
-      00062D 36 00                 1498 	ld	(hl), #0x00
-                                   1499 ;main.c:147: tile_data &= ~k_tile_was_alive_mask;
-      00062F FArE2r02              1500 	ld	a, (#_k_tile_was_alive_mask)
-      000632 21 AB 01              1501 	ld	hl, #427
-      000635 39                    1502 	add	hl, sp
-      000636 77                    1503 	ld	(hl), a
-                                   1504 ;main.c:170: && (board[x][y - 1] & k_tile_was_alive_mask) != 0x00)
-      000637 21 B6 01              1505 	ld	hl, #438
-      00063A 39                    1506 	add	hl, sp
-      00063B 7E                    1507 	ld	a, (hl)
-      00063C 21 B2 01              1508 	ld	hl, #434
-      00063F 39                    1509 	add	hl, sp
-      000640 77                    1510 	ld	(hl), a
-      000641 7E                    1511 	ld	a, (hl)
-      000642 3D                    1512 	dec	a
-      000643 21 AC 01              1513 	ld	hl, #428
-      000646 39                    1514 	add	hl, sp
-      000647 77                    1515 	ld	(hl), a
-                                   1516 ;main.c:169: if (y > 0
-      000648 21 B6 01              1517 	ld	hl, #438
-      00064B 39                    1518 	add	hl, sp
-      00064C 7E                    1519 	ld	a, (hl)
-      00064D B7                    1520 	or	a, a
-      00064E 28 1C                 1521 	jr	Z, 00111$
-                                   1522 ;main.c:170: && (board[x][y - 1] & k_tile_was_alive_mask) != 0x00)
-      000650 21 A4 01              1523 	ld	hl,#0x1a4
-      000653 39                    1524 	add	hl,sp
-      000654 2A                    1525 	ld	a, (hl+)
-      000655 5F                    1526 	ld	e, a
-      000656 56                    1527 	ld	d, (hl)
-      000657 21 AC 01              1528 	ld	hl, #428
-      00065A 39                    1529 	add	hl, sp
-      00065B 6E                    1530 	ld	l, (hl)
-      00065C 26 00                 1531 	ld	h, #0x00
-      00065E 19                    1532 	add	hl, de
-      00065F 4D                    1533 	ld	c, l
-      000660 44                    1534 	ld	b, h
-      000661 0A                    1535 	ld	a, (bc)
-      000662 21 AB 01              1536 	ld	hl, #427
-      000665 39                    1537 	add	hl, sp
-      000666 A6                    1538 	and	a,(hl)
-      000667 28 03                 1539 	jr	Z, 00111$
-                                   1540 ;main.c:172: neighbour_count += 1;
-      000669 2B                    1541 	dec	hl
-      00066A 36 01                 1542 	ld	(hl), #0x01
-      00066C                       1543 00111$:
-                                   1544 ;main.c:178: && (board[x + 1][y - 1] & k_tile_was_alive_mask) != 0x00)
-      00066C 21 B5 01              1545 	ld	hl, #437
-      00066F 39                    1546 	add	hl, sp
-      000670 7E                    1547 	ld	a, (hl)
-      000671 21 AD 01              1548 	ld	hl, #429
-      000674 39                    1549 	add	hl, sp
-      000675 22                    1550 	ld	(hl+), a
-      000676 AF                    1551 	xor	a, a
-      000677 32                    1552 	ld	(hl-), a
-      000678 2A                    1553 	ld	a, (hl+)
-      000679 4F                    1554 	ld	c, a
-      00067A 46                    1555 	ld	b, (hl)
-      00067B 03                    1556 	inc	bc
-      00067C 69                    1557 	ld	l, c
-      00067D 60                    1558 	ld	h, b
-      00067E 29                    1559 	add	hl, hl
-      00067F 29                    1560 	add	hl, hl
-      000680 29                    1561 	add	hl, hl
-      000681 09                    1562 	add	hl, bc
-      000682 29                    1563 	add	hl, hl
-      000683 4D                    1564 	ld	c, l
-      000684 44                    1565 	ld	b, h
-      000685 21 9E 01              1566 	ld	hl, #414
-      000688 39                    1567 	add	hl, sp
-      000689 2A                    1568 	ld	a,	(hl+)
-      00068A 66                    1569 	ld	h, (hl)
-      00068B 6F                    1570 	ld	l, a
-      00068C 09                    1571 	add	hl, bc
-      00068D E5                    1572 	push	hl
-      00068E 7D                    1573 	ld	a, l
-      00068F 21 B1 01              1574 	ld	hl, #433
-      000692 39                    1575 	add	hl, sp
-      000693 77                    1576 	ld	(hl), a
-      000694 E1                    1577 	pop	hl
-      000695 7C                    1578 	ld	a, h
-      000696 21 B0 01              1579 	ld	hl, #432
-      000699 39                    1580 	add	hl, sp
-      00069A 77                    1581 	ld	(hl), a
-                                   1582 ;main.c:177: && y > 0
-      00069B 21 A6 01              1583 	ld	hl, #422
-      00069E 39                    1584 	add	hl, sp
-      00069F 7E                    1585 	ld	a, (hl)
-      0006A0 B7                    1586 	or	a, a
-      0006A1 28 27                 1587 	jr	Z, 00114$
-      0006A3 21 B6 01              1588 	ld	hl, #438
-      0006A6 39                    1589 	add	hl, sp
-      0006A7 7E                    1590 	ld	a, (hl)
-      0006A8 B7                    1591 	or	a, a
-      0006A9 28 1F                 1592 	jr	Z, 00114$
-                                   1593 ;main.c:178: && (board[x + 1][y - 1] & k_tile_was_alive_mask) != 0x00)
-      0006AB 21 AF 01              1594 	ld	hl,#0x1af
-      0006AE 39                    1595 	add	hl,sp
-      0006AF 2A                    1596 	ld	a, (hl+)
-      0006B0 5F                    1597 	ld	e, a
-      0006B1 56                    1598 	ld	d, (hl)
-      0006B2 21 AC 01              1599 	ld	hl, #428
-      0006B5 39                    1600 	add	hl, sp
-      0006B6 6E                    1601 	ld	l, (hl)
-      0006B7 26 00                 1602 	ld	h, #0x00
-      0006B9 19                    1603 	add	hl, de
-      0006BA 33                    1604 	inc	sp
-      0006BB 33                    1605 	inc	sp
-      0006BC 5D                    1606 	ld	e, l
-      0006BD 54                    1607 	ld	d, h
-      0006BE D5                    1608 	push	de
-      0006BF 1A                    1609 	ld	a, (de)
-      0006C0 21 AB 01              1610 	ld	hl, #427
-      0006C3 39                    1611 	add	hl, sp
-      0006C4 A6                    1612 	and	a,(hl)
-      0006C5 28 03                 1613 	jr	Z, 00114$
-                                   1614 ;main.c:180: neighbour_count += 1;
-      0006C7 2B                    1615 	dec	hl
-      0006C8 34                    1616 	inc	(hl)
-      0006C9 7E                    1617 	ld	a, (hl)
-      0006CA                       1618 00114$:
-                                   1619 ;main.c:185: && (board[x + 1][y] & k_tile_was_alive_mask) != 0x00)
-      0006CA 21 A6 01              1620 	ld	hl, #422
-      0006CD 39                    1621 	add	hl, sp
-      0006CE 7E                    1622 	ld	a, (hl)
-      0006CF B7                    1623 	or	a, a
-      0006D0 28 1C                 1624 	jr	Z, 00118$
-      0006D2 21 AF 01              1625 	ld	hl,#0x1af
-      0006D5 39                    1626 	add	hl,sp
-      0006D6 2A                    1627 	ld	a, (hl+)
-      0006D7 5F                    1628 	ld	e, a
-      0006D8 56                    1629 	ld	d, (hl)
-      0006D9 21 B6 01              1630 	ld	hl, #438
-      0006DC 39                    1631 	add	hl, sp
-      0006DD 6E                    1632 	ld	l, (hl)
-      0006DE 26 00                 1633 	ld	h, #0x00
-      0006E0 19                    1634 	add	hl, de
-      0006E1 4D                    1635 	ld	c, l
-      0006E2 44                    1636 	ld	b, h
-      0006E3 0A                    1637 	ld	a, (bc)
-      0006E4 21 AB 01              1638 	ld	hl, #427
-      0006E7 39                    1639 	add	hl, sp
-      0006E8 A6                    1640 	and	a,(hl)
-      0006E9 28 03                 1641 	jr	Z, 00118$
-                                   1642 ;main.c:187: neighbour_count += 1;
-      0006EB 2B                    1643 	dec	hl
-      0006EC 34                    1644 	inc	(hl)
-      0006ED 7E                    1645 	ld	a, (hl)
-      0006EE                       1646 00118$:
-                                   1647 ;main.c:193: && (board[x + 1][y + 1] & k_tile_was_alive_mask) != 0x00)
-      0006EE 21 B6 01              1648 	ld	hl, #438
-      0006F1 39                    1649 	add	hl, sp
-      0006F2 7E                    1650 	ld	a, (hl)
-      0006F3 D6 11                 1651 	sub	a, #0x11
-      0006F5 3E 00                 1652 	ld	a, #0x00
-      0006F7 17                    1653 	rla
-      0006F8 21 B1 01              1654 	ld	hl, #433
-      0006FB 39                    1655 	add	hl, sp
-      0006FC 22                    1656 	ld	(hl+), a
-      0006FD 34                    1657 	inc	(hl)
-                                   1658 ;main.c:192: && y < 17
-      0006FE 21 A6 01              1659 	ld	hl, #422
-      000701 39                    1660 	add	hl, sp
-      000702 7E                    1661 	ld	a, (hl)
-      000703 B7                    1662 	or	a, a
-      000704 28 20                 1663 	jr	Z, 00121$
-                                   1664 ;main.c:193: && (board[x + 1][y + 1] & k_tile_was_alive_mask) != 0x00)
-      000706 21 B1 01              1665 	ld	hl, #433
-      000709 39                    1666 	add	hl, sp
-      00070A 7E                    1667 	ld	a, (hl)
-      00070B B7                    1668 	or	a, a
-      00070C 28 18                 1669 	jr	Z, 00121$
-      00070E 2B                    1670 	dec	hl
-      00070F 2B                    1671 	dec	hl
-      000710 2A                    1672 	ld	a, (hl+)
-      000711 5F                    1673 	ld	e, a
-      000712 2A                    1674 	ld	a, (hl+)
-      000713 23                    1675 	inc	hl
-      000714 57                    1676 	ld	d, a
-      000715 6E                    1677 	ld	l, (hl)
-      000716 26 00                 1678 	ld	h, #0x00
-      000718 19                    1679 	add	hl, de
-      000719 4D                    1680 	ld	c, l
-      00071A 44                    1681 	ld	b, h
-      00071B 0A                    1682 	ld	a, (bc)
-      00071C 21 AB 01              1683 	ld	hl, #427
-      00071F 39                    1684 	add	hl, sp
-      000720 A6                    1685 	and	a,(hl)
-      000721 28 03                 1686 	jr	Z, 00121$
-                                   1687 ;main.c:195: neighbour_count += 1;
-      000723 2B                    1688 	dec	hl
-      000724 34                    1689 	inc	(hl)
-      000725 7E                    1690 	ld	a, (hl)
-      000726                       1691 00121$:
-                                   1692 ;main.c:200: && (board[x][y + 1] & k_tile_was_alive_mask) != 0x00)
-      000726 21 B1 01              1693 	ld	hl, #433
-      000729 39                    1694 	add	hl, sp
-      00072A 7E                    1695 	ld	a, (hl)
-      00072B B7                    1696 	or	a, a
-      00072C 28 2B                 1697 	jr	Z, 00125$
-      00072E 21 A4 01              1698 	ld	hl,#0x1a4
-      000731 39                    1699 	add	hl,sp
-      000732 2A                    1700 	ld	a, (hl+)
-      000733 5F                    1701 	ld	e, a
-      000734 56                    1702 	ld	d, (hl)
-      000735 21 B2 01              1703 	ld	hl, #434
-      000738 39                    1704 	add	hl, sp
-      000739 6E                    1705 	ld	l, (hl)
-      00073A 26 00                 1706 	ld	h, #0x00
-      00073C 19                    1707 	add	hl, de
-      00073D E5                    1708 	push	hl
-      00073E 7D                    1709 	ld	a, l
-      00073F 21 B1 01              1710 	ld	hl, #433
-      000742 39                    1711 	add	hl, sp
-      000743 77                    1712 	ld	(hl), a
-      000744 E1                    1713 	pop	hl
-      000745 7C                    1714 	ld	a, h
-      000746 21 B0 01              1715 	ld	hl, #432
-      000749 39                    1716 	add	hl, sp
-      00074A 32                    1717 	ld	(hl-), a
-      00074B 2A                    1718 	ld	a, (hl+)
-      00074C 5F                    1719 	ld	e, a
-      00074D 56                    1720 	ld	d, (hl)
-      00074E 1A                    1721 	ld	a, (de)
-      00074F 21 AB 01              1722 	ld	hl, #427
-      000752 39                    1723 	add	hl, sp
-      000753 A6                    1724 	and	a,(hl)
-      000754 28 03                 1725 	jr	Z, 00125$
-                                   1726 ;main.c:202: neighbour_count += 1;
-      000756 2B                    1727 	dec	hl
-      000757 34                    1728 	inc	(hl)
-      000758 7E                    1729 	ld	a, (hl)
-      000759                       1730 00125$:
-                                   1731 ;main.c:208: && (board[x - 1][y + 1] & k_tile_was_alive_mask) != 0x00)
-      000759 21 AD 01              1732 	ld	hl,#0x1ad
-      00075C 39                    1733 	add	hl,sp
-      00075D 2A                    1734 	ld	a, (hl+)
-      00075E 4F                    1735 	ld	c, a
-      00075F 46                    1736 	ld	b, (hl)
-      000760 0B                    1737 	dec	bc
-      000761 69                    1738 	ld	l, c
-      000762 60                    1739 	ld	h, b
-      000763 29                    1740 	add	hl, hl
-      000764 29                    1741 	add	hl, hl
-      000765 29                    1742 	add	hl, hl
-      000766 09                    1743 	add	hl, bc
-      000767 29                    1744 	add	hl, hl
-      000768 4D                    1745 	ld	c, l
-      000769 44                    1746 	ld	b, h
-      00076A 21 9E 01              1747 	ld	hl, #414
-      00076D 39                    1748 	add	hl, sp
-      00076E 2A                    1749 	ld	a,	(hl+)
-      00076F 66                    1750 	ld	h, (hl)
-      000770 6F                    1751 	ld	l, a
-      000771 09                    1752 	add	hl, bc
-      000772 E5                    1753 	push	hl
-      000773 7D                    1754 	ld	a, l
-      000774 21 B1 01              1755 	ld	hl, #433
-      000777 39                    1756 	add	hl, sp
-      000778 77                    1757 	ld	(hl), a
-      000779 E1                    1758 	pop	hl
-      00077A 7C                    1759 	ld	a, h
-      00077B 21 B0 01              1760 	ld	hl, #432
-      00077E 39                    1761 	add	hl, sp
-      00077F 77                    1762 	ld	(hl), a
-                                   1763 ;main.c:206: if (x > 0
-      000780 21 B5 01              1764 	ld	hl, #437
-      000783 39                    1765 	add	hl, sp
-      000784 7E                    1766 	ld	a, (hl)
-      000785 B7                    1767 	or	a, a
-      000786 28 21                 1768 	jr	Z, 00128$
-                                   1769 ;main.c:208: && (board[x - 1][y + 1] & k_tile_was_alive_mask) != 0x00)
-      000788 21 B1 01              1770 	ld	hl, #433
-      00078B 39                    1771 	add	hl, sp
-      00078C 7E                    1772 	ld	a, (hl)
-      00078D B7                    1773 	or	a, a
-      00078E 28 19                 1774 	jr	Z, 00128$
-      000790 23                    1775 	inc	hl
-      000791 5E                    1776 	ld	e, (hl)
-      000792 16 00                 1777 	ld	d, #0x00
-      000794 21 AF 01              1778 	ld	hl, #431
-      000797 39                    1779 	add	hl, sp
-      000798 2A                    1780 	ld	a,	(hl+)
-      000799 66                    1781 	ld	h, (hl)
-      00079A 6F                    1782 	ld	l, a
-      00079B 19                    1783 	add	hl, de
-      00079C 4D                    1784 	ld	c, l
-      00079D 44                    1785 	ld	b, h
-      00079E 0A                    1786 	ld	a, (bc)
-      00079F 21 AB 01              1787 	ld	hl, #427
-      0007A2 39                    1788 	add	hl, sp
-      0007A3 A6                    1789 	and	a,(hl)
-      0007A4 28 03                 1790 	jr	Z, 00128$
-                                   1791 ;main.c:210: neighbour_count += 1;
-      0007A6 2B                    1792 	dec	hl
-      0007A7 34                    1793 	inc	(hl)
-      0007A8 7E                    1794 	ld	a, (hl)
-      0007A9                       1795 00128$:
-                                   1796 ;main.c:214: if (x > 0
-      0007A9 21 B5 01              1797 	ld	hl, #437
-      0007AC 39                    1798 	add	hl, sp
-      0007AD 7E                    1799 	ld	a, (hl)
-      0007AE B7                    1800 	or	a, a
-      0007AF 28 1C                 1801 	jr	Z, 00132$
-                                   1802 ;main.c:215: && (board[x - 1][y] & k_tile_was_alive_mask) != 0x00)
-      0007B1 21 AF 01              1803 	ld	hl,#0x1af
-      0007B4 39                    1804 	add	hl,sp
-      0007B5 2A                    1805 	ld	a, (hl+)
-      0007B6 5F                    1806 	ld	e, a
-      0007B7 56                    1807 	ld	d, (hl)
-      0007B8 21 B6 01              1808 	ld	hl, #438
-      0007BB 39                    1809 	add	hl, sp
-      0007BC 6E                    1810 	ld	l, (hl)
-      0007BD 26 00                 1811 	ld	h, #0x00
-      0007BF 19                    1812 	add	hl, de
-      0007C0 4D                    1813 	ld	c, l
-      0007C1 44                    1814 	ld	b, h
-      0007C2 0A                    1815 	ld	a, (bc)
-      0007C3 21 AB 01              1816 	ld	hl, #427
-      0007C6 39                    1817 	add	hl, sp
-      0007C7 A6                    1818 	and	a,(hl)
-      0007C8 28 03                 1819 	jr	Z, 00132$
-                                   1820 ;main.c:217: neighbour_count += 1;
-      0007CA 2B                    1821 	dec	hl
-      0007CB 34                    1822 	inc	(hl)
-      0007CC 7E                    1823 	ld	a, (hl)
-      0007CD                       1824 00132$:
-                                   1825 ;main.c:221: if (x > 0
-      0007CD 21 B5 01              1826 	ld	hl, #437
-      0007D0 39                    1827 	add	hl, sp
-      0007D1 7E                    1828 	ld	a, (hl)
-      0007D2 B7                    1829 	or	a, a
-      0007D3 28 30                 1830 	jr	Z, 00135$
-                                   1831 ;main.c:222: && y > 0
-      0007D5 23                    1832 	inc	hl
-      0007D6 7E                    1833 	ld	a, (hl)
-      0007D7 B7                    1834 	or	a, a
-      0007D8 28 2B                 1835 	jr	Z, 00135$
-                                   1836 ;main.c:223: && (board[x - 1][y - 1] & k_tile_was_alive_mask) != 0x00)
-      0007DA 21 AC 01              1837 	ld	hl, #428
-      0007DD 39                    1838 	add	hl, sp
-      0007DE 5E                    1839 	ld	e, (hl)
-      0007DF 16 00                 1840 	ld	d, #0x00
-      0007E1 21 AF 01              1841 	ld	hl, #431
-      0007E4 39                    1842 	add	hl, sp
-      0007E5 2A                    1843 	ld	a,	(hl+)
-      0007E6 66                    1844 	ld	h, (hl)
-      0007E7 6F                    1845 	ld	l, a
-      0007E8 19                    1846 	add	hl, de
-      0007E9 E5                    1847 	push	hl
-      0007EA 7D                    1848 	ld	a, l
-      0007EB 21 B3 01              1849 	ld	hl, #435
-      0007EE 39                    1850 	add	hl, sp
-      0007EF 77                    1851 	ld	(hl), a
-      0007F0 E1                    1852 	pop	hl
-      0007F1 7C                    1853 	ld	a, h
-      0007F2 21 B2 01              1854 	ld	hl, #434
-      0007F5 39                    1855 	add	hl, sp
-      0007F6 32                    1856 	ld	(hl-), a
-      0007F7 2A                    1857 	ld	a, (hl+)
-      0007F8 5F                    1858 	ld	e, a
-      0007F9 56                    1859 	ld	d, (hl)
-      0007FA 1A                    1860 	ld	a, (de)
-      0007FB 21 AB 01              1861 	ld	hl, #427
-      0007FE 39                    1862 	add	hl, sp
-      0007FF A6                    1863 	and	a,(hl)
-      000800 28 03                 1864 	jr	Z, 00135$
-                                   1865 ;main.c:225: neighbour_count += 1;
-      000802 2B                    1866 	dec	hl
-      000803 34                    1867 	inc	(hl)
-      000804 7E                    1868 	ld	a, (hl)
-      000805                       1869 00135$:
-                                   1870 ;main.c:150: if ((tile_data & k_tile_is_alive_mask) != 0x00)
-      000805 21rE1r02              1871 	ld	hl, #_k_tile_is_alive_mask
-      000808 4E                    1872 	ld	c, (hl)
-                                   1873 ;main.c:229: uint8_t is_alive = (tile_data & k_tile_is_alive_mask) != 0x00;
-      000809 21 A9 01              1874 	ld	hl, #425
-      00080C 39                    1875 	add	hl, sp
-      00080D 7E                    1876 	ld	a, (hl)
-      00080E A1                    1877 	and	a, c
-      00080F D6 01                 1878 	sub	a,#0x01
-      000811 3E 00                 1879 	ld	a, #0x00
-      000813 17                    1880 	rla
-      000814 EE 01                 1881 	xor	a, #0x01
-                                   1882 ;main.c:230: uint8_t come_to_life = !is_alive && neighbour_count == 3;
-      000816 5F                    1883 	ld	e, a
-      000817 B7                    1884 	or	a, a
-      000818 20 06                 1885 	jr	NZ, 00201$
-      00081A 23                    1886 	inc	hl
-      00081B 7E                    1887 	ld	a, (hl)
-      00081C D6 03                 1888 	sub	a, #0x03
-      00081E 28 03                 1889 	jr	Z, 00202$
-      000820                       1890 00201$:
-      000820 AF                    1891 	xor	a, a
-      000821 18 02                 1892 	jr	00203$
-      000823                       1893 00202$:
-      000823 3E 01                 1894 	ld	a, #0x01
-      000825                       1895 00203$:
-      000825 21 B0 01              1896 	ld	hl, #432
-      000828 39                    1897 	add	hl, sp
-      000829 77                    1898 	ld	(hl), a
-                                   1899 ;main.c:235: uint8_t remain_alive = is_alive && neighbour_count >= 2 && neighbour_count <= 3;
-      00082A 7B                    1900 	ld	a, e
-      00082B B7                    1901 	or	a, a
-      00082C 28 0E                 1902 	jr	Z, 00204$
-      00082E 21 AA 01              1903 	ld	hl, #426
-      000831 39                    1904 	add	hl, sp
-      000832 7E                    1905 	ld	a, (hl)
-      000833 D6 02                 1906 	sub	a, #0x02
-      000835 38 05                 1907 	jr	C, 00204$
-      000837 3E 03                 1908 	ld	a, #0x03
-      000839 96                    1909 	sub	a, (hl)
-      00083A 30 04                 1910 	jr	NC, 00205$
-      00083C                       1911 00204$:
-      00083C 1E 00                 1912 	ld	e, #0x00
-      00083E 18 02                 1913 	jr	00206$
-      000840                       1914 00205$:
-      000840 1E 01                 1915 	ld	e, #0x01
-      000842                       1916 00206$:
-                                   1917 ;main.c:238: tile_data &= ~k_tile_is_alive_mask;
-      000842 79                    1918 	ld	a, c
-      000843 2F                    1919 	cpl
-      000844 21 B1 01              1920 	ld	hl, #433
-      000847 39                    1921 	add	hl, sp
-      000848 77                    1922 	ld	(hl), a
-      000849 21 A9 01              1923 	ld	hl, #425
-      00084C 39                    1924 	add	hl, sp
-      00084D 7E                    1925 	ld	a, (hl)
-      00084E 21 B1 01              1926 	ld	hl, #433
-      000851 39                    1927 	add	hl, sp
-      000852 A6                    1928 	and	a, (hl)
-      000853 23                    1929 	inc	hl
-                                   1930 ;main.c:239: if ((come_to_life | remain_alive) != 0x00)
-      000854 32                    1931 	ld	(hl-), a
-      000855 2B                    1932 	dec	hl
-      000856 7E                    1933 	ld	a, (hl)
-      000857 B3                    1934 	or	a, e
-      000858 B7                    1935 	or	a, a
-      000859 28 05                 1936 	jr	Z, 00139$
-                                   1937 ;main.c:241: tile_data |= k_tile_is_alive_mask;
-      00085B 23                    1938 	inc	hl
-      00085C 23                    1939 	inc	hl
-      00085D 7E                    1940 	ld	a, (hl)
-      00085E B1                    1941 	or	a, c
-      00085F 77                    1942 	ld	(hl), a
-      000860                       1943 00139$:
-                                   1944 ;main.c:245: is_alive = (tile_data & k_tile_is_alive_mask) != 0x00;
-      000860 21 B2 01              1945 	ld	hl, #434
-      000863 39                    1946 	add	hl, sp
-      000864 3A                    1947 	ld	a, (hl-)
-      000865 2B                    1948 	dec	hl
-      000866 A1                    1949 	and	a, c
-      000867 D6 01                 1950 	sub	a, #0x01
-      000869 3E 00                 1951 	ld	a, #0x00
-      00086B 17                    1952 	rla
-      00086C EE 01                 1953 	xor	a, #0x01
-                                   1954 ;main.c:246: uint8_t was_alive = (tile_data & k_tile_was_alive_mask) != 0x00;
-      00086E 22                    1955 	ld	(hl+), a
-      00086F 23                    1956 	inc	hl
-      000870 7E                    1957 	ld	a, (hl)
-      000871 21 AB 01              1958 	ld	hl, #427
-      000874 39                    1959 	add	hl, sp
-      000875 A6                    1960 	and	a, (hl)
-      000876 23                    1961 	inc	hl
-      000877 23                    1962 	inc	hl
-      000878 D6 01                 1963 	sub	a, #0x01
-      00087A 3E 00                 1964 	ld	a, #0x00
-      00087C 17                    1965 	rla
-      00087D EE 01                 1966 	xor	a, #0x01
-      00087F 77                    1967 	ld	(hl), a
-      000880 2A                    1968 	ld	a, (hl+)
-      000881 77                    1969 	ld	(hl), a
-                                   1970 ;main.c:259: update_tile_position(tile_data & k_tile_sprite_index_mask, x, y);
-      000882 FArE0r02              1971 	ld	a, (#_k_tile_sprite_index_mask)
-      000885 21 AF 01              1972 	ld	hl, #431
-      000888 39                    1973 	add	hl, sp
-                                   1974 ;main.c:249: if (!was_alive && is_alive)
-      000889 32                    1975 	ld	(hl-), a
-      00088A 2B                    1976 	dec	hl
-      00088B 7E                    1977 	ld	a, (hl)
-      00088C B7                    1978 	or	a, a
-      00088D 20 60                 1979 	jr	NZ, 00147$
-      00088F 21 B0 01              1980 	ld	hl, #432
-      000892 39                    1981 	add	hl, sp
-      000893 7E                    1982 	ld	a, (hl)
-      000894 B7                    1983 	or	a, a
-      000895 28 58                 1984 	jr	Z, 00147$
-                                   1985 ;main.c:252: if (next_available_sprite_index < 39)
-      000897 21 B4 01              1986 	ld	hl, #436
-      00089A 39                    1987 	add	hl, sp
-      00089B 7E                    1988 	ld	a, (hl)
-      00089C D6 27                 1989 	sub	a, #0x27
-      00089E 30 45                 1990 	jr	NC, 00141$
-                                   1991 ;main.c:255: tile_data |= available_sprites[next_available_sprite_index];
-      0008A0 21 A2 01              1992 	ld	hl,#0x1a2
-      0008A3 39                    1993 	add	hl,sp
-      0008A4 2A                    1994 	ld	a, (hl+)
-      0008A5 5F                    1995 	ld	e, a
-      0008A6 56                    1996 	ld	d, (hl)
-      0008A7 21 B4 01              1997 	ld	hl, #436
-      0008AA 39                    1998 	add	hl, sp
-      0008AB 6E                    1999 	ld	l, (hl)
-      0008AC 26 00                 2000 	ld	h, #0x00
-      0008AE 19                    2001 	add	hl, de
-      0008AF E5                    2002 	push	hl
-      0008B0 7D                    2003 	ld	a, l
-      0008B1 21 B2 01              2004 	ld	hl, #434
-      0008B4 39                    2005 	add	hl, sp
-      0008B5 77                    2006 	ld	(hl), a
-      0008B6 E1                    2007 	pop	hl
-      0008B7 7C                    2008 	ld	a, h
-      0008B8 21 B1 01              2009 	ld	hl, #433
-      0008BB 39                    2010 	add	hl, sp
-      0008BC 32                    2011 	ld	(hl-), a
-      0008BD 2A                    2012 	ld	a, (hl+)
-      0008BE 5F                    2013 	ld	e, a
-      0008BF 2A                    2014 	ld	a, (hl+)
-      0008C0 57                    2015 	ld	d, a
-      0008C1 1A                    2016 	ld	a, (de)
-      0008C2 B6                    2017 	or	a, (hl)
-                                   2018 ;main.c:256: next_available_sprite_index++;
-      0008C3 22                    2019 	ld	(hl+), a
-      0008C4 23                    2020 	inc	hl
-      0008C5 34                    2021 	inc	(hl)
-                                   2022 ;main.c:259: update_tile_position(tile_data & k_tile_sprite_index_mask, x, y);
-      0008C6 2B                    2023 	dec	hl
-      0008C7 2B                    2024 	dec	hl
-      0008C8 7E                    2025 	ld	a, (hl)
-      0008C9 21 AF 01              2026 	ld	hl, #431
-      0008CC 39                    2027 	add	hl, sp
-      0008CD A6                    2028 	and	a, (hl)
-      0008CE 21 B6 01              2029 	ld	hl, #438
-      0008D1 39                    2030 	add	hl, sp
-      0008D2 66                    2031 	ld	h, (hl)
-                                   2032 ;	spillPairReg hl
-                                   2033 ;	spillPairReg hl
-      0008D3 E5                    2034 	push	hl
-      0008D4 33                    2035 	inc	sp
-      0008D5 21 B6 01              2036 	ld	hl, #438
-      0008D8 39                    2037 	add	hl, sp
-      0008D9 66                    2038 	ld	h, (hl)
-                                   2039 ;	spillPairReg hl
-                                   2040 ;	spillPairReg hl
-      0008DA E5                    2041 	push	hl
-      0008DB 33                    2042 	inc	sp
-      0008DC F5                    2043 	push	af
-      0008DD 33                    2044 	inc	sp
-      0008DE CDr31r03              2045 	call	_update_tile_position
-      0008E1 E8 03                 2046 	add	sp, #3
-      0008E3 18 54                 2047 	jr	00148$
-      0008E5                       2048 00141$:
-                                   2049 ;main.c:264: tile_data &= ~k_tile_is_alive_mask;
-      0008E5 21 B2 01              2050 	ld	hl, #434
-      0008E8 39                    2051 	add	hl, sp
-      0008E9 3A                    2052 	ld	a, (hl-)
-      0008EA A6                    2053 	and	a, (hl)
-      0008EB 23                    2054 	inc	hl
-      0008EC 77                    2055 	ld	(hl), a
-      0008ED 18 4A                 2056 	jr	00148$
-      0008EF                       2057 00147$:
-                                   2058 ;main.c:267: else if (was_alive && !is_alive)
-      0008EF 21 AE 01              2059 	ld	hl, #430
-      0008F2 39                    2060 	add	hl, sp
-      0008F3 7E                    2061 	ld	a, (hl)
-      0008F4 B7                    2062 	or	a, a
-      0008F5 28 42                 2063 	jr	Z, 00148$
-      0008F7 23                    2064 	inc	hl
-      0008F8 23                    2065 	inc	hl
-      0008F9 7E                    2066 	ld	a, (hl)
-      0008FA B7                    2067 	or	a, a
-      0008FB 20 3C                 2068 	jr	NZ, 00148$
-                                   2069 ;main.c:270: update_tile_position(tile_data & k_tile_sprite_index_mask, 0, 19);
-      0008FD 23                    2070 	inc	hl
-      0008FE 23                    2071 	inc	hl
-      0008FF 7E                    2072 	ld	a, (hl)
-      000900 21 AF 01              2073 	ld	hl, #431
-      000903 39                    2074 	add	hl, sp
-      000904 A6                    2075 	and	a, (hl)
-      000905 26 13                 2076 	ld	h, #0x13
-                                   2077 ;	spillPairReg hl
-                                   2078 ;	spillPairReg hl
-      000907 E5                    2079 	push	hl
-      000908 33                    2080 	inc	sp
-      000909 26 00                 2081 	ld	h, #0x00
-                                   2082 ;	spillPairReg hl
-                                   2083 ;	spillPairReg hl
-      00090B E5                    2084 	push	hl
-      00090C 33                    2085 	inc	sp
-      00090D F5                    2086 	push	af
-      00090E 33                    2087 	inc	sp
-      00090F CDr31r03              2088 	call	_update_tile_position
-      000912 E8 03                 2089 	add	sp, #3
-                                   2090 ;main.c:273: next_available_sprite_index--;
-      000914 21 B4 01              2091 	ld	hl, #436
-      000917 39                    2092 	add	hl, sp
-      000918 35                    2093 	dec	(hl)
-                                   2094 ;main.c:274: available_sprites[next_available_sprite_index] = tile_data & k_tile_sprite_index_mask;
-      000919 21 A0 01              2095 	ld	hl,#0x1a0
-      00091C 39                    2096 	add	hl,sp
-      00091D 2A                    2097 	ld	a, (hl+)
-      00091E 5F                    2098 	ld	e, a
-      00091F 56                    2099 	ld	d, (hl)
-      000920 21 B4 01              2100 	ld	hl, #436
-      000923 39                    2101 	add	hl, sp
-      000924 6E                    2102 	ld	l, (hl)
-      000925 26 00                 2103 	ld	h, #0x00
-      000927 19                    2104 	add	hl, de
-      000928 5D                    2105 	ld	e, l
-      000929 54                    2106 	ld	d, h
-      00092A 21rE0r02              2107 	ld	hl, #_k_tile_sprite_index_mask
-      00092D 4E                    2108 	ld	c, (hl)
-      00092E 21 B2 01              2109 	ld	hl, #434
-      000931 39                    2110 	add	hl, sp
-      000932 7E                    2111 	ld	a, (hl)
-      000933 A1                    2112 	and	a, c
-      000934 12                    2113 	ld	(de), a
-                                   2114 ;main.c:277: tile_data &= ~k_tile_sprite_index_mask;
-      000935 79                    2115 	ld	a, c
-      000936 2F                    2116 	cpl
-      000937 A6                    2117 	and	a, (hl)
-      000938 77                    2118 	ld	(hl), a
-      000939                       2119 00148$:
-                                   2120 ;main.c:280: board[x][y] = tile_data;
-      000939 21 A7 01              2121 	ld	hl,#0x1a7
-      00093C 39                    2122 	add	hl,sp
-      00093D 2A                    2123 	ld	a, (hl+)
-      00093E 5F                    2124 	ld	e, a
-      00093F 56                    2125 	ld	d, (hl)
-      000940 21 B2 01              2126 	ld	hl, #434
-      000943 39                    2127 	add	hl, sp
-      000944 7E                    2128 	ld	a, (hl)
-      000945 12                    2129 	ld	(de), a
-                                   2130 ;main.c:163: for (uint8_t y = 0; y < 18; ++y)
-      000946 21 B6 01              2131 	ld	hl, #438
-      000949 39                    2132 	add	hl, sp
-      00094A 34                    2133 	inc	(hl)
-      00094B C3r00r06              2134 	jp	00192$
-      00094E                       2135 00196$:
-                                   2136 ;main.c:161: for (uint8_t x = 0; x < 20; ++x)
-      00094E 21 B5 01              2137 	ld	hl, #437
-      000951 39                    2138 	add	hl, sp
-      000952 34                    2139 	inc	(hl)
-      000953 C3rBFr05              2140 	jp	00195$
-      000956                       2141 00171$:
-                                   2142 ;main.c:293: if (was_input_depressed(&input_state, btn_up))
-      000956 21 96 01              2143 	ld	hl, #406
-      000959 39                    2144 	add	hl, sp
-      00095A 7E                    2145 	ld	a, (hl)
-      00095B 21 B5 01              2146 	ld	hl, #437
-      00095E 39                    2147 	add	hl, sp
-      00095F 77                    2148 	ld	(hl), a
-      000960 21 97 01              2149 	ld	hl, #407
-      000963 39                    2150 	add	hl, sp
-      000964 7E                    2151 	ld	a, (hl)
-      000965 21 B6 01              2152 	ld	hl, #438
-      000968 39                    2153 	add	hl, sp
-      000969 32                    2154 	ld	(hl-), a
-      00096A 3E 02                 2155 	ld	a, #0x02
-      00096C F5                    2156 	push	af
-      00096D 33                    2157 	inc	sp
-      00096E 2A                    2158 	ld	a, (hl+)
-      00096F 5F                    2159 	ld	e, a
-      000970 56                    2160 	ld	d, (hl)
-      000971 D5                    2161 	push	de
-      000972 CDr77r02              2162 	call	_was_input_depressed
-      000975 E8 03                 2163 	add	sp, #3
-      000977 21 B6 01              2164 	ld	hl, #438
-      00097A 39                    2165 	add	hl, sp
-      00097B 73                    2166 	ld	(hl), e
-                                   2167 ;main.c:295: cursor_tile_y -= 1;
-      00097C 21 99 01              2168 	ld	hl, #409
-      00097F 39                    2169 	add	hl, sp
-      000980 7E                    2170 	ld	a, (hl)
-      000981 21 B2 01              2171 	ld	hl, #434
-      000984 39                    2172 	add	hl, sp
-      000985 77                    2173 	ld	(hl), a
-                                   2174 ;main.c:293: if (was_input_depressed(&input_state, btn_up))
-      000986 21 B6 01              2175 	ld	hl, #438
-      000989 39                    2176 	add	hl, sp
-      00098A 7E                    2177 	ld	a, (hl)
-      00098B B7                    2178 	or	a, a
-      00098C 28 0E                 2179 	jr	Z, 00161$
-                                   2180 ;main.c:295: cursor_tile_y -= 1;
-      00098E 21 B2 01              2181 	ld	hl, #434
-      000991 39                    2182 	add	hl, sp
-      000992 7E                    2183 	ld	a, (hl)
-      000993 3D                    2184 	dec	a
-      000994 21 99 01              2185 	ld	hl, #409
-      000997 39                    2186 	add	hl, sp
-      000998 77                    2187 	ld	(hl), a
-      000999 C3r36r0A              2188 	jp	00162$
-      00099C                       2189 00161$:
-                                   2190 ;main.c:297: else if (was_input_depressed(&input_state, btn_down))
-      00099C 21 96 01              2191 	ld	hl, #406
-      00099F 39                    2192 	add	hl, sp
-      0009A0 7E                    2193 	ld	a, (hl)
-      0009A1 21 B5 01              2194 	ld	hl, #437
-      0009A4 39                    2195 	add	hl, sp
-      0009A5 77                    2196 	ld	(hl), a
-      0009A6 21 97 01              2197 	ld	hl, #407
-      0009A9 39                    2198 	add	hl, sp
-      0009AA 7E                    2199 	ld	a, (hl)
-      0009AB 21 B6 01              2200 	ld	hl, #438
-      0009AE 39                    2201 	add	hl, sp
-      0009AF 32                    2202 	ld	(hl-), a
-      0009B0 3E 03                 2203 	ld	a, #0x03
-      0009B2 F5                    2204 	push	af
-      0009B3 33                    2205 	inc	sp
-      0009B4 2A                    2206 	ld	a, (hl+)
-      0009B5 5F                    2207 	ld	e, a
-      0009B6 56                    2208 	ld	d, (hl)
-      0009B7 D5                    2209 	push	de
-      0009B8 CDr77r02              2210 	call	_was_input_depressed
-      0009BB E8 03                 2211 	add	sp, #3
-      0009BD 7B                    2212 	ld	a, e
-      0009BE B7                    2213 	or	a, a
-      0009BF 28 0D                 2214 	jr	Z, 00158$
-                                   2215 ;main.c:299: cursor_tile_y += 1;
-      0009C1 21 B2 01              2216 	ld	hl, #434
-      0009C4 39                    2217 	add	hl, sp
-      0009C5 7E                    2218 	ld	a, (hl)
-      0009C6 3C                    2219 	inc	a
-      0009C7 21 99 01              2220 	ld	hl, #409
-      0009CA 39                    2221 	add	hl, sp
-      0009CB 77                    2222 	ld	(hl), a
-      0009CC 18 68                 2223 	jr	00162$
-      0009CE                       2224 00158$:
-                                   2225 ;main.c:301: else if (was_input_depressed(&input_state, btn_left))
-      0009CE 21 96 01              2226 	ld	hl, #406
-      0009D1 39                    2227 	add	hl, sp
-      0009D2 7E                    2228 	ld	a, (hl)
-      0009D3 21 B5 01              2229 	ld	hl, #437
-      0009D6 39                    2230 	add	hl, sp
-      0009D7 77                    2231 	ld	(hl), a
-      0009D8 21 97 01              2232 	ld	hl, #407
-      0009DB 39                    2233 	add	hl, sp
-      0009DC 7E                    2234 	ld	a, (hl)
-      0009DD 21 B6 01              2235 	ld	hl, #438
-      0009E0 39                    2236 	add	hl, sp
-      0009E1 32                    2237 	ld	(hl-), a
-      0009E2 3E 04                 2238 	ld	a, #0x04
-      0009E4 F5                    2239 	push	af
-      0009E5 33                    2240 	inc	sp
-      0009E6 2A                    2241 	ld	a, (hl+)
-      0009E7 5F                    2242 	ld	e, a
-      0009E8 56                    2243 	ld	d, (hl)
-      0009E9 D5                    2244 	push	de
-      0009EA CDr77r02              2245 	call	_was_input_depressed
-      0009ED E8 03                 2246 	add	sp, #3
-                                   2247 ;main.c:303: cursor_tile_x -= 1;
-      0009EF 21 98 01              2248 	ld	hl, #408
-      0009F2 39                    2249 	add	hl, sp
-      0009F3 7E                    2250 	ld	a, (hl)
-      0009F4 21 B2 01              2251 	ld	hl, #434
-      0009F7 39                    2252 	add	hl, sp
-      0009F8 77                    2253 	ld	(hl), a
-                                   2254 ;main.c:301: else if (was_input_depressed(&input_state, btn_left))
-      0009F9 7B                    2255 	ld	a, e
-      0009FA B7                    2256 	or	a, a
-      0009FB 28 09                 2257 	jr	Z, 00155$
-                                   2258 ;main.c:303: cursor_tile_x -= 1;
-      0009FD 7E                    2259 	ld	a, (hl)
-      0009FE 3D                    2260 	dec	a
-      0009FF 21 98 01              2261 	ld	hl, #408
-      000A02 39                    2262 	add	hl, sp
-      000A03 77                    2263 	ld	(hl), a
-      000A04 18 30                 2264 	jr	00162$
-      000A06                       2265 00155$:
-                                   2266 ;main.c:305: else if (was_input_depressed(&input_state, btn_right))
-      000A06 21 96 01              2267 	ld	hl, #406
-      000A09 39                    2268 	add	hl, sp
-      000A0A 7E                    2269 	ld	a, (hl)
-      000A0B 21 B5 01              2270 	ld	hl, #437
-      000A0E 39                    2271 	add	hl, sp
-      000A0F 77                    2272 	ld	(hl), a
-      000A10 21 97 01              2273 	ld	hl, #407
-      000A13 39                    2274 	add	hl, sp
-      000A14 7E                    2275 	ld	a, (hl)
-      000A15 21 B6 01              2276 	ld	hl, #438
-      000A18 39                    2277 	add	hl, sp
-      000A19 32                    2278 	ld	(hl-), a
-      000A1A 3E 05                 2279 	ld	a, #0x05
-      000A1C F5                    2280 	push	af
-      000A1D 33                    2281 	inc	sp
-      000A1E 2A                    2282 	ld	a, (hl+)
-      000A1F 5F                    2283 	ld	e, a
-      000A20 56                    2284 	ld	d, (hl)
-      000A21 D5                    2285 	push	de
-      000A22 CDr77r02              2286 	call	_was_input_depressed
-      000A25 E8 03                 2287 	add	sp, #3
-      000A27 7B                    2288 	ld	a, e
-      000A28 B7                    2289 	or	a, a
-      000A29 28 0B                 2290 	jr	Z, 00162$
-                                   2291 ;main.c:307: cursor_tile_x += 1;
-      000A2B 21 B2 01              2292 	ld	hl, #434
-      000A2E 39                    2293 	add	hl, sp
-      000A2F 7E                    2294 	ld	a, (hl)
-      000A30 3C                    2295 	inc	a
-      000A31 21 98 01              2296 	ld	hl, #408
-      000A34 39                    2297 	add	hl, sp
-      000A35 77                    2298 	ld	(hl), a
-      000A36                       2299 00162$:
-                                   2300 ;main.c:312: ? 19
-      000A36 21 98 01              2301 	ld	hl, #408
-      000A39 39                    2302 	add	hl, sp
-      000A3A 7E                    2303 	ld	a, (hl)
-      000A3B 3C                    2304 	inc	a
-      000A3C 20 0B                 2305 	jr	NZ, 00210$
-      000A3E 21 B5 01              2306 	ld	hl, #437
-      000A41 39                    2307 	add	hl, sp
-      000A42 3E 13                 2308 	ld	a, #0x13
-      000A44 22                    2309 	ld	(hl+), a
-      000A45 AF                    2310 	xor	a, a
-      000A46 77                    2311 	ld	(hl), a
-      000A47 18 1E                 2312 	jr	00211$
-      000A49                       2313 00210$:
-                                   2314 ;main.c:314: ? 0
-      000A49 3E 13                 2315 	ld	a, #0x13
-      000A4B 21 98 01              2316 	ld	hl, #408
-      000A4E 39                    2317 	add	hl, sp
-      000A4F 96                    2318 	sub	a, (hl)
-      000A50 30 09                 2319 	jr	NC, 00212$
-      000A52 AF                    2320 	xor	a, a
-      000A53 21 B5 01              2321 	ld	hl, #437
-      000A56 39                    2322 	add	hl, sp
-      000A57 22                    2323 	ld	(hl+), a
-      000A58 77                    2324 	ld	(hl), a
-      000A59 18 0C                 2325 	jr	00213$
-      000A5B                       2326 00212$:
-                                   2327 ;main.c:315: : cursor_tile_x;
-      000A5B 21 98 01              2328 	ld	hl, #408
-      000A5E 39                    2329 	add	hl, sp
-      000A5F 7E                    2330 	ld	a, (hl)
-      000A60 21 B5 01              2331 	ld	hl, #437
-      000A63 39                    2332 	add	hl, sp
-      000A64 22                    2333 	ld	(hl+), a
-      000A65 36 00                 2334 	ld	(hl), #0x00
-      000A67                       2335 00213$:
-      000A67                       2336 00211$:
-      000A67 21 B5 01              2337 	ld	hl, #437
-      000A6A 39                    2338 	add	hl, sp
-      000A6B 7E                    2339 	ld	a, (hl)
-      000A6C 21 98 01              2340 	ld	hl, #408
-      000A6F 39                    2341 	add	hl, sp
-                                   2342 ;main.c:319: ? 17
-      000A70 22                    2343 	ld	(hl+), a
-      000A71 7E                    2344 	ld	a, (hl)
-      000A72 3C                    2345 	inc	a
-      000A73 20 0B                 2346 	jr	NZ, 00214$
-      000A75 21 B5 01              2347 	ld	hl, #437
-      000A78 39                    2348 	add	hl, sp
-      000A79 3E 11                 2349 	ld	a, #0x11
-      000A7B 22                    2350 	ld	(hl+), a
-      000A7C AF                    2351 	xor	a, a
-      000A7D 77                    2352 	ld	(hl), a
-      000A7E 18 1E                 2353 	jr	00215$
-      000A80                       2354 00214$:
-                                   2355 ;main.c:321: ? 0
-      000A80 3E 11                 2356 	ld	a, #0x11
-      000A82 21 99 01              2357 	ld	hl, #409
-      000A85 39                    2358 	add	hl, sp
-      000A86 96                    2359 	sub	a, (hl)
-      000A87 30 09                 2360 	jr	NC, 00216$
-      000A89 AF                    2361 	xor	a, a
-      000A8A 21 B5 01              2362 	ld	hl, #437
-      000A8D 39                    2363 	add	hl, sp
-      000A8E 22                    2364 	ld	(hl+), a
-      000A8F 77                    2365 	ld	(hl), a
-      000A90 18 0C                 2366 	jr	00217$
-      000A92                       2367 00216$:
-                                   2368 ;main.c:322: : cursor_tile_y;
-      000A92 21 99 01              2369 	ld	hl, #409
-      000A95 39                    2370 	add	hl, sp
-      000A96 7E                    2371 	ld	a, (hl)
-      000A97 21 B5 01              2372 	ld	hl, #437
-      000A9A 39                    2373 	add	hl, sp
-      000A9B 22                    2374 	ld	(hl+), a
-      000A9C 36 00                 2375 	ld	(hl), #0x00
-      000A9E                       2376 00217$:
-      000A9E                       2377 00215$:
-      000A9E 21 B5 01              2378 	ld	hl, #437
-      000AA1 39                    2379 	add	hl, sp
-      000AA2 7E                    2380 	ld	a, (hl)
-      000AA3 21 99 01              2381 	ld	hl, #409
-      000AA6 39                    2382 	add	hl, sp
-      000AA7 77                    2383 	ld	(hl), a
-                                   2384 ;main.c:324: update_cursor_position(cursor_tile_x, cursor_tile_y);
-      000AA8 3A                    2385 	ld	a, (hl-)
-      000AA9 57                    2386 	ld	d, a
-      000AAA 5E                    2387 	ld	e, (hl)
-      000AAB D5                    2388 	push	de
-      000AAC CDrE8r02              2389 	call	_update_cursor_position
-      000AAF E1                    2390 	pop	hl
-                                   2391 ;main.c:327: if (was_input_depressed(&input_state, btn_b))
-      000AB0 21 96 01              2392 	ld	hl, #406
-      000AB3 39                    2393 	add	hl, sp
-      000AB4 2A                    2394 	ld	a, (hl+)
-      000AB5 4F                    2395 	ld	c, a
-      000AB6 46                    2396 	ld	b, (hl)
-      000AB7 3E 01                 2397 	ld	a, #0x01
-      000AB9 F5                    2398 	push	af
-      000ABA 33                    2399 	inc	sp
-      000ABB C5                    2400 	push	bc
-      000ABC CDr77r02              2401 	call	_was_input_depressed
-      000ABF E8 03                 2402 	add	sp, #3
-      000AC1 7B                    2403 	ld	a, e
-      000AC2 B7                    2404 	or	a, a
-      000AC3 CArDDr0B              2405 	jp	Z, 00172$
-                                   2406 ;main.c:329: uint8_t tile_data = board[cursor_tile_x][cursor_tile_y];
-      000AC6 21 98 01              2407 	ld	hl, #408
-      000AC9 39                    2408 	add	hl, sp
-      000ACA 4E                    2409 	ld	c, (hl)
-      000ACB 06 00                 2410 	ld	b, #0x00
-      000ACD 69                    2411 	ld	l, c
-      000ACE 60                    2412 	ld	h, b
-      000ACF 29                    2413 	add	hl, hl
-      000AD0 29                    2414 	add	hl, hl
-      000AD1 29                    2415 	add	hl, hl
-      000AD2 09                    2416 	add	hl, bc
-      000AD3 29                    2417 	add	hl, hl
-      000AD4 4D                    2418 	ld	c, l
-      000AD5 44                    2419 	ld	b, h
-      000AD6 21 9C 01              2420 	ld	hl, #412
-      000AD9 39                    2421 	add	hl, sp
-      000ADA 2A                    2422 	ld	a,	(hl+)
-      000ADB 66                    2423 	ld	h, (hl)
-      000ADC 6F                    2424 	ld	l, a
-      000ADD 09                    2425 	add	hl, bc
-      000ADE 4D                    2426 	ld	c, l
-      000ADF 44                    2427 	ld	b, h
-      000AE0 21 99 01              2428 	ld	hl, #409
-      000AE3 39                    2429 	add	hl, sp
-      000AE4 6E                    2430 	ld	l, (hl)
-      000AE5 26 00                 2431 	ld	h, #0x00
-      000AE7 09                    2432 	add	hl, bc
-      000AE8 E5                    2433 	push	hl
-      000AE9 7D                    2434 	ld	a, l
-      000AEA 21 B3 01              2435 	ld	hl, #435
-      000AED 39                    2436 	add	hl, sp
-      000AEE 77                    2437 	ld	(hl), a
-      000AEF E1                    2438 	pop	hl
-      000AF0 7C                    2439 	ld	a, h
-      000AF1 21 B2 01              2440 	ld	hl, #434
-      000AF4 39                    2441 	add	hl, sp
-      000AF5 32                    2442 	ld	(hl-), a
-      000AF6 2A                    2443 	ld	a, (hl+)
-      000AF7 5F                    2444 	ld	e, a
-      000AF8 56                    2445 	ld	d, (hl)
-      000AF9 1A                    2446 	ld	a, (de)
-      000AFA 21 B6 01              2447 	ld	hl, #438
-      000AFD 39                    2448 	add	hl, sp
-      000AFE 77                    2449 	ld	(hl), a
-                                   2450 ;main.c:330: uint8_t is_alive = tile_data & k_tile_is_alive_mask;
-      000AFF 21rE1r02              2451 	ld	hl, #_k_tile_is_alive_mask
-      000B02 4E                    2452 	ld	c, (hl)
-                                   2453 ;main.c:259: update_tile_position(tile_data & k_tile_sprite_index_mask, x, y);
-      000B03 FArE0r02              2454 	ld	a, (#_k_tile_sprite_index_mask)
-      000B06 21 B5 01              2455 	ld	hl, #437
-      000B09 39                    2456 	add	hl, sp
-                                   2457 ;main.c:330: uint8_t is_alive = tile_data & k_tile_is_alive_mask;
-      000B0A 22                    2458 	ld	(hl+), a
-      000B0B 7E                    2459 	ld	a, (hl)
-      000B0C A1                    2460 	and	a, c
-      000B0D 21 B0 01              2461 	ld	hl, #432
-      000B10 39                    2462 	add	hl, sp
-      000B11 77                    2463 	ld	(hl), a
-                                   2464 ;main.c:332: if (!is_alive)
-      000B12 7E                    2465 	ld	a, (hl)
-      000B13 B7                    2466 	or	a, a
-      000B14 20 4A                 2467 	jr	NZ, 00166$
-                                   2468 ;main.c:334: if (next_available_sprite_index < 39)
-      000B16 21 B4 01              2469 	ld	hl, #436
-      000B19 39                    2470 	add	hl, sp
-      000B1A 7E                    2471 	ld	a, (hl)
-      000B1B D6 27                 2472 	sub	a, #0x27
-      000B1D D2rD0r0B              2473 	jp	NC, 00167$
-                                   2474 ;main.c:337: tile_data |= available_sprites[next_available_sprite_index];
-      000B20 21 9A 01              2475 	ld	hl,#0x19a
-      000B23 39                    2476 	add	hl,sp
-      000B24 2A                    2477 	ld	a, (hl+)
-      000B25 5F                    2478 	ld	e, a
-      000B26 56                    2479 	ld	d, (hl)
-      000B27 21 B4 01              2480 	ld	hl, #436
-      000B2A 39                    2481 	add	hl, sp
-      000B2B 6E                    2482 	ld	l, (hl)
-      000B2C 26 00                 2483 	ld	h, #0x00
-      000B2E 19                    2484 	add	hl, de
-      000B2F 4D                    2485 	ld	c, l
-      000B30 44                    2486 	ld	b, h
-      000B31 0A                    2487 	ld	a, (bc)
-      000B32 21 B6 01              2488 	ld	hl, #438
-      000B35 39                    2489 	add	hl, sp
-      000B36 B6                    2490 	or	a, (hl)
-                                   2491 ;main.c:338: next_available_sprite_index++;
-      000B37 2B                    2492 	dec	hl
-      000B38 2B                    2493 	dec	hl
-      000B39 4F                    2494 	ld	c, a
-      000B3A 34                    2495 	inc	(hl)
-                                   2496 ;main.c:341: update_tile_position(tile_data & k_tile_sprite_index_mask, cursor_tile_x, cursor_tile_y);
-      000B3B 23                    2497 	inc	hl
-      000B3C 79                    2498 	ld	a, c
-      000B3D A6                    2499 	and	a, (hl)
-      000B3E C5                    2500 	push	bc
-      000B3F 21 9B 01              2501 	ld	hl, #411
-      000B42 39                    2502 	add	hl, sp
-      000B43 66                    2503 	ld	h, (hl)
-                                   2504 ;	spillPairReg hl
-                                   2505 ;	spillPairReg hl
-      000B44 E5                    2506 	push	hl
-      000B45 33                    2507 	inc	sp
-      000B46 21 9B 01              2508 	ld	hl, #411
-      000B49 39                    2509 	add	hl, sp
-      000B4A 66                    2510 	ld	h, (hl)
-                                   2511 ;	spillPairReg hl
-                                   2512 ;	spillPairReg hl
-      000B4B E5                    2513 	push	hl
-      000B4C 33                    2514 	inc	sp
-      000B4D F5                    2515 	push	af
-      000B4E 33                    2516 	inc	sp
-      000B4F CDr31r03              2517 	call	_update_tile_position
-      000B52 E8 03                 2518 	add	sp, #3
-      000B54 C1                    2519 	pop	bc
-                                   2520 ;main.c:344: tile_data |= k_tile_is_alive_mask;
-      000B55 FArE1r02              2521 	ld	a, (#_k_tile_is_alive_mask)
-      000B58 B1                    2522 	or	a, c
-      000B59 21 B6 01              2523 	ld	hl, #438
-      000B5C 39                    2524 	add	hl, sp
-      000B5D 77                    2525 	ld	(hl), a
-      000B5E 18 70                 2526 	jr	00167$
-      000B60                       2527 00166$:
-                                   2528 ;main.c:350: update_tile_position(tile_data & k_tile_sprite_index_mask, 0, 19);
-      000B60 21 B5 01              2529 	ld	hl, #437
-      000B63 39                    2530 	add	hl, sp
-      000B64 2A                    2531 	ld	a, (hl+)
-      000B65 A6                    2532 	and	a, (hl)
-      000B66 2B                    2533 	dec	hl
-      000B67 77                    2534 	ld	(hl), a
-      000B68 3E 13                 2535 	ld	a, #0x13
-      000B6A F5                    2536 	push	af
-      000B6B 33                    2537 	inc	sp
-      000B6C AF                    2538 	xor	a, a
-      000B6D F5                    2539 	push	af
-      000B6E 33                    2540 	inc	sp
-      000B6F 7E                    2541 	ld	a, (hl)
-      000B70 F5                    2542 	push	af
-      000B71 33                    2543 	inc	sp
-      000B72 CDr31r03              2544 	call	_update_tile_position
-      000B75 E8 03                 2545 	add	sp, #3
-                                   2546 ;main.c:353: next_available_sprite_index--;
-      000B77 21 B4 01              2547 	ld	hl, #436
-      000B7A 39                    2548 	add	hl, sp
-      000B7B 35                    2549 	dec	(hl)
-                                   2550 ;main.c:354: available_sprites[next_available_sprite_index] = tile_data & k_tile_sprite_index_mask;
-      000B7C 21 9A 01              2551 	ld	hl,#0x19a
-      000B7F 39                    2552 	add	hl,sp
-      000B80 2A                    2553 	ld	a, (hl+)
-      000B81 5F                    2554 	ld	e, a
-      000B82 56                    2555 	ld	d, (hl)
-      000B83 21 B4 01              2556 	ld	hl, #436
-      000B86 39                    2557 	add	hl, sp
-      000B87 6E                    2558 	ld	l, (hl)
-      000B88 26 00                 2559 	ld	h, #0x00
-      000B8A 19                    2560 	add	hl, de
-      000B8B E5                    2561 	push	hl
-      000B8C 7D                    2562 	ld	a, l
-      000B8D 21 B1 01              2563 	ld	hl, #433
-      000B90 39                    2564 	add	hl, sp
-      000B91 77                    2565 	ld	(hl), a
-      000B92 E1                    2566 	pop	hl
-      000B93 7C                    2567 	ld	a, h
-      000B94 21 B0 01              2568 	ld	hl, #432
-      000B97 39                    2569 	add	hl, sp
-      000B98 77                    2570 	ld	(hl), a
-      000B99 FArE0r02              2571 	ld	a, (#_k_tile_sprite_index_mask)
-      000B9C 21 B5 01              2572 	ld	hl, #437
-      000B9F 39                    2573 	add	hl, sp
-      000BA0 22                    2574 	ld	(hl+), a
-      000BA1 3A                    2575 	ld	a, (hl-)
-      000BA2 A6                    2576 	and	a, (hl)
-      000BA3 4F                    2577 	ld	c, a
-      000BA4 21 AF 01              2578 	ld	hl, #431
-      000BA7 39                    2579 	add	hl, sp
-      000BA8 2A                    2580 	ld	a,	(hl+)
-      000BA9 66                    2581 	ld	h, (hl)
-      000BAA 6F                    2582 	ld	l, a
-      000BAB 71                    2583 	ld	(hl), c
-                                   2584 ;main.c:357: tile_data &= ~k_tile_sprite_index_mask;
-      000BAC 21 B5 01              2585 	ld	hl, #437
-      000BAF 39                    2586 	add	hl, sp
-      000BB0 7E                    2587 	ld	a, (hl)
-      000BB1 2F                    2588 	cpl
-      000BB2 21 B0 01              2589 	ld	hl, #432
-      000BB5 39                    2590 	add	hl, sp
-      000BB6 77                    2591 	ld	(hl), a
-      000BB7 21 B6 01              2592 	ld	hl, #438
-      000BBA 39                    2593 	add	hl, sp
-      000BBB 7E                    2594 	ld	a, (hl)
-      000BBC 21 B0 01              2595 	ld	hl, #432
-      000BBF 39                    2596 	add	hl, sp
-      000BC0 A6                    2597 	and	a, (hl)
-      000BC1 21 B6 01              2598 	ld	hl, #438
-      000BC4 39                    2599 	add	hl, sp
-      000BC5 77                    2600 	ld	(hl), a
-                                   2601 ;main.c:360: tile_data &= ~k_tile_is_alive_mask;
-      000BC6 FArE1r02              2602 	ld	a, (#_k_tile_is_alive_mask)
-      000BC9 2F                    2603 	cpl
-      000BCA 21 B6 01              2604 	ld	hl, #438
-      000BCD 39                    2605 	add	hl, sp
-      000BCE A6                    2606 	and	a, (hl)
-      000BCF 77                    2607 	ld	(hl), a
-      000BD0                       2608 00167$:
-                                   2609 ;main.c:364: board[cursor_tile_x][cursor_tile_y] = tile_data;
-      000BD0 21 B1 01              2610 	ld	hl,#0x1b1
-      000BD3 39                    2611 	add	hl,sp
-      000BD4 2A                    2612 	ld	a, (hl+)
-      000BD5 5F                    2613 	ld	e, a
-      000BD6 56                    2614 	ld	d, (hl)
-      000BD7 21 B6 01              2615 	ld	hl, #438
-      000BDA 39                    2616 	add	hl, sp
-      000BDB 7E                    2617 	ld	a, (hl)
-      000BDC 12                    2618 	ld	(de), a
-      000BDD                       2619 00172$:
-                                   2620 ;main.c:369: wait_vbls_done(1);
-      000BDD 3E 01                 2621 	ld	a, #0x01
-      000BDF F5                    2622 	push	af
-      000BE0 33                    2623 	inc	sp
-      000BE1 CDrBFr02              2624 	call	_wait_vbls_done
-      000BE4 33                    2625 	inc	sp
-      000BE5 C3r8Br04              2626 	jp	00174$
-                                   2627 ;main.c:371: }
-      000BE8 21 B7 01              2628 	ld	hl, #439
-      000BEB 39                    2629 	add	hl, sp
-      000BEC F9                    2630 	ld	sp, hl
-      000BED C9                    2631 	ret
-                                   2632 	.area _CODE
-                                   2633 	.area _INITIALIZER
-      000000                       2634 __xinit__k_sprites:
-      000000 00                    2635 	.db #0x00	; 0
-      000001 00                    2636 	.db #0x00	; 0
-      000002 00                    2637 	.db #0x00	; 0
-      000003 00                    2638 	.db #0x00	; 0
-      000004 00                    2639 	.db #0x00	; 0
-      000005 00                    2640 	.db #0x00	; 0
-      000006 00                    2641 	.db #0x00	; 0
-      000007 00                    2642 	.db #0x00	; 0
-      000008 00                    2643 	.db #0x00	; 0
-      000009 00                    2644 	.db #0x00	; 0
-      00000A 00                    2645 	.db #0x00	; 0
-      00000B 00                    2646 	.db #0x00	; 0
-      00000C 00                    2647 	.db #0x00	; 0
-      00000D 00                    2648 	.db #0x00	; 0
-      00000E 00                    2649 	.db #0x00	; 0
-      00000F 00                    2650 	.db #0x00	; 0
-      000010 00                    2651 	.db #0x00	; 0
-      000011 00                    2652 	.db #0x00	; 0
-      000012 7F                    2653 	.db #0x7f	; 127
-      000013 7F                    2654 	.db #0x7f	; 127
-      000014 7F                    2655 	.db #0x7f	; 127
-      000015 7F                    2656 	.db #0x7f	; 127
-      000016 7F                    2657 	.db #0x7f	; 127
-      000017 7F                    2658 	.db #0x7f	; 127
-      000018 7F                    2659 	.db #0x7f	; 127
-      000019 7F                    2660 	.db #0x7f	; 127
-      00001A 7F                    2661 	.db #0x7f	; 127
-      00001B 7F                    2662 	.db #0x7f	; 127
-      00001C 7F                    2663 	.db #0x7f	; 127
-      00001D 7F                    2664 	.db #0x7f	; 127
-      00001E 7F                    2665 	.db #0x7f	; 127
-      00001F 7F                    2666 	.db #0x7f	; 127
-      000020 00                    2667 	.db #0x00	; 0
-      000021 00                    2668 	.db #0x00	; 0
-      000022 00                    2669 	.db #0x00	; 0
-      000023 3E                    2670 	.db #0x3e	; 62
-      000024 00                    2671 	.db #0x00	; 0
-      000025 41                    2672 	.db #0x41	; 65	'A'
-      000026 00                    2673 	.db #0x00	; 0
-      000027 41                    2674 	.db #0x41	; 65	'A'
-      000028 00                    2675 	.db #0x00	; 0
-      000029 41                    2676 	.db #0x41	; 65	'A'
-      00002A 00                    2677 	.db #0x00	; 0
-      00002B 41                    2678 	.db #0x41	; 65	'A'
-      00002C 00                    2679 	.db #0x00	; 0
-      00002D 41                    2680 	.db #0x41	; 65	'A'
-      00002E 00                    2681 	.db #0x00	; 0
-      00002F 3E                    2682 	.db #0x3e	; 62
-      000030 00                    2683 	.db #0x00	; 0
-      000031 00                    2684 	.db #0x00	; 0
-      000032 41                    2685 	.db #0x41	; 65	'A'
-      000033 7F                    2686 	.db #0x7f	; 127
-      000034 3E                    2687 	.db #0x3e	; 62
-      000035 7F                    2688 	.db #0x7f	; 127
-      000036 3E                    2689 	.db #0x3e	; 62
-      000037 7F                    2690 	.db #0x7f	; 127
-      000038 3E                    2691 	.db #0x3e	; 62
-      000039 7F                    2692 	.db #0x7f	; 127
-      00003A 3E                    2693 	.db #0x3e	; 62
-      00003B 7F                    2694 	.db #0x7f	; 127
-      00003C 3E                    2695 	.db #0x3e	; 62
-      00003D 7F                    2696 	.db #0x7f	; 127
-      00003E 41                    2697 	.db #0x41	; 65	'A'
-      00003F 7F                    2698 	.db #0x7f	; 127
-                                   2699 	.area _CABS (ABS)
+      000533 21 AF 01              1317 	ld	hl,#0x1af
+      000536 39                    1318 	add	hl,sp
+      000537 2A                    1319 	ld	a, (hl+)
+      000538 5F                    1320 	ld	e, a
+      000539 56                    1321 	ld	d, (hl)
+      00053A 21 B6 01              1322 	ld	hl, #438
+      00053D 39                    1323 	add	hl, sp
+      00053E 6E                    1324 	ld	l, (hl)
+      00053F 26 00                 1325 	ld	h, #0x00
+      000541 19                    1326 	add	hl, de
+      000542 E5                    1327 	push	hl
+      000543 7D                    1328 	ld	a, l
+      000544 21 B3 01              1329 	ld	hl, #435
+      000547 39                    1330 	add	hl, sp
+      000548 77                    1331 	ld	(hl), a
+      000549 E1                    1332 	pop	hl
+      00054A 7C                    1333 	ld	a, h
+      00054B 21 B2 01              1334 	ld	hl, #434
+      00054E 39                    1335 	add	hl, sp
+      00054F 32                    1336 	ld	(hl-), a
+      000550 2A                    1337 	ld	a, (hl+)
+      000551 5F                    1338 	ld	e, a
+      000552 56                    1339 	ld	d, (hl)
+      000553 1A                    1340 	ld	a, (de)
+      000554 47                    1341 	ld	b, a
+                                   1342 ;main.c:147: board[x][y] = (tile_data & ~k_tile_was_alive_mask) | ((tile_data & k_tile_is_alive_mask) << 1);
+      000555 FArE2r02              1343 	ld	a, (#_k_tile_was_alive_mask)
+      000558 2F                    1344 	cpl
+      000559 A0                    1345 	and	a, b
+      00055A 4F                    1346 	ld	c, a
+      00055B FArE1r02              1347 	ld	a, (#_k_tile_is_alive_mask)
+      00055E A0                    1348 	and	a, b
+      00055F 87                    1349 	add	a, a
+      000560 B1                    1350 	or	a, c
+      000561 4F                    1351 	ld	c, a
+      000562 21 B1 01              1352 	ld	hl, #433
+      000565 39                    1353 	add	hl, sp
+      000566 2A                    1354 	ld	a,	(hl+)
+      000567 66                    1355 	ld	h, (hl)
+      000568 6F                    1356 	ld	l, a
+      000569 71                    1357 	ld	(hl), c
+                                   1358 ;main.c:142: for (uint8_t y = 0; y < 18; ++y)
+      00056A 21 B6 01              1359 	ld	hl, #438
+      00056D 39                    1360 	add	hl, sp
+      00056E 34                    1361 	inc	(hl)
+      00056F 18 B9                 1362 	jr	00184$
+      000571                       1363 00188$:
+                                   1364 ;main.c:140: for (uint8_t x = 0; x < 20; ++x)
+      000571 21 B5 01              1365 	ld	hl, #437
+      000574 39                    1366 	add	hl, sp
+      000575 34                    1367 	inc	(hl)
+      000576 C3rF9r04              1368 	jp	00187$
+      000579                       1369 00107$:
+                                   1370 ;main.c:152: for (uint8_t x = 0; x < 20; ++x)
+      000579 21 9C 01              1371 	ld	hl, #412
+      00057C 39                    1372 	add	hl, sp
+      00057D 2A                    1373 	ld	a, (hl+)
+      00057E 23                    1374 	inc	hl
+      00057F 32                    1375 	ld	(hl-), a
+      000580 2A                    1376 	ld	a, (hl+)
+      000581 23                    1377 	inc	hl
+      000582 77                    1378 	ld	(hl), a
+      000583 21 9A 01              1379 	ld	hl, #410
+      000586 39                    1380 	add	hl, sp
+      000587 7E                    1381 	ld	a, (hl)
+      000588 21 A0 01              1382 	ld	hl, #416
+      00058B 39                    1383 	add	hl, sp
+      00058C 77                    1384 	ld	(hl), a
+      00058D 21 9B 01              1385 	ld	hl, #411
+      000590 39                    1386 	add	hl, sp
+      000591 7E                    1387 	ld	a, (hl)
+      000592 21 A1 01              1388 	ld	hl, #417
+      000595 39                    1389 	add	hl, sp
+      000596 77                    1390 	ld	(hl), a
+      000597 21 9A 01              1391 	ld	hl, #410
+      00059A 39                    1392 	add	hl, sp
+      00059B 7E                    1393 	ld	a, (hl)
+      00059C 21 A2 01              1394 	ld	hl, #418
+      00059F 39                    1395 	add	hl, sp
+      0005A0 77                    1396 	ld	(hl), a
+      0005A1 21 9B 01              1397 	ld	hl, #411
+      0005A4 39                    1398 	add	hl, sp
+      0005A5 7E                    1399 	ld	a, (hl)
+      0005A6 21 A3 01              1400 	ld	hl, #419
+      0005A9 39                    1401 	add	hl, sp
+      0005AA 77                    1402 	ld	(hl), a
+      0005AB 21 B5 01              1403 	ld	hl, #437
+      0005AE 39                    1404 	add	hl, sp
+      0005AF 36 00                 1405 	ld	(hl), #0x00
+      0005B1                       1406 00193$:
+      0005B1 21 B5 01              1407 	ld	hl, #437
+      0005B4 39                    1408 	add	hl, sp
+      0005B5 7E                    1409 	ld	a, (hl)
+      0005B6 D6 14                 1410 	sub	a, #0x14
+      0005B8 D2rCFr0B              1411 	jp	NC, 00170$
+                                   1412 ;main.c:154: for (uint8_t y = 0; y < 18; ++y)
+      0005BB 4E                    1413 	ld	c, (hl)
+      0005BC 06 00                 1414 	ld	b, #0x00
+      0005BE 69                    1415 	ld	l, c
+      0005BF 60                    1416 	ld	h, b
+      0005C0 29                    1417 	add	hl, hl
+      0005C1 29                    1418 	add	hl, hl
+      0005C2 29                    1419 	add	hl, hl
+      0005C3 09                    1420 	add	hl, bc
+      0005C4 29                    1421 	add	hl, hl
+      0005C5 4D                    1422 	ld	c, l
+      0005C6 44                    1423 	ld	b, h
+      0005C7 21 9E 01              1424 	ld	hl, #414
+      0005CA 39                    1425 	add	hl, sp
+      0005CB 2A                    1426 	ld	a,	(hl+)
+      0005CC 66                    1427 	ld	h, (hl)
+      0005CD 6F                    1428 	ld	l, a
+      0005CE 09                    1429 	add	hl, bc
+      0005CF E5                    1430 	push	hl
+      0005D0 7D                    1431 	ld	a, l
+      0005D1 21 A6 01              1432 	ld	hl, #422
+      0005D4 39                    1433 	add	hl, sp
+      0005D5 77                    1434 	ld	(hl), a
+      0005D6 E1                    1435 	pop	hl
+      0005D7 7C                    1436 	ld	a, h
+      0005D8 21 A5 01              1437 	ld	hl, #421
+      0005DB 39                    1438 	add	hl, sp
+      0005DC 77                    1439 	ld	(hl), a
+      0005DD 21 B5 01              1440 	ld	hl, #437
+      0005E0 39                    1441 	add	hl, sp
+      0005E1 7E                    1442 	ld	a, (hl)
+      0005E2 D6 13                 1443 	sub	a, #0x13
+      0005E4 3E 00                 1444 	ld	a, #0x00
+      0005E6 17                    1445 	rla
+      0005E7 21 A6 01              1446 	ld	hl, #422
+      0005EA 39                    1447 	add	hl, sp
+      0005EB 77                    1448 	ld	(hl), a
+      0005EC 21 B6 01              1449 	ld	hl, #438
+      0005EF 39                    1450 	add	hl, sp
+      0005F0 36 00                 1451 	ld	(hl), #0x00
+      0005F2                       1452 00190$:
+      0005F2 21 B6 01              1453 	ld	hl, #438
+      0005F5 39                    1454 	add	hl, sp
+      0005F6 7E                    1455 	ld	a, (hl)
+      0005F7 D6 12                 1456 	sub	a, #0x12
+      0005F9 D2r40r09              1457 	jp	NC, 00194$
+                                   1458 ;main.c:156: uint8_t tile_data = board[x][y];
+      0005FC 21 A4 01              1459 	ld	hl,#0x1a4
+      0005FF 39                    1460 	add	hl,sp
+      000600 2A                    1461 	ld	a, (hl+)
+      000601 5F                    1462 	ld	e, a
+      000602 56                    1463 	ld	d, (hl)
+      000603 21 B6 01              1464 	ld	hl, #438
+      000606 39                    1465 	add	hl, sp
+      000607 6E                    1466 	ld	l, (hl)
+      000608 26 00                 1467 	ld	h, #0x00
+      00060A 19                    1468 	add	hl, de
+      00060B E5                    1469 	push	hl
+      00060C 7D                    1470 	ld	a, l
+      00060D 21 A9 01              1471 	ld	hl, #425
+      000610 39                    1472 	add	hl, sp
+      000611 77                    1473 	ld	(hl), a
+      000612 E1                    1474 	pop	hl
+      000613 7C                    1475 	ld	a, h
+      000614 21 A8 01              1476 	ld	hl, #424
+      000617 39                    1477 	add	hl, sp
+      000618 32                    1478 	ld	(hl-), a
+      000619 2A                    1479 	ld	a, (hl+)
+      00061A 5F                    1480 	ld	e, a
+      00061B 2A                    1481 	ld	a, (hl+)
+      00061C 57                    1482 	ld	d, a
+      00061D 1A                    1483 	ld	a, (de)
+                                   1484 ;main.c:157: uint8_t neighbour_count = 0;
+      00061E 22                    1485 	ld	(hl+), a
+      00061F 36 00                 1486 	ld	(hl), #0x00
+                                   1487 ;main.c:147: board[x][y] = (tile_data & ~k_tile_was_alive_mask) | ((tile_data & k_tile_is_alive_mask) << 1);
+      000621 FArE2r02              1488 	ld	a, (#_k_tile_was_alive_mask)
+      000624 21 AB 01              1489 	ld	hl, #427
+      000627 39                    1490 	add	hl, sp
+      000628 77                    1491 	ld	(hl), a
+                                   1492 ;main.c:161: && (board[x][y - 1] & k_tile_was_alive_mask) != 0x00)
+      000629 21 B6 01              1493 	ld	hl, #438
+      00062C 39                    1494 	add	hl, sp
+      00062D 7E                    1495 	ld	a, (hl)
+      00062E 21 B2 01              1496 	ld	hl, #434
+      000631 39                    1497 	add	hl, sp
+      000632 77                    1498 	ld	(hl), a
+      000633 7E                    1499 	ld	a, (hl)
+      000634 3D                    1500 	dec	a
+      000635 21 AC 01              1501 	ld	hl, #428
+      000638 39                    1502 	add	hl, sp
+      000639 77                    1503 	ld	(hl), a
+                                   1504 ;main.c:160: if (y > 0
+      00063A 21 B6 01              1505 	ld	hl, #438
+      00063D 39                    1506 	add	hl, sp
+      00063E 7E                    1507 	ld	a, (hl)
+      00063F B7                    1508 	or	a, a
+      000640 28 1C                 1509 	jr	Z, 00109$
+                                   1510 ;main.c:161: && (board[x][y - 1] & k_tile_was_alive_mask) != 0x00)
+      000642 21 A4 01              1511 	ld	hl,#0x1a4
+      000645 39                    1512 	add	hl,sp
+      000646 2A                    1513 	ld	a, (hl+)
+      000647 5F                    1514 	ld	e, a
+      000648 56                    1515 	ld	d, (hl)
+      000649 21 AC 01              1516 	ld	hl, #428
+      00064C 39                    1517 	add	hl, sp
+      00064D 6E                    1518 	ld	l, (hl)
+      00064E 26 00                 1519 	ld	h, #0x00
+      000650 19                    1520 	add	hl, de
+      000651 4D                    1521 	ld	c, l
+      000652 44                    1522 	ld	b, h
+      000653 0A                    1523 	ld	a, (bc)
+      000654 21 AB 01              1524 	ld	hl, #427
+      000657 39                    1525 	add	hl, sp
+      000658 A6                    1526 	and	a,(hl)
+      000659 28 03                 1527 	jr	Z, 00109$
+                                   1528 ;main.c:163: neighbour_count += 1;
+      00065B 2B                    1529 	dec	hl
+      00065C 36 01                 1530 	ld	(hl), #0x01
+      00065E                       1531 00109$:
+                                   1532 ;main.c:169: && (board[x + 1][y - 1] & k_tile_was_alive_mask) != 0x00)
+      00065E 21 B5 01              1533 	ld	hl, #437
+      000661 39                    1534 	add	hl, sp
+      000662 7E                    1535 	ld	a, (hl)
+      000663 21 AD 01              1536 	ld	hl, #429
+      000666 39                    1537 	add	hl, sp
+      000667 22                    1538 	ld	(hl+), a
+      000668 AF                    1539 	xor	a, a
+      000669 32                    1540 	ld	(hl-), a
+      00066A 2A                    1541 	ld	a, (hl+)
+      00066B 4F                    1542 	ld	c, a
+      00066C 46                    1543 	ld	b, (hl)
+      00066D 03                    1544 	inc	bc
+      00066E 69                    1545 	ld	l, c
+      00066F 60                    1546 	ld	h, b
+      000670 29                    1547 	add	hl, hl
+      000671 29                    1548 	add	hl, hl
+      000672 29                    1549 	add	hl, hl
+      000673 09                    1550 	add	hl, bc
+      000674 29                    1551 	add	hl, hl
+      000675 4D                    1552 	ld	c, l
+      000676 44                    1553 	ld	b, h
+      000677 21 9E 01              1554 	ld	hl, #414
+      00067A 39                    1555 	add	hl, sp
+      00067B 2A                    1556 	ld	a,	(hl+)
+      00067C 66                    1557 	ld	h, (hl)
+      00067D 6F                    1558 	ld	l, a
+      00067E 09                    1559 	add	hl, bc
+      00067F E5                    1560 	push	hl
+      000680 7D                    1561 	ld	a, l
+      000681 21 B1 01              1562 	ld	hl, #433
+      000684 39                    1563 	add	hl, sp
+      000685 77                    1564 	ld	(hl), a
+      000686 E1                    1565 	pop	hl
+      000687 7C                    1566 	ld	a, h
+      000688 21 B0 01              1567 	ld	hl, #432
+      00068B 39                    1568 	add	hl, sp
+      00068C 77                    1569 	ld	(hl), a
+                                   1570 ;main.c:168: && y > 0
+      00068D 21 A6 01              1571 	ld	hl, #422
+      000690 39                    1572 	add	hl, sp
+      000691 7E                    1573 	ld	a, (hl)
+      000692 B7                    1574 	or	a, a
+      000693 28 27                 1575 	jr	Z, 00112$
+      000695 21 B6 01              1576 	ld	hl, #438
+      000698 39                    1577 	add	hl, sp
+      000699 7E                    1578 	ld	a, (hl)
+      00069A B7                    1579 	or	a, a
+      00069B 28 1F                 1580 	jr	Z, 00112$
+                                   1581 ;main.c:169: && (board[x + 1][y - 1] & k_tile_was_alive_mask) != 0x00)
+      00069D 21 AF 01              1582 	ld	hl,#0x1af
+      0006A0 39                    1583 	add	hl,sp
+      0006A1 2A                    1584 	ld	a, (hl+)
+      0006A2 5F                    1585 	ld	e, a
+      0006A3 56                    1586 	ld	d, (hl)
+      0006A4 21 AC 01              1587 	ld	hl, #428
+      0006A7 39                    1588 	add	hl, sp
+      0006A8 6E                    1589 	ld	l, (hl)
+      0006A9 26 00                 1590 	ld	h, #0x00
+      0006AB 19                    1591 	add	hl, de
+      0006AC 33                    1592 	inc	sp
+      0006AD 33                    1593 	inc	sp
+      0006AE 5D                    1594 	ld	e, l
+      0006AF 54                    1595 	ld	d, h
+      0006B0 D5                    1596 	push	de
+      0006B1 1A                    1597 	ld	a, (de)
+      0006B2 21 AB 01              1598 	ld	hl, #427
+      0006B5 39                    1599 	add	hl, sp
+      0006B6 A6                    1600 	and	a,(hl)
+      0006B7 28 03                 1601 	jr	Z, 00112$
+                                   1602 ;main.c:171: neighbour_count += 1;
+      0006B9 2B                    1603 	dec	hl
+      0006BA 34                    1604 	inc	(hl)
+      0006BB 7E                    1605 	ld	a, (hl)
+      0006BC                       1606 00112$:
+                                   1607 ;main.c:176: && (board[x + 1][y] & k_tile_was_alive_mask) != 0x00)
+      0006BC 21 A6 01              1608 	ld	hl, #422
+      0006BF 39                    1609 	add	hl, sp
+      0006C0 7E                    1610 	ld	a, (hl)
+      0006C1 B7                    1611 	or	a, a
+      0006C2 28 1C                 1612 	jr	Z, 00116$
+      0006C4 21 AF 01              1613 	ld	hl,#0x1af
+      0006C7 39                    1614 	add	hl,sp
+      0006C8 2A                    1615 	ld	a, (hl+)
+      0006C9 5F                    1616 	ld	e, a
+      0006CA 56                    1617 	ld	d, (hl)
+      0006CB 21 B6 01              1618 	ld	hl, #438
+      0006CE 39                    1619 	add	hl, sp
+      0006CF 6E                    1620 	ld	l, (hl)
+      0006D0 26 00                 1621 	ld	h, #0x00
+      0006D2 19                    1622 	add	hl, de
+      0006D3 4D                    1623 	ld	c, l
+      0006D4 44                    1624 	ld	b, h
+      0006D5 0A                    1625 	ld	a, (bc)
+      0006D6 21 AB 01              1626 	ld	hl, #427
+      0006D9 39                    1627 	add	hl, sp
+      0006DA A6                    1628 	and	a,(hl)
+      0006DB 28 03                 1629 	jr	Z, 00116$
+                                   1630 ;main.c:178: neighbour_count += 1;
+      0006DD 2B                    1631 	dec	hl
+      0006DE 34                    1632 	inc	(hl)
+      0006DF 7E                    1633 	ld	a, (hl)
+      0006E0                       1634 00116$:
+                                   1635 ;main.c:184: && (board[x + 1][y + 1] & k_tile_was_alive_mask) != 0x00)
+      0006E0 21 B6 01              1636 	ld	hl, #438
+      0006E3 39                    1637 	add	hl, sp
+      0006E4 7E                    1638 	ld	a, (hl)
+      0006E5 D6 11                 1639 	sub	a, #0x11
+      0006E7 3E 00                 1640 	ld	a, #0x00
+      0006E9 17                    1641 	rla
+      0006EA 21 B1 01              1642 	ld	hl, #433
+      0006ED 39                    1643 	add	hl, sp
+      0006EE 22                    1644 	ld	(hl+), a
+      0006EF 34                    1645 	inc	(hl)
+                                   1646 ;main.c:183: && y < 17
+      0006F0 21 A6 01              1647 	ld	hl, #422
+      0006F3 39                    1648 	add	hl, sp
+      0006F4 7E                    1649 	ld	a, (hl)
+      0006F5 B7                    1650 	or	a, a
+      0006F6 28 20                 1651 	jr	Z, 00119$
+                                   1652 ;main.c:184: && (board[x + 1][y + 1] & k_tile_was_alive_mask) != 0x00)
+      0006F8 21 B1 01              1653 	ld	hl, #433
+      0006FB 39                    1654 	add	hl, sp
+      0006FC 7E                    1655 	ld	a, (hl)
+      0006FD B7                    1656 	or	a, a
+      0006FE 28 18                 1657 	jr	Z, 00119$
+      000700 2B                    1658 	dec	hl
+      000701 2B                    1659 	dec	hl
+      000702 2A                    1660 	ld	a, (hl+)
+      000703 5F                    1661 	ld	e, a
+      000704 2A                    1662 	ld	a, (hl+)
+      000705 23                    1663 	inc	hl
+      000706 57                    1664 	ld	d, a
+      000707 6E                    1665 	ld	l, (hl)
+      000708 26 00                 1666 	ld	h, #0x00
+      00070A 19                    1667 	add	hl, de
+      00070B 4D                    1668 	ld	c, l
+      00070C 44                    1669 	ld	b, h
+      00070D 0A                    1670 	ld	a, (bc)
+      00070E 21 AB 01              1671 	ld	hl, #427
+      000711 39                    1672 	add	hl, sp
+      000712 A6                    1673 	and	a,(hl)
+      000713 28 03                 1674 	jr	Z, 00119$
+                                   1675 ;main.c:186: neighbour_count += 1;
+      000715 2B                    1676 	dec	hl
+      000716 34                    1677 	inc	(hl)
+      000717 7E                    1678 	ld	a, (hl)
+      000718                       1679 00119$:
+                                   1680 ;main.c:191: && (board[x][y + 1] & k_tile_was_alive_mask) != 0x00)
+      000718 21 B1 01              1681 	ld	hl, #433
+      00071B 39                    1682 	add	hl, sp
+      00071C 7E                    1683 	ld	a, (hl)
+      00071D B7                    1684 	or	a, a
+      00071E 28 2B                 1685 	jr	Z, 00123$
+      000720 21 A4 01              1686 	ld	hl,#0x1a4
+      000723 39                    1687 	add	hl,sp
+      000724 2A                    1688 	ld	a, (hl+)
+      000725 5F                    1689 	ld	e, a
+      000726 56                    1690 	ld	d, (hl)
+      000727 21 B2 01              1691 	ld	hl, #434
+      00072A 39                    1692 	add	hl, sp
+      00072B 6E                    1693 	ld	l, (hl)
+      00072C 26 00                 1694 	ld	h, #0x00
+      00072E 19                    1695 	add	hl, de
+      00072F E5                    1696 	push	hl
+      000730 7D                    1697 	ld	a, l
+      000731 21 B1 01              1698 	ld	hl, #433
+      000734 39                    1699 	add	hl, sp
+      000735 77                    1700 	ld	(hl), a
+      000736 E1                    1701 	pop	hl
+      000737 7C                    1702 	ld	a, h
+      000738 21 B0 01              1703 	ld	hl, #432
+      00073B 39                    1704 	add	hl, sp
+      00073C 32                    1705 	ld	(hl-), a
+      00073D 2A                    1706 	ld	a, (hl+)
+      00073E 5F                    1707 	ld	e, a
+      00073F 56                    1708 	ld	d, (hl)
+      000740 1A                    1709 	ld	a, (de)
+      000741 21 AB 01              1710 	ld	hl, #427
+      000744 39                    1711 	add	hl, sp
+      000745 A6                    1712 	and	a,(hl)
+      000746 28 03                 1713 	jr	Z, 00123$
+                                   1714 ;main.c:193: neighbour_count += 1;
+      000748 2B                    1715 	dec	hl
+      000749 34                    1716 	inc	(hl)
+      00074A 7E                    1717 	ld	a, (hl)
+      00074B                       1718 00123$:
+                                   1719 ;main.c:199: && (board[x - 1][y + 1] & k_tile_was_alive_mask) != 0x00)
+      00074B 21 AD 01              1720 	ld	hl,#0x1ad
+      00074E 39                    1721 	add	hl,sp
+      00074F 2A                    1722 	ld	a, (hl+)
+      000750 4F                    1723 	ld	c, a
+      000751 46                    1724 	ld	b, (hl)
+      000752 0B                    1725 	dec	bc
+      000753 69                    1726 	ld	l, c
+      000754 60                    1727 	ld	h, b
+      000755 29                    1728 	add	hl, hl
+      000756 29                    1729 	add	hl, hl
+      000757 29                    1730 	add	hl, hl
+      000758 09                    1731 	add	hl, bc
+      000759 29                    1732 	add	hl, hl
+      00075A 4D                    1733 	ld	c, l
+      00075B 44                    1734 	ld	b, h
+      00075C 21 9E 01              1735 	ld	hl, #414
+      00075F 39                    1736 	add	hl, sp
+      000760 2A                    1737 	ld	a,	(hl+)
+      000761 66                    1738 	ld	h, (hl)
+      000762 6F                    1739 	ld	l, a
+      000763 09                    1740 	add	hl, bc
+      000764 E5                    1741 	push	hl
+      000765 7D                    1742 	ld	a, l
+      000766 21 B1 01              1743 	ld	hl, #433
+      000769 39                    1744 	add	hl, sp
+      00076A 77                    1745 	ld	(hl), a
+      00076B E1                    1746 	pop	hl
+      00076C 7C                    1747 	ld	a, h
+      00076D 21 B0 01              1748 	ld	hl, #432
+      000770 39                    1749 	add	hl, sp
+      000771 77                    1750 	ld	(hl), a
+                                   1751 ;main.c:197: if (x > 0
+      000772 21 B5 01              1752 	ld	hl, #437
+      000775 39                    1753 	add	hl, sp
+      000776 7E                    1754 	ld	a, (hl)
+      000777 B7                    1755 	or	a, a
+      000778 28 21                 1756 	jr	Z, 00126$
+                                   1757 ;main.c:199: && (board[x - 1][y + 1] & k_tile_was_alive_mask) != 0x00)
+      00077A 21 B1 01              1758 	ld	hl, #433
+      00077D 39                    1759 	add	hl, sp
+      00077E 7E                    1760 	ld	a, (hl)
+      00077F B7                    1761 	or	a, a
+      000780 28 19                 1762 	jr	Z, 00126$
+      000782 23                    1763 	inc	hl
+      000783 5E                    1764 	ld	e, (hl)
+      000784 16 00                 1765 	ld	d, #0x00
+      000786 21 AF 01              1766 	ld	hl, #431
+      000789 39                    1767 	add	hl, sp
+      00078A 2A                    1768 	ld	a,	(hl+)
+      00078B 66                    1769 	ld	h, (hl)
+      00078C 6F                    1770 	ld	l, a
+      00078D 19                    1771 	add	hl, de
+      00078E 4D                    1772 	ld	c, l
+      00078F 44                    1773 	ld	b, h
+      000790 0A                    1774 	ld	a, (bc)
+      000791 21 AB 01              1775 	ld	hl, #427
+      000794 39                    1776 	add	hl, sp
+      000795 A6                    1777 	and	a,(hl)
+      000796 28 03                 1778 	jr	Z, 00126$
+                                   1779 ;main.c:201: neighbour_count += 1;
+      000798 2B                    1780 	dec	hl
+      000799 34                    1781 	inc	(hl)
+      00079A 7E                    1782 	ld	a, (hl)
+      00079B                       1783 00126$:
+                                   1784 ;main.c:205: if (x > 0
+      00079B 21 B5 01              1785 	ld	hl, #437
+      00079E 39                    1786 	add	hl, sp
+      00079F 7E                    1787 	ld	a, (hl)
+      0007A0 B7                    1788 	or	a, a
+      0007A1 28 1C                 1789 	jr	Z, 00130$
+                                   1790 ;main.c:206: && (board[x - 1][y] & k_tile_was_alive_mask) != 0x00)
+      0007A3 21 AF 01              1791 	ld	hl,#0x1af
+      0007A6 39                    1792 	add	hl,sp
+      0007A7 2A                    1793 	ld	a, (hl+)
+      0007A8 5F                    1794 	ld	e, a
+      0007A9 56                    1795 	ld	d, (hl)
+      0007AA 21 B6 01              1796 	ld	hl, #438
+      0007AD 39                    1797 	add	hl, sp
+      0007AE 6E                    1798 	ld	l, (hl)
+      0007AF 26 00                 1799 	ld	h, #0x00
+      0007B1 19                    1800 	add	hl, de
+      0007B2 4D                    1801 	ld	c, l
+      0007B3 44                    1802 	ld	b, h
+      0007B4 0A                    1803 	ld	a, (bc)
+      0007B5 21 AB 01              1804 	ld	hl, #427
+      0007B8 39                    1805 	add	hl, sp
+      0007B9 A6                    1806 	and	a,(hl)
+      0007BA 28 03                 1807 	jr	Z, 00130$
+                                   1808 ;main.c:208: neighbour_count += 1;
+      0007BC 2B                    1809 	dec	hl
+      0007BD 34                    1810 	inc	(hl)
+      0007BE 7E                    1811 	ld	a, (hl)
+      0007BF                       1812 00130$:
+                                   1813 ;main.c:212: if (x > 0
+      0007BF 21 B5 01              1814 	ld	hl, #437
+      0007C2 39                    1815 	add	hl, sp
+      0007C3 7E                    1816 	ld	a, (hl)
+      0007C4 B7                    1817 	or	a, a
+      0007C5 28 30                 1818 	jr	Z, 00133$
+                                   1819 ;main.c:213: && y > 0
+      0007C7 23                    1820 	inc	hl
+      0007C8 7E                    1821 	ld	a, (hl)
+      0007C9 B7                    1822 	or	a, a
+      0007CA 28 2B                 1823 	jr	Z, 00133$
+                                   1824 ;main.c:214: && (board[x - 1][y - 1] & k_tile_was_alive_mask) != 0x00)
+      0007CC 21 AC 01              1825 	ld	hl, #428
+      0007CF 39                    1826 	add	hl, sp
+      0007D0 5E                    1827 	ld	e, (hl)
+      0007D1 16 00                 1828 	ld	d, #0x00
+      0007D3 21 AF 01              1829 	ld	hl, #431
+      0007D6 39                    1830 	add	hl, sp
+      0007D7 2A                    1831 	ld	a,	(hl+)
+      0007D8 66                    1832 	ld	h, (hl)
+      0007D9 6F                    1833 	ld	l, a
+      0007DA 19                    1834 	add	hl, de
+      0007DB E5                    1835 	push	hl
+      0007DC 7D                    1836 	ld	a, l
+      0007DD 21 B3 01              1837 	ld	hl, #435
+      0007E0 39                    1838 	add	hl, sp
+      0007E1 77                    1839 	ld	(hl), a
+      0007E2 E1                    1840 	pop	hl
+      0007E3 7C                    1841 	ld	a, h
+      0007E4 21 B2 01              1842 	ld	hl, #434
+      0007E7 39                    1843 	add	hl, sp
+      0007E8 32                    1844 	ld	(hl-), a
+      0007E9 2A                    1845 	ld	a, (hl+)
+      0007EA 5F                    1846 	ld	e, a
+      0007EB 56                    1847 	ld	d, (hl)
+      0007EC 1A                    1848 	ld	a, (de)
+      0007ED 21 AB 01              1849 	ld	hl, #427
+      0007F0 39                    1850 	add	hl, sp
+      0007F1 A6                    1851 	and	a,(hl)
+      0007F2 28 03                 1852 	jr	Z, 00133$
+                                   1853 ;main.c:216: neighbour_count += 1;
+      0007F4 2B                    1854 	dec	hl
+      0007F5 34                    1855 	inc	(hl)
+      0007F6 7E                    1856 	ld	a, (hl)
+      0007F7                       1857 00133$:
+                                   1858 ;main.c:147: board[x][y] = (tile_data & ~k_tile_was_alive_mask) | ((tile_data & k_tile_is_alive_mask) << 1);
+      0007F7 21rE1r02              1859 	ld	hl, #_k_tile_is_alive_mask
+      0007FA 4E                    1860 	ld	c, (hl)
+                                   1861 ;main.c:220: uint8_t is_alive = (tile_data & k_tile_is_alive_mask) != 0x00;
+      0007FB 21 A9 01              1862 	ld	hl, #425
+      0007FE 39                    1863 	add	hl, sp
+      0007FF 7E                    1864 	ld	a, (hl)
+      000800 A1                    1865 	and	a, c
+      000801 D6 01                 1866 	sub	a,#0x01
+      000803 3E 00                 1867 	ld	a, #0x00
+      000805 17                    1868 	rla
+      000806 EE 01                 1869 	xor	a, #0x01
+                                   1870 ;main.c:221: uint8_t come_to_life = !is_alive && neighbour_count == 3;
+      000808 5F                    1871 	ld	e, a
+      000809 B7                    1872 	or	a, a
+      00080A 20 06                 1873 	jr	NZ, 00199$
+      00080C 23                    1874 	inc	hl
+      00080D 7E                    1875 	ld	a, (hl)
+      00080E D6 03                 1876 	sub	a, #0x03
+      000810 28 03                 1877 	jr	Z, 00200$
+      000812                       1878 00199$:
+      000812 AF                    1879 	xor	a, a
+      000813 18 02                 1880 	jr	00201$
+      000815                       1881 00200$:
+      000815 3E 01                 1882 	ld	a, #0x01
+      000817                       1883 00201$:
+      000817 21 B0 01              1884 	ld	hl, #432
+      00081A 39                    1885 	add	hl, sp
+      00081B 77                    1886 	ld	(hl), a
+                                   1887 ;main.c:226: uint8_t remain_alive = is_alive && neighbour_count >= 2 && neighbour_count <= 3;
+      00081C 7B                    1888 	ld	a, e
+      00081D B7                    1889 	or	a, a
+      00081E 28 0E                 1890 	jr	Z, 00202$
+      000820 21 AA 01              1891 	ld	hl, #426
+      000823 39                    1892 	add	hl, sp
+      000824 7E                    1893 	ld	a, (hl)
+      000825 D6 02                 1894 	sub	a, #0x02
+      000827 38 05                 1895 	jr	C, 00202$
+      000829 3E 03                 1896 	ld	a, #0x03
+      00082B 96                    1897 	sub	a, (hl)
+      00082C 30 04                 1898 	jr	NC, 00203$
+      00082E                       1899 00202$:
+      00082E 1E 00                 1900 	ld	e, #0x00
+      000830 18 02                 1901 	jr	00204$
+      000832                       1902 00203$:
+      000832 1E 01                 1903 	ld	e, #0x01
+      000834                       1904 00204$:
+                                   1905 ;main.c:229: tile_data &= ~k_tile_is_alive_mask;
+      000834 79                    1906 	ld	a, c
+      000835 2F                    1907 	cpl
+      000836 21 B1 01              1908 	ld	hl, #433
+      000839 39                    1909 	add	hl, sp
+      00083A 77                    1910 	ld	(hl), a
+      00083B 21 A9 01              1911 	ld	hl, #425
+      00083E 39                    1912 	add	hl, sp
+      00083F 7E                    1913 	ld	a, (hl)
+      000840 21 B1 01              1914 	ld	hl, #433
+      000843 39                    1915 	add	hl, sp
+      000844 A6                    1916 	and	a, (hl)
+      000845 23                    1917 	inc	hl
+                                   1918 ;main.c:230: if ((come_to_life | remain_alive) != 0x00)
+      000846 32                    1919 	ld	(hl-), a
+      000847 2B                    1920 	dec	hl
+      000848 7E                    1921 	ld	a, (hl)
+      000849 B3                    1922 	or	a, e
+      00084A B7                    1923 	or	a, a
+      00084B 28 05                 1924 	jr	Z, 00137$
+                                   1925 ;main.c:232: tile_data |= k_tile_is_alive_mask;
+      00084D 23                    1926 	inc	hl
+      00084E 23                    1927 	inc	hl
+      00084F 7E                    1928 	ld	a, (hl)
+      000850 B1                    1929 	or	a, c
+      000851 77                    1930 	ld	(hl), a
+      000852                       1931 00137$:
+                                   1932 ;main.c:236: is_alive = (tile_data & k_tile_is_alive_mask) != 0x00;
+      000852 21 B2 01              1933 	ld	hl, #434
+      000855 39                    1934 	add	hl, sp
+      000856 3A                    1935 	ld	a, (hl-)
+      000857 2B                    1936 	dec	hl
+      000858 A1                    1937 	and	a, c
+      000859 D6 01                 1938 	sub	a, #0x01
+      00085B 3E 00                 1939 	ld	a, #0x00
+      00085D 17                    1940 	rla
+      00085E EE 01                 1941 	xor	a, #0x01
+                                   1942 ;main.c:237: uint8_t was_alive = (tile_data & k_tile_was_alive_mask) != 0x00;
+      000860 22                    1943 	ld	(hl+), a
+      000861 23                    1944 	inc	hl
+      000862 7E                    1945 	ld	a, (hl)
+      000863 21 AB 01              1946 	ld	hl, #427
+      000866 39                    1947 	add	hl, sp
+      000867 A6                    1948 	and	a, (hl)
+      000868 23                    1949 	inc	hl
+      000869 23                    1950 	inc	hl
+      00086A D6 01                 1951 	sub	a, #0x01
+      00086C 3E 00                 1952 	ld	a, #0x00
+      00086E 17                    1953 	rla
+      00086F EE 01                 1954 	xor	a, #0x01
+      000871 77                    1955 	ld	(hl), a
+      000872 2A                    1956 	ld	a, (hl+)
+      000873 77                    1957 	ld	(hl), a
+                                   1958 ;main.c:250: update_tile_position(tile_data & k_tile_sprite_index_mask, x, y);
+      000874 FArE0r02              1959 	ld	a, (#_k_tile_sprite_index_mask)
+      000877 21 AF 01              1960 	ld	hl, #431
+      00087A 39                    1961 	add	hl, sp
+                                   1962 ;main.c:240: if (!was_alive && is_alive)
+      00087B 32                    1963 	ld	(hl-), a
+      00087C 2B                    1964 	dec	hl
+      00087D 7E                    1965 	ld	a, (hl)
+      00087E B7                    1966 	or	a, a
+      00087F 20 60                 1967 	jr	NZ, 00145$
+      000881 21 B0 01              1968 	ld	hl, #432
+      000884 39                    1969 	add	hl, sp
+      000885 7E                    1970 	ld	a, (hl)
+      000886 B7                    1971 	or	a, a
+      000887 28 58                 1972 	jr	Z, 00145$
+                                   1973 ;main.c:243: if (next_available_sprite_index < 39)
+      000889 21 B4 01              1974 	ld	hl, #436
+      00088C 39                    1975 	add	hl, sp
+      00088D 7E                    1976 	ld	a, (hl)
+      00088E D6 27                 1977 	sub	a, #0x27
+      000890 30 45                 1978 	jr	NC, 00139$
+                                   1979 ;main.c:246: tile_data |= available_sprites[next_available_sprite_index];
+      000892 21 A2 01              1980 	ld	hl,#0x1a2
+      000895 39                    1981 	add	hl,sp
+      000896 2A                    1982 	ld	a, (hl+)
+      000897 5F                    1983 	ld	e, a
+      000898 56                    1984 	ld	d, (hl)
+      000899 21 B4 01              1985 	ld	hl, #436
+      00089C 39                    1986 	add	hl, sp
+      00089D 6E                    1987 	ld	l, (hl)
+      00089E 26 00                 1988 	ld	h, #0x00
+      0008A0 19                    1989 	add	hl, de
+      0008A1 E5                    1990 	push	hl
+      0008A2 7D                    1991 	ld	a, l
+      0008A3 21 B2 01              1992 	ld	hl, #434
+      0008A6 39                    1993 	add	hl, sp
+      0008A7 77                    1994 	ld	(hl), a
+      0008A8 E1                    1995 	pop	hl
+      0008A9 7C                    1996 	ld	a, h
+      0008AA 21 B1 01              1997 	ld	hl, #433
+      0008AD 39                    1998 	add	hl, sp
+      0008AE 32                    1999 	ld	(hl-), a
+      0008AF 2A                    2000 	ld	a, (hl+)
+      0008B0 5F                    2001 	ld	e, a
+      0008B1 2A                    2002 	ld	a, (hl+)
+      0008B2 57                    2003 	ld	d, a
+      0008B3 1A                    2004 	ld	a, (de)
+      0008B4 B6                    2005 	or	a, (hl)
+                                   2006 ;main.c:247: next_available_sprite_index++;
+      0008B5 22                    2007 	ld	(hl+), a
+      0008B6 23                    2008 	inc	hl
+      0008B7 34                    2009 	inc	(hl)
+                                   2010 ;main.c:250: update_tile_position(tile_data & k_tile_sprite_index_mask, x, y);
+      0008B8 2B                    2011 	dec	hl
+      0008B9 2B                    2012 	dec	hl
+      0008BA 7E                    2013 	ld	a, (hl)
+      0008BB 21 AF 01              2014 	ld	hl, #431
+      0008BE 39                    2015 	add	hl, sp
+      0008BF A6                    2016 	and	a, (hl)
+      0008C0 21 B6 01              2017 	ld	hl, #438
+      0008C3 39                    2018 	add	hl, sp
+      0008C4 66                    2019 	ld	h, (hl)
+                                   2020 ;	spillPairReg hl
+                                   2021 ;	spillPairReg hl
+      0008C5 E5                    2022 	push	hl
+      0008C6 33                    2023 	inc	sp
+      0008C7 21 B6 01              2024 	ld	hl, #438
+      0008CA 39                    2025 	add	hl, sp
+      0008CB 66                    2026 	ld	h, (hl)
+                                   2027 ;	spillPairReg hl
+                                   2028 ;	spillPairReg hl
+      0008CC E5                    2029 	push	hl
+      0008CD 33                    2030 	inc	sp
+      0008CE F5                    2031 	push	af
+      0008CF 33                    2032 	inc	sp
+      0008D0 CDr31r03              2033 	call	_update_tile_position
+      0008D3 E8 03                 2034 	add	sp, #3
+      0008D5 18 54                 2035 	jr	00146$
+      0008D7                       2036 00139$:
+                                   2037 ;main.c:255: tile_data &= ~k_tile_is_alive_mask;
+      0008D7 21 B2 01              2038 	ld	hl, #434
+      0008DA 39                    2039 	add	hl, sp
+      0008DB 3A                    2040 	ld	a, (hl-)
+      0008DC A6                    2041 	and	a, (hl)
+      0008DD 23                    2042 	inc	hl
+      0008DE 77                    2043 	ld	(hl), a
+      0008DF 18 4A                 2044 	jr	00146$
+      0008E1                       2045 00145$:
+                                   2046 ;main.c:258: else if (was_alive && !is_alive)
+      0008E1 21 AE 01              2047 	ld	hl, #430
+      0008E4 39                    2048 	add	hl, sp
+      0008E5 7E                    2049 	ld	a, (hl)
+      0008E6 B7                    2050 	or	a, a
+      0008E7 28 42                 2051 	jr	Z, 00146$
+      0008E9 23                    2052 	inc	hl
+      0008EA 23                    2053 	inc	hl
+      0008EB 7E                    2054 	ld	a, (hl)
+      0008EC B7                    2055 	or	a, a
+      0008ED 20 3C                 2056 	jr	NZ, 00146$
+                                   2057 ;main.c:261: update_tile_position(tile_data & k_tile_sprite_index_mask, 0, 19);
+      0008EF 23                    2058 	inc	hl
+      0008F0 23                    2059 	inc	hl
+      0008F1 7E                    2060 	ld	a, (hl)
+      0008F2 21 AF 01              2061 	ld	hl, #431
+      0008F5 39                    2062 	add	hl, sp
+      0008F6 A6                    2063 	and	a, (hl)
+      0008F7 26 13                 2064 	ld	h, #0x13
+                                   2065 ;	spillPairReg hl
+                                   2066 ;	spillPairReg hl
+      0008F9 E5                    2067 	push	hl
+      0008FA 33                    2068 	inc	sp
+      0008FB 26 00                 2069 	ld	h, #0x00
+                                   2070 ;	spillPairReg hl
+                                   2071 ;	spillPairReg hl
+      0008FD E5                    2072 	push	hl
+      0008FE 33                    2073 	inc	sp
+      0008FF F5                    2074 	push	af
+      000900 33                    2075 	inc	sp
+      000901 CDr31r03              2076 	call	_update_tile_position
+      000904 E8 03                 2077 	add	sp, #3
+                                   2078 ;main.c:264: next_available_sprite_index--;
+      000906 21 B4 01              2079 	ld	hl, #436
+      000909 39                    2080 	add	hl, sp
+      00090A 35                    2081 	dec	(hl)
+                                   2082 ;main.c:265: available_sprites[next_available_sprite_index] = tile_data & k_tile_sprite_index_mask;
+      00090B 21 A0 01              2083 	ld	hl,#0x1a0
+      00090E 39                    2084 	add	hl,sp
+      00090F 2A                    2085 	ld	a, (hl+)
+      000910 5F                    2086 	ld	e, a
+      000911 56                    2087 	ld	d, (hl)
+      000912 21 B4 01              2088 	ld	hl, #436
+      000915 39                    2089 	add	hl, sp
+      000916 6E                    2090 	ld	l, (hl)
+      000917 26 00                 2091 	ld	h, #0x00
+      000919 19                    2092 	add	hl, de
+      00091A 5D                    2093 	ld	e, l
+      00091B 54                    2094 	ld	d, h
+      00091C 21rE0r02              2095 	ld	hl, #_k_tile_sprite_index_mask
+      00091F 4E                    2096 	ld	c, (hl)
+      000920 21 B2 01              2097 	ld	hl, #434
+      000923 39                    2098 	add	hl, sp
+      000924 7E                    2099 	ld	a, (hl)
+      000925 A1                    2100 	and	a, c
+      000926 12                    2101 	ld	(de), a
+                                   2102 ;main.c:268: tile_data &= ~k_tile_sprite_index_mask;
+      000927 79                    2103 	ld	a, c
+      000928 2F                    2104 	cpl
+      000929 A6                    2105 	and	a, (hl)
+      00092A 77                    2106 	ld	(hl), a
+      00092B                       2107 00146$:
+                                   2108 ;main.c:271: board[x][y] = tile_data;
+      00092B 21 A7 01              2109 	ld	hl,#0x1a7
+      00092E 39                    2110 	add	hl,sp
+      00092F 2A                    2111 	ld	a, (hl+)
+      000930 5F                    2112 	ld	e, a
+      000931 56                    2113 	ld	d, (hl)
+      000932 21 B2 01              2114 	ld	hl, #434
+      000935 39                    2115 	add	hl, sp
+      000936 7E                    2116 	ld	a, (hl)
+      000937 12                    2117 	ld	(de), a
+                                   2118 ;main.c:154: for (uint8_t y = 0; y < 18; ++y)
+      000938 21 B6 01              2119 	ld	hl, #438
+      00093B 39                    2120 	add	hl, sp
+      00093C 34                    2121 	inc	(hl)
+      00093D C3rF2r05              2122 	jp	00190$
+      000940                       2123 00194$:
+                                   2124 ;main.c:152: for (uint8_t x = 0; x < 20; ++x)
+      000940 21 B5 01              2125 	ld	hl, #437
+      000943 39                    2126 	add	hl, sp
+      000944 34                    2127 	inc	(hl)
+      000945 C3rB1r05              2128 	jp	00193$
+      000948                       2129 00169$:
+                                   2130 ;main.c:284: if (was_input_depressed(&input_state, btn_up))
+      000948 21 96 01              2131 	ld	hl, #406
+      00094B 39                    2132 	add	hl, sp
+      00094C 7E                    2133 	ld	a, (hl)
+      00094D 21 B5 01              2134 	ld	hl, #437
+      000950 39                    2135 	add	hl, sp
+      000951 77                    2136 	ld	(hl), a
+      000952 21 97 01              2137 	ld	hl, #407
+      000955 39                    2138 	add	hl, sp
+      000956 7E                    2139 	ld	a, (hl)
+      000957 21 B6 01              2140 	ld	hl, #438
+      00095A 39                    2141 	add	hl, sp
+      00095B 32                    2142 	ld	(hl-), a
+      00095C 3E 02                 2143 	ld	a, #0x02
+      00095E F5                    2144 	push	af
+      00095F 33                    2145 	inc	sp
+      000960 2A                    2146 	ld	a, (hl+)
+      000961 5F                    2147 	ld	e, a
+      000962 56                    2148 	ld	d, (hl)
+      000963 D5                    2149 	push	de
+      000964 CDr77r02              2150 	call	_was_input_depressed
+      000967 E8 03                 2151 	add	sp, #3
+      000969 21 B6 01              2152 	ld	hl, #438
+      00096C 39                    2153 	add	hl, sp
+      00096D 73                    2154 	ld	(hl), e
+                                   2155 ;main.c:286: cursor_tile_y -= 1;
+      00096E 21 99 01              2156 	ld	hl, #409
+      000971 39                    2157 	add	hl, sp
+      000972 7E                    2158 	ld	a, (hl)
+      000973 21 B2 01              2159 	ld	hl, #434
+      000976 39                    2160 	add	hl, sp
+      000977 77                    2161 	ld	(hl), a
+                                   2162 ;main.c:284: if (was_input_depressed(&input_state, btn_up))
+      000978 21 B6 01              2163 	ld	hl, #438
+      00097B 39                    2164 	add	hl, sp
+      00097C 7E                    2165 	ld	a, (hl)
+      00097D B7                    2166 	or	a, a
+      00097E 28 0E                 2167 	jr	Z, 00159$
+                                   2168 ;main.c:286: cursor_tile_y -= 1;
+      000980 21 B2 01              2169 	ld	hl, #434
+      000983 39                    2170 	add	hl, sp
+      000984 7E                    2171 	ld	a, (hl)
+      000985 3D                    2172 	dec	a
+      000986 21 99 01              2173 	ld	hl, #409
+      000989 39                    2174 	add	hl, sp
+      00098A 77                    2175 	ld	(hl), a
+      00098B C3r28r0A              2176 	jp	00160$
+      00098E                       2177 00159$:
+                                   2178 ;main.c:288: else if (was_input_depressed(&input_state, btn_down))
+      00098E 21 96 01              2179 	ld	hl, #406
+      000991 39                    2180 	add	hl, sp
+      000992 7E                    2181 	ld	a, (hl)
+      000993 21 B5 01              2182 	ld	hl, #437
+      000996 39                    2183 	add	hl, sp
+      000997 77                    2184 	ld	(hl), a
+      000998 21 97 01              2185 	ld	hl, #407
+      00099B 39                    2186 	add	hl, sp
+      00099C 7E                    2187 	ld	a, (hl)
+      00099D 21 B6 01              2188 	ld	hl, #438
+      0009A0 39                    2189 	add	hl, sp
+      0009A1 32                    2190 	ld	(hl-), a
+      0009A2 3E 03                 2191 	ld	a, #0x03
+      0009A4 F5                    2192 	push	af
+      0009A5 33                    2193 	inc	sp
+      0009A6 2A                    2194 	ld	a, (hl+)
+      0009A7 5F                    2195 	ld	e, a
+      0009A8 56                    2196 	ld	d, (hl)
+      0009A9 D5                    2197 	push	de
+      0009AA CDr77r02              2198 	call	_was_input_depressed
+      0009AD E8 03                 2199 	add	sp, #3
+      0009AF 7B                    2200 	ld	a, e
+      0009B0 B7                    2201 	or	a, a
+      0009B1 28 0D                 2202 	jr	Z, 00156$
+                                   2203 ;main.c:290: cursor_tile_y += 1;
+      0009B3 21 B2 01              2204 	ld	hl, #434
+      0009B6 39                    2205 	add	hl, sp
+      0009B7 7E                    2206 	ld	a, (hl)
+      0009B8 3C                    2207 	inc	a
+      0009B9 21 99 01              2208 	ld	hl, #409
+      0009BC 39                    2209 	add	hl, sp
+      0009BD 77                    2210 	ld	(hl), a
+      0009BE 18 68                 2211 	jr	00160$
+      0009C0                       2212 00156$:
+                                   2213 ;main.c:292: else if (was_input_depressed(&input_state, btn_left))
+      0009C0 21 96 01              2214 	ld	hl, #406
+      0009C3 39                    2215 	add	hl, sp
+      0009C4 7E                    2216 	ld	a, (hl)
+      0009C5 21 B5 01              2217 	ld	hl, #437
+      0009C8 39                    2218 	add	hl, sp
+      0009C9 77                    2219 	ld	(hl), a
+      0009CA 21 97 01              2220 	ld	hl, #407
+      0009CD 39                    2221 	add	hl, sp
+      0009CE 7E                    2222 	ld	a, (hl)
+      0009CF 21 B6 01              2223 	ld	hl, #438
+      0009D2 39                    2224 	add	hl, sp
+      0009D3 32                    2225 	ld	(hl-), a
+      0009D4 3E 04                 2226 	ld	a, #0x04
+      0009D6 F5                    2227 	push	af
+      0009D7 33                    2228 	inc	sp
+      0009D8 2A                    2229 	ld	a, (hl+)
+      0009D9 5F                    2230 	ld	e, a
+      0009DA 56                    2231 	ld	d, (hl)
+      0009DB D5                    2232 	push	de
+      0009DC CDr77r02              2233 	call	_was_input_depressed
+      0009DF E8 03                 2234 	add	sp, #3
+                                   2235 ;main.c:294: cursor_tile_x -= 1;
+      0009E1 21 98 01              2236 	ld	hl, #408
+      0009E4 39                    2237 	add	hl, sp
+      0009E5 7E                    2238 	ld	a, (hl)
+      0009E6 21 B2 01              2239 	ld	hl, #434
+      0009E9 39                    2240 	add	hl, sp
+      0009EA 77                    2241 	ld	(hl), a
+                                   2242 ;main.c:292: else if (was_input_depressed(&input_state, btn_left))
+      0009EB 7B                    2243 	ld	a, e
+      0009EC B7                    2244 	or	a, a
+      0009ED 28 09                 2245 	jr	Z, 00153$
+                                   2246 ;main.c:294: cursor_tile_x -= 1;
+      0009EF 7E                    2247 	ld	a, (hl)
+      0009F0 3D                    2248 	dec	a
+      0009F1 21 98 01              2249 	ld	hl, #408
+      0009F4 39                    2250 	add	hl, sp
+      0009F5 77                    2251 	ld	(hl), a
+      0009F6 18 30                 2252 	jr	00160$
+      0009F8                       2253 00153$:
+                                   2254 ;main.c:296: else if (was_input_depressed(&input_state, btn_right))
+      0009F8 21 96 01              2255 	ld	hl, #406
+      0009FB 39                    2256 	add	hl, sp
+      0009FC 7E                    2257 	ld	a, (hl)
+      0009FD 21 B5 01              2258 	ld	hl, #437
+      000A00 39                    2259 	add	hl, sp
+      000A01 77                    2260 	ld	(hl), a
+      000A02 21 97 01              2261 	ld	hl, #407
+      000A05 39                    2262 	add	hl, sp
+      000A06 7E                    2263 	ld	a, (hl)
+      000A07 21 B6 01              2264 	ld	hl, #438
+      000A0A 39                    2265 	add	hl, sp
+      000A0B 32                    2266 	ld	(hl-), a
+      000A0C 3E 05                 2267 	ld	a, #0x05
+      000A0E F5                    2268 	push	af
+      000A0F 33                    2269 	inc	sp
+      000A10 2A                    2270 	ld	a, (hl+)
+      000A11 5F                    2271 	ld	e, a
+      000A12 56                    2272 	ld	d, (hl)
+      000A13 D5                    2273 	push	de
+      000A14 CDr77r02              2274 	call	_was_input_depressed
+      000A17 E8 03                 2275 	add	sp, #3
+      000A19 7B                    2276 	ld	a, e
+      000A1A B7                    2277 	or	a, a
+      000A1B 28 0B                 2278 	jr	Z, 00160$
+                                   2279 ;main.c:298: cursor_tile_x += 1;
+      000A1D 21 B2 01              2280 	ld	hl, #434
+      000A20 39                    2281 	add	hl, sp
+      000A21 7E                    2282 	ld	a, (hl)
+      000A22 3C                    2283 	inc	a
+      000A23 21 98 01              2284 	ld	hl, #408
+      000A26 39                    2285 	add	hl, sp
+      000A27 77                    2286 	ld	(hl), a
+      000A28                       2287 00160$:
+                                   2288 ;main.c:303: ? 19
+      000A28 21 98 01              2289 	ld	hl, #408
+      000A2B 39                    2290 	add	hl, sp
+      000A2C 7E                    2291 	ld	a, (hl)
+      000A2D 3C                    2292 	inc	a
+      000A2E 20 0B                 2293 	jr	NZ, 00208$
+      000A30 21 B5 01              2294 	ld	hl, #437
+      000A33 39                    2295 	add	hl, sp
+      000A34 3E 13                 2296 	ld	a, #0x13
+      000A36 22                    2297 	ld	(hl+), a
+      000A37 AF                    2298 	xor	a, a
+      000A38 77                    2299 	ld	(hl), a
+      000A39 18 1E                 2300 	jr	00209$
+      000A3B                       2301 00208$:
+                                   2302 ;main.c:305: ? 0
+      000A3B 3E 13                 2303 	ld	a, #0x13
+      000A3D 21 98 01              2304 	ld	hl, #408
+      000A40 39                    2305 	add	hl, sp
+      000A41 96                    2306 	sub	a, (hl)
+      000A42 30 09                 2307 	jr	NC, 00210$
+      000A44 AF                    2308 	xor	a, a
+      000A45 21 B5 01              2309 	ld	hl, #437
+      000A48 39                    2310 	add	hl, sp
+      000A49 22                    2311 	ld	(hl+), a
+      000A4A 77                    2312 	ld	(hl), a
+      000A4B 18 0C                 2313 	jr	00211$
+      000A4D                       2314 00210$:
+                                   2315 ;main.c:306: : cursor_tile_x;
+      000A4D 21 98 01              2316 	ld	hl, #408
+      000A50 39                    2317 	add	hl, sp
+      000A51 7E                    2318 	ld	a, (hl)
+      000A52 21 B5 01              2319 	ld	hl, #437
+      000A55 39                    2320 	add	hl, sp
+      000A56 22                    2321 	ld	(hl+), a
+      000A57 36 00                 2322 	ld	(hl), #0x00
+      000A59                       2323 00211$:
+      000A59                       2324 00209$:
+      000A59 21 B5 01              2325 	ld	hl, #437
+      000A5C 39                    2326 	add	hl, sp
+      000A5D 7E                    2327 	ld	a, (hl)
+      000A5E 21 98 01              2328 	ld	hl, #408
+      000A61 39                    2329 	add	hl, sp
+                                   2330 ;main.c:310: ? 17
+      000A62 22                    2331 	ld	(hl+), a
+      000A63 7E                    2332 	ld	a, (hl)
+      000A64 3C                    2333 	inc	a
+      000A65 20 0B                 2334 	jr	NZ, 00212$
+      000A67 21 B5 01              2335 	ld	hl, #437
+      000A6A 39                    2336 	add	hl, sp
+      000A6B 3E 11                 2337 	ld	a, #0x11
+      000A6D 22                    2338 	ld	(hl+), a
+      000A6E AF                    2339 	xor	a, a
+      000A6F 77                    2340 	ld	(hl), a
+      000A70 18 1E                 2341 	jr	00213$
+      000A72                       2342 00212$:
+                                   2343 ;main.c:312: ? 0
+      000A72 3E 11                 2344 	ld	a, #0x11
+      000A74 21 99 01              2345 	ld	hl, #409
+      000A77 39                    2346 	add	hl, sp
+      000A78 96                    2347 	sub	a, (hl)
+      000A79 30 09                 2348 	jr	NC, 00214$
+      000A7B AF                    2349 	xor	a, a
+      000A7C 21 B5 01              2350 	ld	hl, #437
+      000A7F 39                    2351 	add	hl, sp
+      000A80 22                    2352 	ld	(hl+), a
+      000A81 77                    2353 	ld	(hl), a
+      000A82 18 0C                 2354 	jr	00215$
+      000A84                       2355 00214$:
+                                   2356 ;main.c:313: : cursor_tile_y;
+      000A84 21 99 01              2357 	ld	hl, #409
+      000A87 39                    2358 	add	hl, sp
+      000A88 7E                    2359 	ld	a, (hl)
+      000A89 21 B5 01              2360 	ld	hl, #437
+      000A8C 39                    2361 	add	hl, sp
+      000A8D 22                    2362 	ld	(hl+), a
+      000A8E 36 00                 2363 	ld	(hl), #0x00
+      000A90                       2364 00215$:
+      000A90                       2365 00213$:
+      000A90 21 B5 01              2366 	ld	hl, #437
+      000A93 39                    2367 	add	hl, sp
+      000A94 7E                    2368 	ld	a, (hl)
+      000A95 21 99 01              2369 	ld	hl, #409
+      000A98 39                    2370 	add	hl, sp
+      000A99 77                    2371 	ld	(hl), a
+                                   2372 ;main.c:315: update_cursor_position(cursor_tile_x, cursor_tile_y);
+      000A9A 3A                    2373 	ld	a, (hl-)
+      000A9B 57                    2374 	ld	d, a
+      000A9C 5E                    2375 	ld	e, (hl)
+      000A9D D5                    2376 	push	de
+      000A9E CDrE8r02              2377 	call	_update_cursor_position
+      000AA1 E1                    2378 	pop	hl
+                                   2379 ;main.c:318: if (was_input_depressed(&input_state, btn_b))
+      000AA2 21 96 01              2380 	ld	hl, #406
+      000AA5 39                    2381 	add	hl, sp
+      000AA6 2A                    2382 	ld	a, (hl+)
+      000AA7 4F                    2383 	ld	c, a
+      000AA8 46                    2384 	ld	b, (hl)
+      000AA9 3E 01                 2385 	ld	a, #0x01
+      000AAB F5                    2386 	push	af
+      000AAC 33                    2387 	inc	sp
+      000AAD C5                    2388 	push	bc
+      000AAE CDr77r02              2389 	call	_was_input_depressed
+      000AB1 E8 03                 2390 	add	sp, #3
+      000AB3 7B                    2391 	ld	a, e
+      000AB4 B7                    2392 	or	a, a
+      000AB5 CArCFr0B              2393 	jp	Z, 00170$
+                                   2394 ;main.c:320: uint8_t tile_data = board[cursor_tile_x][cursor_tile_y];
+      000AB8 21 98 01              2395 	ld	hl, #408
+      000ABB 39                    2396 	add	hl, sp
+      000ABC 4E                    2397 	ld	c, (hl)
+      000ABD 06 00                 2398 	ld	b, #0x00
+      000ABF 69                    2399 	ld	l, c
+      000AC0 60                    2400 	ld	h, b
+      000AC1 29                    2401 	add	hl, hl
+      000AC2 29                    2402 	add	hl, hl
+      000AC3 29                    2403 	add	hl, hl
+      000AC4 09                    2404 	add	hl, bc
+      000AC5 29                    2405 	add	hl, hl
+      000AC6 4D                    2406 	ld	c, l
+      000AC7 44                    2407 	ld	b, h
+      000AC8 21 9C 01              2408 	ld	hl, #412
+      000ACB 39                    2409 	add	hl, sp
+      000ACC 2A                    2410 	ld	a,	(hl+)
+      000ACD 66                    2411 	ld	h, (hl)
+      000ACE 6F                    2412 	ld	l, a
+      000ACF 09                    2413 	add	hl, bc
+      000AD0 4D                    2414 	ld	c, l
+      000AD1 44                    2415 	ld	b, h
+      000AD2 21 99 01              2416 	ld	hl, #409
+      000AD5 39                    2417 	add	hl, sp
+      000AD6 6E                    2418 	ld	l, (hl)
+      000AD7 26 00                 2419 	ld	h, #0x00
+      000AD9 09                    2420 	add	hl, bc
+      000ADA E5                    2421 	push	hl
+      000ADB 7D                    2422 	ld	a, l
+      000ADC 21 B3 01              2423 	ld	hl, #435
+      000ADF 39                    2424 	add	hl, sp
+      000AE0 77                    2425 	ld	(hl), a
+      000AE1 E1                    2426 	pop	hl
+      000AE2 7C                    2427 	ld	a, h
+      000AE3 21 B2 01              2428 	ld	hl, #434
+      000AE6 39                    2429 	add	hl, sp
+      000AE7 32                    2430 	ld	(hl-), a
+      000AE8 2A                    2431 	ld	a, (hl+)
+      000AE9 5F                    2432 	ld	e, a
+      000AEA 56                    2433 	ld	d, (hl)
+      000AEB 1A                    2434 	ld	a, (de)
+      000AEC 21 B6 01              2435 	ld	hl, #438
+      000AEF 39                    2436 	add	hl, sp
+      000AF0 77                    2437 	ld	(hl), a
+                                   2438 ;main.c:321: uint8_t is_alive = tile_data & k_tile_is_alive_mask;
+      000AF1 21rE1r02              2439 	ld	hl, #_k_tile_is_alive_mask
+      000AF4 4E                    2440 	ld	c, (hl)
+                                   2441 ;main.c:250: update_tile_position(tile_data & k_tile_sprite_index_mask, x, y);
+      000AF5 FArE0r02              2442 	ld	a, (#_k_tile_sprite_index_mask)
+      000AF8 21 B5 01              2443 	ld	hl, #437
+      000AFB 39                    2444 	add	hl, sp
+                                   2445 ;main.c:321: uint8_t is_alive = tile_data & k_tile_is_alive_mask;
+      000AFC 22                    2446 	ld	(hl+), a
+      000AFD 7E                    2447 	ld	a, (hl)
+      000AFE A1                    2448 	and	a, c
+      000AFF 21 B0 01              2449 	ld	hl, #432
+      000B02 39                    2450 	add	hl, sp
+      000B03 77                    2451 	ld	(hl), a
+                                   2452 ;main.c:323: if (!is_alive)
+      000B04 7E                    2453 	ld	a, (hl)
+      000B05 B7                    2454 	or	a, a
+      000B06 20 4A                 2455 	jr	NZ, 00164$
+                                   2456 ;main.c:325: if (next_available_sprite_index < 39)
+      000B08 21 B4 01              2457 	ld	hl, #436
+      000B0B 39                    2458 	add	hl, sp
+      000B0C 7E                    2459 	ld	a, (hl)
+      000B0D D6 27                 2460 	sub	a, #0x27
+      000B0F D2rC2r0B              2461 	jp	NC, 00165$
+                                   2462 ;main.c:328: tile_data |= available_sprites[next_available_sprite_index];
+      000B12 21 9A 01              2463 	ld	hl,#0x19a
+      000B15 39                    2464 	add	hl,sp
+      000B16 2A                    2465 	ld	a, (hl+)
+      000B17 5F                    2466 	ld	e, a
+      000B18 56                    2467 	ld	d, (hl)
+      000B19 21 B4 01              2468 	ld	hl, #436
+      000B1C 39                    2469 	add	hl, sp
+      000B1D 6E                    2470 	ld	l, (hl)
+      000B1E 26 00                 2471 	ld	h, #0x00
+      000B20 19                    2472 	add	hl, de
+      000B21 4D                    2473 	ld	c, l
+      000B22 44                    2474 	ld	b, h
+      000B23 0A                    2475 	ld	a, (bc)
+      000B24 21 B6 01              2476 	ld	hl, #438
+      000B27 39                    2477 	add	hl, sp
+      000B28 B6                    2478 	or	a, (hl)
+                                   2479 ;main.c:329: next_available_sprite_index++;
+      000B29 2B                    2480 	dec	hl
+      000B2A 2B                    2481 	dec	hl
+      000B2B 4F                    2482 	ld	c, a
+      000B2C 34                    2483 	inc	(hl)
+                                   2484 ;main.c:332: update_tile_position(tile_data & k_tile_sprite_index_mask, cursor_tile_x, cursor_tile_y);
+      000B2D 23                    2485 	inc	hl
+      000B2E 79                    2486 	ld	a, c
+      000B2F A6                    2487 	and	a, (hl)
+      000B30 C5                    2488 	push	bc
+      000B31 21 9B 01              2489 	ld	hl, #411
+      000B34 39                    2490 	add	hl, sp
+      000B35 66                    2491 	ld	h, (hl)
+                                   2492 ;	spillPairReg hl
+                                   2493 ;	spillPairReg hl
+      000B36 E5                    2494 	push	hl
+      000B37 33                    2495 	inc	sp
+      000B38 21 9B 01              2496 	ld	hl, #411
+      000B3B 39                    2497 	add	hl, sp
+      000B3C 66                    2498 	ld	h, (hl)
+                                   2499 ;	spillPairReg hl
+                                   2500 ;	spillPairReg hl
+      000B3D E5                    2501 	push	hl
+      000B3E 33                    2502 	inc	sp
+      000B3F F5                    2503 	push	af
+      000B40 33                    2504 	inc	sp
+      000B41 CDr31r03              2505 	call	_update_tile_position
+      000B44 E8 03                 2506 	add	sp, #3
+      000B46 C1                    2507 	pop	bc
+                                   2508 ;main.c:335: tile_data |= k_tile_is_alive_mask;
+      000B47 FArE1r02              2509 	ld	a, (#_k_tile_is_alive_mask)
+      000B4A B1                    2510 	or	a, c
+      000B4B 21 B6 01              2511 	ld	hl, #438
+      000B4E 39                    2512 	add	hl, sp
+      000B4F 77                    2513 	ld	(hl), a
+      000B50 18 70                 2514 	jr	00165$
+      000B52                       2515 00164$:
+                                   2516 ;main.c:341: update_tile_position(tile_data & k_tile_sprite_index_mask, 0, 19);
+      000B52 21 B5 01              2517 	ld	hl, #437
+      000B55 39                    2518 	add	hl, sp
+      000B56 2A                    2519 	ld	a, (hl+)
+      000B57 A6                    2520 	and	a, (hl)
+      000B58 2B                    2521 	dec	hl
+      000B59 77                    2522 	ld	(hl), a
+      000B5A 3E 13                 2523 	ld	a, #0x13
+      000B5C F5                    2524 	push	af
+      000B5D 33                    2525 	inc	sp
+      000B5E AF                    2526 	xor	a, a
+      000B5F F5                    2527 	push	af
+      000B60 33                    2528 	inc	sp
+      000B61 7E                    2529 	ld	a, (hl)
+      000B62 F5                    2530 	push	af
+      000B63 33                    2531 	inc	sp
+      000B64 CDr31r03              2532 	call	_update_tile_position
+      000B67 E8 03                 2533 	add	sp, #3
+                                   2534 ;main.c:344: next_available_sprite_index--;
+      000B69 21 B4 01              2535 	ld	hl, #436
+      000B6C 39                    2536 	add	hl, sp
+      000B6D 35                    2537 	dec	(hl)
+                                   2538 ;main.c:345: available_sprites[next_available_sprite_index] = tile_data & k_tile_sprite_index_mask;
+      000B6E 21 9A 01              2539 	ld	hl,#0x19a
+      000B71 39                    2540 	add	hl,sp
+      000B72 2A                    2541 	ld	a, (hl+)
+      000B73 5F                    2542 	ld	e, a
+      000B74 56                    2543 	ld	d, (hl)
+      000B75 21 B4 01              2544 	ld	hl, #436
+      000B78 39                    2545 	add	hl, sp
+      000B79 6E                    2546 	ld	l, (hl)
+      000B7A 26 00                 2547 	ld	h, #0x00
+      000B7C 19                    2548 	add	hl, de
+      000B7D E5                    2549 	push	hl
+      000B7E 7D                    2550 	ld	a, l
+      000B7F 21 B1 01              2551 	ld	hl, #433
+      000B82 39                    2552 	add	hl, sp
+      000B83 77                    2553 	ld	(hl), a
+      000B84 E1                    2554 	pop	hl
+      000B85 7C                    2555 	ld	a, h
+      000B86 21 B0 01              2556 	ld	hl, #432
+      000B89 39                    2557 	add	hl, sp
+      000B8A 77                    2558 	ld	(hl), a
+      000B8B FArE0r02              2559 	ld	a, (#_k_tile_sprite_index_mask)
+      000B8E 21 B5 01              2560 	ld	hl, #437
+      000B91 39                    2561 	add	hl, sp
+      000B92 22                    2562 	ld	(hl+), a
+      000B93 3A                    2563 	ld	a, (hl-)
+      000B94 A6                    2564 	and	a, (hl)
+      000B95 4F                    2565 	ld	c, a
+      000B96 21 AF 01              2566 	ld	hl, #431
+      000B99 39                    2567 	add	hl, sp
+      000B9A 2A                    2568 	ld	a,	(hl+)
+      000B9B 66                    2569 	ld	h, (hl)
+      000B9C 6F                    2570 	ld	l, a
+      000B9D 71                    2571 	ld	(hl), c
+                                   2572 ;main.c:348: tile_data &= ~k_tile_sprite_index_mask;
+      000B9E 21 B5 01              2573 	ld	hl, #437
+      000BA1 39                    2574 	add	hl, sp
+      000BA2 7E                    2575 	ld	a, (hl)
+      000BA3 2F                    2576 	cpl
+      000BA4 21 B0 01              2577 	ld	hl, #432
+      000BA7 39                    2578 	add	hl, sp
+      000BA8 77                    2579 	ld	(hl), a
+      000BA9 21 B6 01              2580 	ld	hl, #438
+      000BAC 39                    2581 	add	hl, sp
+      000BAD 7E                    2582 	ld	a, (hl)
+      000BAE 21 B0 01              2583 	ld	hl, #432
+      000BB1 39                    2584 	add	hl, sp
+      000BB2 A6                    2585 	and	a, (hl)
+      000BB3 21 B6 01              2586 	ld	hl, #438
+      000BB6 39                    2587 	add	hl, sp
+      000BB7 77                    2588 	ld	(hl), a
+                                   2589 ;main.c:351: tile_data &= ~k_tile_is_alive_mask;
+      000BB8 FArE1r02              2590 	ld	a, (#_k_tile_is_alive_mask)
+      000BBB 2F                    2591 	cpl
+      000BBC 21 B6 01              2592 	ld	hl, #438
+      000BBF 39                    2593 	add	hl, sp
+      000BC0 A6                    2594 	and	a, (hl)
+      000BC1 77                    2595 	ld	(hl), a
+      000BC2                       2596 00165$:
+                                   2597 ;main.c:355: board[cursor_tile_x][cursor_tile_y] = tile_data;
+      000BC2 21 B1 01              2598 	ld	hl,#0x1b1
+      000BC5 39                    2599 	add	hl,sp
+      000BC6 2A                    2600 	ld	a, (hl+)
+      000BC7 5F                    2601 	ld	e, a
+      000BC8 56                    2602 	ld	d, (hl)
+      000BC9 21 B6 01              2603 	ld	hl, #438
+      000BCC 39                    2604 	add	hl, sp
+      000BCD 7E                    2605 	ld	a, (hl)
+      000BCE 12                    2606 	ld	(de), a
+      000BCF                       2607 00170$:
+                                   2608 ;main.c:360: wait_vbls_done(1);
+      000BCF 3E 01                 2609 	ld	a, #0x01
+      000BD1 F5                    2610 	push	af
+      000BD2 33                    2611 	inc	sp
+      000BD3 CDrBFr02              2612 	call	_wait_vbls_done
+      000BD6 33                    2613 	inc	sp
+      000BD7 C3r8Br04              2614 	jp	00172$
+                                   2615 ;main.c:362: }
+      000BDA 21 B7 01              2616 	ld	hl, #439
+      000BDD 39                    2617 	add	hl, sp
+      000BDE F9                    2618 	ld	sp, hl
+      000BDF C9                    2619 	ret
+                                   2620 	.area _CODE
+                                   2621 	.area _INITIALIZER
+      000000                       2622 __xinit__k_sprites:
+      000000 00                    2623 	.db #0x00	; 0
+      000001 00                    2624 	.db #0x00	; 0
+      000002 00                    2625 	.db #0x00	; 0
+      000003 00                    2626 	.db #0x00	; 0
+      000004 00                    2627 	.db #0x00	; 0
+      000005 00                    2628 	.db #0x00	; 0
+      000006 00                    2629 	.db #0x00	; 0
+      000007 00                    2630 	.db #0x00	; 0
+      000008 00                    2631 	.db #0x00	; 0
+      000009 00                    2632 	.db #0x00	; 0
+      00000A 00                    2633 	.db #0x00	; 0
+      00000B 00                    2634 	.db #0x00	; 0
+      00000C 00                    2635 	.db #0x00	; 0
+      00000D 00                    2636 	.db #0x00	; 0
+      00000E 00                    2637 	.db #0x00	; 0
+      00000F 00                    2638 	.db #0x00	; 0
+      000010 00                    2639 	.db #0x00	; 0
+      000011 00                    2640 	.db #0x00	; 0
+      000012 7F                    2641 	.db #0x7f	; 127
+      000013 7F                    2642 	.db #0x7f	; 127
+      000014 7F                    2643 	.db #0x7f	; 127
+      000015 7F                    2644 	.db #0x7f	; 127
+      000016 7F                    2645 	.db #0x7f	; 127
+      000017 7F                    2646 	.db #0x7f	; 127
+      000018 7F                    2647 	.db #0x7f	; 127
+      000019 7F                    2648 	.db #0x7f	; 127
+      00001A 7F                    2649 	.db #0x7f	; 127
+      00001B 7F                    2650 	.db #0x7f	; 127
+      00001C 7F                    2651 	.db #0x7f	; 127
+      00001D 7F                    2652 	.db #0x7f	; 127
+      00001E 7F                    2653 	.db #0x7f	; 127
+      00001F 7F                    2654 	.db #0x7f	; 127
+      000020 00                    2655 	.db #0x00	; 0
+      000021 00                    2656 	.db #0x00	; 0
+      000022 00                    2657 	.db #0x00	; 0
+      000023 3E                    2658 	.db #0x3e	; 62
+      000024 00                    2659 	.db #0x00	; 0
+      000025 41                    2660 	.db #0x41	; 65	'A'
+      000026 00                    2661 	.db #0x00	; 0
+      000027 41                    2662 	.db #0x41	; 65	'A'
+      000028 00                    2663 	.db #0x00	; 0
+      000029 41                    2664 	.db #0x41	; 65	'A'
+      00002A 00                    2665 	.db #0x00	; 0
+      00002B 41                    2666 	.db #0x41	; 65	'A'
+      00002C 00                    2667 	.db #0x00	; 0
+      00002D 41                    2668 	.db #0x41	; 65	'A'
+      00002E 00                    2669 	.db #0x00	; 0
+      00002F 3E                    2670 	.db #0x3e	; 62
+      000030 00                    2671 	.db #0x00	; 0
+      000031 00                    2672 	.db #0x00	; 0
+      000032 41                    2673 	.db #0x41	; 65	'A'
+      000033 7F                    2674 	.db #0x7f	; 127
+      000034 3E                    2675 	.db #0x3e	; 62
+      000035 7F                    2676 	.db #0x7f	; 127
+      000036 3E                    2677 	.db #0x3e	; 62
+      000037 7F                    2678 	.db #0x7f	; 127
+      000038 3E                    2679 	.db #0x3e	; 62
+      000039 7F                    2680 	.db #0x7f	; 127
+      00003A 3E                    2681 	.db #0x3e	; 62
+      00003B 7F                    2682 	.db #0x7f	; 127
+      00003C 3E                    2683 	.db #0x3e	; 62
+      00003D 7F                    2684 	.db #0x7f	; 127
+      00003E 41                    2685 	.db #0x41	; 65	'A'
+      00003F 7F                    2686 	.db #0x7f	; 127
+                                   2687 	.area _CABS (ABS)
